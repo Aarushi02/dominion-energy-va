@@ -27,6 +27,63 @@ from dominion_pdf_to_spreadsheet import (
 
 st.set_page_config(page_title="Dominion Bill -> Monthly History Excel", page_icon="⚡")
 
+
+# ============================================================
+# AUTH -- simple username/password gate
+#
+# Credentials live in Streamlit secrets (st.secrets), NOT hardcoded in
+# this file, so they aren't checked into git. On Streamlit Community
+# Cloud: App settings -> Secrets -> paste:
+#
+#   [credentials]
+#   username = "your-username"
+#   password = "your-password"
+#
+# For local dev, create a .streamlit/secrets.toml file with the same
+# content (and add .streamlit/secrets.toml to .gitignore).
+# ============================================================
+
+def check_login():
+    if st.session_state.get("authenticated"):
+        return True
+
+    st.title("🔒 Login required")
+
+    with st.form("login_form"):
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
+        submitted = st.form_submit_button("Log in")
+
+    if submitted:
+        try:
+            correct_username = st.secrets["credentials"]["username"]
+            correct_password = st.secrets["credentials"]["password"]
+        except (KeyError, FileNotFoundError):
+            st.error(
+                "No credentials configured. Set [credentials] username/password "
+                "in Streamlit secrets before deploying."
+            )
+            return False
+
+        if username == correct_username and password == correct_password:
+            st.session_state["authenticated"] = True
+            st.rerun()
+        else:
+            st.error("Incorrect username or password.")
+
+    return False
+
+
+if not check_login():
+    st.stop()
+
+# Optional: let a logged-in user log out
+with st.sidebar:
+    if st.button("Log out"):
+        st.session_state["authenticated"] = False
+        st.rerun()
+
+
 st.title("⚡ Dominion Account Profile -> Monthly History")
 st.write(
     "Upload a Dominion Energy **Electric Account Profile** PDF. "
