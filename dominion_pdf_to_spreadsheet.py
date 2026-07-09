@@ -1,0 +1,467 @@
+# ------------------------------------------------------------------
+# Dominion Energy "Electric Account Profile" PDF -> Spreadsheet
+# Handles OCR (the PDF has no text layer), key-value field extraction,
+# annual summary table extraction, and monthly rate/charge table
+# extraction, writing everything out to a multi-sheet Excel workbook.
+#
+# Style follows utility_bill_doc_processor.py (normspace/pull helpers,
+# DataFrame -> Excel), adapted for this document's layout, which is a
+# scanned/rendered "Account Profile" report rather than the tabular
+# "Monthly Electric History" bill the reference script targets.
+# ------------------------------------------------------------------
+
+import os
+import re
+import sys
+import unicodedata
+from pathlib import Path
+
+import pandas as pd
+import pytesseract
+from pytesseract import Output
+from pdf2image import convert_from_path
+
+# ============================================================
+# CONFIG
+# ============================================================
+
+CONFIG = {
+    "INPUT_PDF": "/mnt/user-data/uploads/County_of_Louisa_Account_Profile_001603782051_Dominion_VEPGA.pdf",
+    "OUT_XLSX": "/mnt/user-data/outputs/dominion_account_profile.xlsx",
+    "OCR_DPI": 300,
+}
+
+# ============================================================
+# HELPERS (mirrors utility_bill_doc_processor.py conventions)
+# ============================================================
+
+def normspace(s: str) -> str:
+    if s is None:
+        return ""
+    s = unicodedata.normalize("NFKC", str(s)).replace("\u00A0", " ")
+    return re.sub(r"\s+", " ", s).strip()
+
+
+def pull(text, pats, group=1, default=""):
+    for pat in pats:
+        m = re.search(pat, text, flags=re.IGNORECASE | re.DOTALL)
+        if m:
+            return normspace(m.group(group))
+    return default
+
+
+MONEY_RE = r"\$?-?[\d,]*\.?\d+"
+
+
+def parse_money(tok):
+    if tok is None:
+        return None
+    s = str(tok).replace("$", "").replace(",", "").strip()
+    if s in ("", "-", "."):
+        return None
+    try:
+        return float(s)
+    except ValueError:
+        return None
+
+
+def parse_intlike(tok):
+    if tok is None:
+        return None
+    s = str(tok).replace(",", "").strip()
+    if s in ("", "-"):
+        return None
+    try:
+        return int(float(s))
+    except ValueError:
+        return None
+
+
+# ============================================================
+# OCR
+# ============================================================
+
+def ocr_pages(pdf_path, dpi=300):
+    """Returns a list of page texts (index 0 = page 1)."""
+    images = convert_from_path(pdf_path, dpi=dpi)
+    pages = []
+    for img in images:
+        # psm 6: assume a uniform block of text -> keeps rows/columns
+        # more coherent for this layout than the default psm 3.
+        txt = pytesseract.image_to_string(img, config="--psm 6")
+        pages.append(txt)
+    return pages
+
+
+def ocr_two_column_page(img, split_frac=0.42):
+    """
+    The Account Profile page (page 2) is laid out in two columns
+    (left = key-value fields, right = manager box + annual summary
+    table). OCR'ing the whole page as one block interleaves the two
+    columns' text on the same lines and corrupts both. Cropping and
+    OCR'ing each column separately fixes this.
+    """
+    w, h = img.size
+    left = img.crop((0, 0, int(w * split_frac), h))
+    right = img.crop((int(w * (split_frac - 0.03)), 0, w, h))
+    left_txt = pytesseract.image_to_string(left, config="--psm 6")
+    right_txt = pytesseract.image_to_string(right, config="--psm 6")
+    return left_txt, right_txt
+
+
+# ============================================================
+# PAGE 2: ACCOUNT PROFILE (key-value fields) + ANNUAL SUMMARY TABLE
+# ============================================================
+
+def extract_account_profile(left_col_text, right_col_text, page1_text):
+    """
+    left_col_text  = OCR of the left column of page 2 (key-value fields)
+    right_col_text = OCR of the right column of page 2 (manager box)
+    page1_text     = OCR of the cover page (has the customer name cleanly)
+    """
+    fields = {
+        "customer": pull(left_col_text, [r"Account Profile\s*\n\s*(.+?)\n\s*\nPhone Number"], default=""),
+        "phone_number": pull(left_col_text, [r"Phone Number\s*\n?\s*(\(\d{3}\)\s?\d{3}-\d{4})"]),
+        "mailing_address": pull(left_col_text, [r"Mailing Address\s*\n?\s*(.+?)\nCustomer Class"], default=""),
+        "customer_class": pull(left_col_text, [r"Customer Class\s*\n?\s*(.+?)\n"]),
+        "account_no": pull(left_col_text, [r"ACCOUNT NO\.?\s*\n?\s*(\d{6,15})"]),
+        "service_address": pull(left_col_text, [r"Service Address\s*\n?\s*(.+?)\nTurn On Date"], default=""),
+        "turn_on_date": pull(left_col_text, [r"Turn On Date\s*\n?\s*([A-Za-z]+ \d{1,2}, \d{4})"]),
+        "district_office": pull(left_col_text, [r"District Office\s*\n?\s*(.+?)\n"]),
+        "naics_code": pull(left_col_text, [r"NAICS Code\s*\n?\s*(\d+)"]),
+        "meter_numbers": pull(left_col_text, [r"Meter Number\(s\)\s*\n?\s*(.+?)\nCurrent Rate"], default=""),
+        "current_rate": pull(left_col_text, [r"Current Rate\s*\n?\s*(.+?)\n"]),
+        "voltage": pull(left_col_text, [r"Voltage\s*\n?\s*(.+?)\n"]),
+        "delivery_phase": pull(left_col_text, [r"Delivery Phase\s*\n?\s*(.+?)\n"]),
+        "minimum_demand": pull(left_col_text, [r"Minimum Demand\s*\n?\s*(.+?)\n"]),
+        "facility_charge": pull(left_col_text, [r"Facility Charge\s*\n?\s*(.+?)\n"]),
+        "billing_status": pull(left_col_text, [r"Billing Status\s*\n?\s*(.+?)\n"]),
+        "key_account_manager": pull(
+            right_col_text,
+            [r"\n([A-Z][A-Z]+(?: [A-Z][A-Z]+)+)\b[^\n]*\n(?:[^\n]*\n){0,2}[^\n]*Key Account Manager"],
+        ),
+    }
+    # Multi-line address fields collapse newlines -> single spaced string
+    fields["customer"] = normspace(fields["customer"])
+    fields["mailing_address"] = normspace(fields["mailing_address"].replace("\n", " "))
+    fields["service_address"] = normspace(fields["service_address"].replace("\n", " "))
+    fields["meter_numbers"] = normspace(fields["meter_numbers"].replace("\n", "; "))
+    return fields
+
+
+def extract_annual_summary(text):
+    """
+    Parses rows like:
+        2026 (YTD) $2,899.47 22,862 kWh 0.13 $/kWh
+        2025 $4,620.41 34,895 kWh 0.13 $/kWh
+    """
+    rows = []
+    pattern = re.compile(
+        r"(?P<year>\d{4}(?:\s*\(YTD\))?)\s+"
+        r"\$(?P<billed>[\d,]+\.\d{2})\s+"
+        r"(?P<usage>[\d,]+)\s*kWh\s+"
+        r"(?P<avg>[\d.]+)\s*\$/kWh",
+        flags=re.IGNORECASE,
+    )
+    for m in pattern.finditer(text):
+        rows.append({
+            "year": m.group("year").strip(),
+            "total_billed": parse_money(m.group("billed")),
+            "total_usage_kwh": parse_intlike(m.group("usage")),
+            "average_cost_per_kwh": float(m.group("avg")),
+        })
+    return pd.DataFrame(rows)
+
+
+# ============================================================
+# MONTHLY DETAIL TABLES (one per "Historical Electricity Usage - YEAR" page)
+# ============================================================
+
+MONTH_HEADERS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN",
+                  "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"]
+
+# Row labels we expect as line items in the monthly bill-summary table.
+KNOWN_LABELS = [
+    "Bill From", "Bill To", "Billing Days", "Billed Rate",
+    "Total Consumption", "Demand",
+    "Basic Cust. Charges", "Basic Customer Chg",
+    "Energy Charges", "Energy DIS", "Energy ESS",
+    "Rider B kWh", "Rider BW kWh", "Rider CCR", "Rider CE kWh",
+    "Rider DIST kWh", "Rider E kWh", "Rider GEN kWh", "Rider GV kWh",
+    "Rider OSW kWh", "Rider PIPP", "Rider PPA", "Rider R kWh",
+    "Rider RBB kWh", "Rider RGGI", "Rider RPS", "Rider S kWh",
+    "Rider SMR kWh", "Rider SNA kWh", "Rider U1 kWh", "Rider U2 kWh",
+    "Rider US-2 kWh", "Rider US-3 kWh", "Rider US-4 kWh", "Rider W kWh",
+    "Ridr GT", "Transmission Energy", "Fuel Charges", "Fuel Chg",
+    "Other Charges/Credits", "Virginia Tax Surcharge",
+    "Subtotal", "Facility Charges", "Total Charges",
+]
+
+# Sort longest-first so e.g. "Rider US-2 kWh" matches before "Rider U2 kWh".
+_LABELS_SORTED = sorted(KNOWN_LABELS, key=len, reverse=True)
+
+
+def extract_year_from_header(text):
+    m = re.search(r"Historical Electricity Usage\s*-\s*(\d{4})", text)
+    return m.group(1) if m else None
+
+
+def _find_month_columns(word_data):
+    """
+    Returns {month_abbrev: x_center} for whichever month headers are
+    present on this page (e.g. only JAN-JUN on a YTD page).
+    Requires an exact-case ALL-CAPS match, since the page also contains
+    title-case month mentions elsewhere (e.g. "As of Jul 8, 2026") that
+    would otherwise be mistaken for a table column header.
+    """
+    cols = {}
+    n = len(word_data["text"])
+    for i in range(n):
+        t = word_data["text"][i].strip()
+        if t in MONTH_HEADERS:  # exact-case match against all-caps list
+            x_center = word_data["left"][i] + word_data["width"][i] / 2
+            cols[t] = x_center
+    return cols
+
+
+def _match_label(tokens):
+    """
+    Given the list of text tokens for a row (in reading order), strip
+    any leading footnote markers (*, **), then greedily match the
+    longest known label from the start of the row and return
+    (label, remaining_tokens_with_positions) or (None, tokens) if no
+    label matches -> row is not a data row we care about.
+    """
+    tokens = list(tokens)
+    while tokens and re.fullmatch(r"\*+", tokens[0]["text"]):
+        tokens = tokens[1:]
+
+    text_joined = " ".join(t["text"] for t in tokens)
+    for label in _LABELS_SORTED:
+        if text_joined.upper().startswith(label.upper()):
+            consumed = len(label.split())
+            return label, tokens[consumed:]
+    return None, tokens
+
+
+_NOISE_ROW_PATTERNS = [
+    r"^LOUISA,?\s*COUNTY OF",           # repeated page header
+    r"^Historical Electricity Usage",    # section title (has a year in it)
+    r"Dominion Energy",                  # footer stamp
+    r"Page\s+\d+\s+of\s+\d+",            # page X of Y footer
+]
+
+
+def _is_noise_row(raw_text):
+    return any(re.search(pat, raw_text, flags=re.IGNORECASE) for pat in _NOISE_ROW_PATTERNS)
+
+
+def _looks_like_data_row(tokens):
+    """
+    Heuristic to decide whether an unmatched row is worth warning about.
+    Plain header/section text (e.g. "Bill Determinants", "Bill Summary",
+    the month-header row itself, footnotes) has no money/number-like
+    tokens after the label and would just be noise; a row with at least
+    one such token but no recognized label is the actual risk case
+    (a real charge/rider line item that KNOWN_LABELS doesn't cover).
+    """
+    for t in tokens:
+        txt = t["text"]
+        if re.fullmatch(MONEY_RE, txt) or re.fullmatch(r"\d{1,2}/\d{1,2}/\d{2,4}", txt) or re.fullmatch(r"VE-\d+", txt):
+            return True
+    return False
+
+
+def extract_monthly_tables(pdf_images, page_texts, warn_unmatched=True):
+    """
+    Position-aware extraction: reads word-level bounding boxes so each
+    value is assigned to a month by x-coordinate proximity to that
+    month's column header, rather than by left-to-right token order.
+    This correctly handles months where Dominion's PDF omits a $0.00
+    cell entirely instead of printing it (a plain left-to-right token
+    fill would shift every later month's value into the wrong column).
+
+    If warn_unmatched=True, any row that has numeric/dollar/date tokens
+    but doesn't start with a label in KNOWN_LABELS is printed as a
+    warning -- this is the main defense against silently dropping a
+    charge/rider line item that a new document introduces and this
+    version of the script doesn't know about yet.
+
+    Returns a long-format DataFrame: [year, month, line_item, value].
+    """
+    all_rows = []
+    unmatched_summary = []
+
+    for img, page_text in zip(pdf_images, page_texts):
+        if "Historical Electricity Usage" not in page_text:
+            continue
+
+        year = extract_year_from_header(page_text)
+        data = pytesseract.image_to_data(img, config="--psm 6", output_type=Output.DICT)
+        n = len(data["text"])
+
+        month_cols = _find_month_columns(data)
+        if not month_cols:
+            continue
+        # half the typical column spacing, used as a max-distance cutoff
+        # so a token never gets assigned to the wrong-but-nearest column
+        spacings = sorted(month_cols.values())
+        gaps = [b - a for a, b in zip(spacings, spacings[1:])]
+        max_dist = (sum(gaps) / len(gaps)) / 2 if gaps else 100
+
+        # group word tokens into rows via (block, par, line)
+        rows = {}
+        for i in range(n):
+            txt = data["text"][i].strip()
+            if not txt:
+                continue
+            key = (data["block_num"][i], data["par_num"][i], data["line_num"][i])
+            rows.setdefault(key, []).append({
+                "text": txt,
+                "left": data["left"][i],
+                "width": data["width"][i],
+            })
+
+        for key, tokens in rows.items():
+            tokens = sorted(tokens, key=lambda t: t["left"])
+            label, value_tokens = _match_label(tokens)
+            if label is None:
+                raw_text = " ".join(t["text"] for t in tokens)
+                if _looks_like_data_row(tokens) and not _is_noise_row(raw_text):
+                    unmatched_summary.append({"year": year, "row_text": raw_text})
+                continue
+
+            for vt in value_tokens:
+                x_center = vt["left"] + vt["width"] / 2
+                # nearest month column, but only if within max_dist
+                nearest_month, nearest_dist = None, None
+                for month, cx in month_cols.items():
+                    d = abs(x_center - cx)
+                    if nearest_dist is None or d < nearest_dist:
+                        nearest_month, nearest_dist = month, d
+                if nearest_month is None or nearest_dist > max_dist:
+                    continue  # stray token (e.g. OCR noise), skip
+
+                tok = vt["text"]
+                if label in ("Bill From", "Bill To", "Billed Rate"):
+                    value = tok
+                elif label in ("Billing Days",):
+                    value = parse_intlike(tok)
+                elif label in ("Total Consumption", "Demand"):
+                    value = parse_intlike(tok)
+                else:
+                    value = parse_money(tok)
+
+                all_rows.append({
+                    "year": year,
+                    "month": nearest_month,
+                    "line_item": label,
+                    "value": value,
+                })
+
+    df = pd.DataFrame(all_rows)
+    # a label+month can only legitimately appear once per page; if OCR
+    # noise produces a duplicate, keep the first (leftmost-token) hit
+    if not df.empty:
+        df = df.drop_duplicates(subset=["year", "month", "line_item"], keep="first")
+
+    if warn_unmatched and unmatched_summary:
+        print(f"⚠️  {len(unmatched_summary)} row(s) with data-like tokens did not match "
+              f"any label in KNOWN_LABELS -- these rows were SKIPPED, not extracted:")
+        for u in unmatched_summary:
+            print(f"    [{u['year']}] {u['row_text']}")
+        print("    -> if any of these are real charge/rider line items, add them "
+              "to KNOWN_LABELS and rerun.")
+
+    return df
+
+
+def pivot_monthly_wide_by_year(monthly_long_df):
+    """
+    Returns {year: wide_df} where each wide_df has one row per
+    line_item (in the same order the line items appear in the source
+    PDF, i.e. KNOWN_LABELS order -- not alphabetical) and one column
+    per month present for that year.
+    """
+    if monthly_long_df.empty:
+        return {}
+
+    label_order = {label: i for i, label in enumerate(KNOWN_LABELS)}
+    out = {}
+
+    for year, group in monthly_long_df.groupby("year"):
+        wide = group.pivot_table(
+            index="line_item",
+            columns="month",
+            values="value",
+            aggfunc="first",
+        )
+        months_present = [m for m in MONTH_HEADERS if m in wide.columns]
+        wide = wide.reindex(columns=months_present)
+
+        # sort rows by their position in the source PDF instead of
+        # pivot_table's default alphabetical index order
+        wide = wide.reindex(
+            sorted(wide.index, key=lambda li: label_order.get(li, len(label_order)))
+        )
+        wide = wide.reset_index()
+        out[year] = wide
+
+    return out
+
+
+# ============================================================
+# MAIN
+# ============================================================
+
+def main():
+    print("===== Dominion Account Profile PDF -> Spreadsheet =====")
+
+    if not os.path.exists(CONFIG["INPUT_PDF"]):
+        print("❌ ERROR: input PDF not found:", CONFIG["INPUT_PDF"])
+        sys.exit(1)
+
+    print("Running OCR (no text layer in this PDF)...")
+    images = convert_from_path(CONFIG["INPUT_PDF"], dpi=CONFIG["OCR_DPI"])
+    page_texts = [pytesseract.image_to_string(img, config="--psm 6") for img in images]
+    full_text = "\n".join(page_texts)
+
+    # Page 2 (index 1) is two-column: re-OCR it split into columns so
+    # the fields don't interleave with the annual-summary table text.
+    left_col_text, right_col_text = ocr_two_column_page(images[1])
+
+    # ---------------- Account profile (page ~2) ----------------
+    profile_fields = extract_account_profile(left_col_text, right_col_text, page_texts[0])
+    profile_df = pd.DataFrame(
+        [{"field": k, "value": v} for k, v in profile_fields.items()]
+    )
+
+    # ---------------- Annual summary table ----------------
+    annual_df = extract_annual_summary(right_col_text)
+
+    # ---------------- Monthly detail tables ----------------
+    monthly_long_df = extract_monthly_tables(images, page_texts)
+    monthly_wide_by_year = pivot_monthly_wide_by_year(monthly_long_df)
+
+    # ---------------- Diagnostics ----------------
+    print(f"Profile fields extracted: {profile_df['value'].astype(bool).sum()}/{len(profile_df)}")
+    print(f"Annual summary rows: {len(annual_df)}")
+    print(f"Monthly line-item x month cells: {len(monthly_long_df)}")
+    print(f"Monthly detail years found: {sorted(monthly_wide_by_year.keys())}")
+
+    # ---------------- Save ----------------
+    os.makedirs(os.path.dirname(CONFIG["OUT_XLSX"]), exist_ok=True)
+    with pd.ExcelWriter(CONFIG["OUT_XLSX"], engine="openpyxl") as writer:
+        profile_df.to_excel(writer, sheet_name="Account_Profile", index=False)
+        annual_df.to_excel(writer, sheet_name="Annual_Summary", index=False)
+        for year in sorted(monthly_wide_by_year.keys()):
+            monthly_wide_by_year[year].to_excel(
+                writer, sheet_name=f"Monthly_Detail_{year}", index=False
+            )
+        monthly_long_df.to_excel(writer, sheet_name="Monthly_Detail_Long", index=False)
+
+    print("✅ WROTE:", CONFIG["OUT_XLSX"])
+
+
+if __name__ == "__main__":
+    main()
