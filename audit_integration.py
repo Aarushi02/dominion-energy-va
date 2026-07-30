@@ -101,3 +101,42 @@ def run_audit(monthly_long_df: pd.DataFrame, engine) -> pd.DataFrame:
         })
 
     return pd.DataFrame(results)
+
+
+def read_monthly_detail_spreadsheet(file_obj) -> pd.DataFrame:
+    """
+    Reads a previously-downloaded 'Monthly History Excel' (one
+    Monthly_Detail_<year> sheet per year, wide format: rows=line_item,
+    columns=JAN..DEC) back into the long format run_audit() expects:
+    [year, month, line_item, value].
+
+    This is the reverse of pivot_monthly_wide_by_year() in
+    dominion_pdf_to_spreadsheet.py -- lets the audit section accept an
+    already-converted spreadsheet directly, rather than requiring the
+    original PDF to be re-uploaded and re-OCR'd.
+    """
+    xl = pd.ExcelFile(file_obj)
+    all_rows = []
+
+    for sheet_name in xl.sheet_names:
+        if not sheet_name.startswith("Monthly_Detail_"):
+            continue
+        year = sheet_name.replace("Monthly_Detail_", "")
+
+        wide = xl.parse(sheet_name)
+        month_cols = [c for c in wide.columns if c != "line_item"]
+
+        melted = wide.melt(
+            id_vars=["line_item"],
+            value_vars=month_cols,
+            var_name="month",
+            value_name="value",
+        )
+        melted["year"] = year
+        melted = melted.dropna(subset=["value"])
+        all_rows.append(melted[["year", "month", "line_item", "value"]])
+
+    if not all_rows:
+        return pd.DataFrame(columns=["year", "month", "line_item", "value"])
+
+    return pd.concat(all_rows, ignore_index=True)
