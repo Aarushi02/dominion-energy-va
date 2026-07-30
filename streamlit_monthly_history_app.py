@@ -82,7 +82,7 @@ with st.sidebar:
         st.rerun()
 
     st.divider()
-    section = st.radio("Section", ["📄 Bill Upload", "🔍 Audit Calculation"])
+    section = st.radio("Section", ["📄 Bill Upload", "🔍 Audit Calculation", "📋 Tariff Viewer"])
 
 
 # ============================================================
@@ -279,10 +279,83 @@ def render_audit_calculation():
 
 
 # ============================================================
+# SECTION 3: Tariff Viewer (browse the pre-bundled tariff JSON)
+# ============================================================
+
+def render_tariff_viewer():
+    st.title("📋 Tariff Viewer")
+    st.write("Browse the rates loaded from the tariff logic file.")
+
+    if not Path(TARIFF_JSON_PATH).exists():
+        st.error(
+            f"Tariff logic file not found at `{TARIFF_JSON_PATH}`. "
+            f"This file needs to be committed to the repo alongside the app "
+            f"(output of dominion_tariff_pipeline_v2.py)."
+        )
+        return
+
+    engine = load_audit_engine(TARIFF_JSON_PATH)
+    st.caption(f"Using tariff logic: `{TARIFF_JSON_PATH}`")
+
+    schedule_codes = sorted(engine.tariff_map.keys())
+    if not schedule_codes:
+        st.warning("No schedules found in the tariff logic file.")
+        return
+
+    selected_schedule = st.selectbox("Select a schedule", schedule_codes)
+
+    entries = engine.tariff_map.get(selected_schedule, [])
+    if not entries:
+        st.info("No rate data found for this schedule.")
+        return
+
+    for entry in entries:
+        description = entry.get("description") or "General"
+        eff_date = entry.get("_effective_date")
+
+        with st.expander(f"{description}" + (f" (effective {eff_date})" if eff_date else ""), expanded=True):
+            logic_steps = entry.get("logic_steps", [])
+            riders = entry.get("riders_priced", [])
+
+            st.markdown("**Base Charges**")
+            if logic_steps:
+                steps_df = pd.DataFrame(logic_steps)
+                # keep the columns that actually matter for a rate readout
+                display_cols = [c for c in ["step_name", "charge_type", "value", "period"] if c in steps_df.columns]
+                st.dataframe(steps_df[display_cols], use_container_width=True, hide_index=True)
+            else:
+                st.caption("No base charges extracted for this entry.")
+
+            if entry.get("riders_note"):
+                st.caption(f"ℹ️ {entry['riders_note']}")
+
+            st.markdown("**Riders**")
+            if riders:
+                riders_df = pd.DataFrame(riders)
+                display_cols = [c for c in ["rider_name", "value", "unit"] if c in riders_df.columns]
+                st.dataframe(riders_df[display_cols], use_container_width=True, hide_index=True)
+
+                total_kwh_riders = sum(r["value"] for r in riders if r.get("unit") == "kwh")
+                total_kw_riders = sum(r["value"] for r in riders if r.get("unit") == "kw")
+                st.caption(
+                    f"Rider totals: **${total_kwh_riders:.5f}/kWh** + **${total_kw_riders:.5f}/kW** "
+                    f"across {len(riders)} rider(s)"
+                )
+            else:
+                st.caption("No priced riders found for this schedule.")
+
+            source_pages = entry.get("source_pages")
+            if source_pages:
+                st.caption(f"Source: pages {source_pages} of the tariff document")
+
+
+# ============================================================
 # ROUTE
 # ============================================================
 
 if section == "📄 Bill Upload":
     render_bill_upload()
-else:
+elif section == "🔍 Audit Calculation":
     render_audit_calculation()
+else:
+    render_tariff_viewer()
