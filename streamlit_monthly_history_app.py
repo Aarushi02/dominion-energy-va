@@ -24,6 +24,8 @@ from dominion_pdf_to_spreadsheet import (
     extract_monthly_tables,
     pivot_monthly_wide_by_year,
 )
+from dominion_audit_engine import DominionAuditEngine
+from audit_integration import run_audit
 
 st.set_page_config(page_title="Dominion Bill -> Monthly History Excel", page_icon="⚡")
 
@@ -87,8 +89,15 @@ with st.sidebar:
 st.title("⚡ Dominion Account Profile -> Monthly History")
 st.write(
     "Upload a Dominion Energy **Electric Account Profile** PDF. "
-    "You'll get back an Excel file containing just the monthly "
-    "usage/billing history tables (one sheet per year found in the PDF)."
+    "You'll get back an Excel file containing the monthly "
+    "usage/billing history tables (one sheet per year found in the PDF), "
+    "plus an automated bill audit if you also provide a tariff logic file."
+)
+
+tariff_json = st.file_uploader(
+    "Optional: upload tariff logic JSON (from dominion_tariff_pipeline_v2.py) "
+    "to enable automated bill auditing",
+    type=["json"],
 )
 
 uploaded_file = st.file_uploader("Upload PDF", type=["pdf"])
@@ -123,6 +132,22 @@ if uploaded_file is not None:
 
             st.write(f"Found monthly history for: {', '.join(years_found)}")
 
+            # ---------------- Optional: run bill audit ----------------
+            audit_results_df = pd.DataFrame()
+            if tariff_json is not None:
+                st.write("Running bill audit against uploaded tariff logic...")
+                with tempfile.NamedTemporaryFile(delete=False, suffix=".json", mode="wb") as tmp_json:
+                    tmp_json.write(tariff_json.read())
+                    tariff_json_path = tmp_json.name
+
+                try:
+                    engine = DominionAuditEngine(tariff_json_path)
+                    audit_results_df = run_audit(monthly_long_df, engine)
+                except Exception as e:
+                    st.warning(f"Audit could not run: {e}")
+                finally:
+                    Path(tariff_json_path).unlink(missing_ok=True)
+
             # ---------------- Build the Excel file in memory ----------------
             buffer = io.BytesIO()
             with pd.ExcelWriter(buffer, engine="openpyxl") as writer:
@@ -130,6 +155,8 @@ if uploaded_file is not None:
                     monthly_wide_by_year[year].to_excel(
                         writer, sheet_name=f"Monthly_Detail_{year}", index=False
                     )
+                if not audit_results_df.empty:
+                    audit_results_df.to_excel(writer, sheet_name="Audit_Results", index=False)
             buffer.seek(0)
 
             status.update(label="Done", state="complete")
@@ -140,6 +167,30 @@ if uploaded_file is not None:
             for year in years_found:
                 with st.expander(f"Preview: {year}"):
                     st.dataframe(monthly_wide_by_year[year], use_container_width=True)
+
+            # Preview audit results, if run
+            if not audit_results_df.empty:
+                with st.expander("🔍 Audit Results", expanded=True):
+                    skipped = (audit_results_df["status"] == "SKIPPED").sum()
+                    if skipped:
+                        st.info(f"{skipped} month(s) skipped -- no tariff logic found "
+                                f"for that schedule in the uploaded JSON.")
+
+                    def _highlight_variance(row):
+                        if row["status"] != "SUCCESS":
+                            return [""] * len(row)
+                        # flag anything more than $10 or 5% off, whichever is larger
+                        threshold = max(10.0, 0.05 * abs(row["actual_bill"]))
+                        color = "background-color: #ffcccc" if abs(row["variance"]) > threshold else ""
+                        return [color] * len(row)
+
+                    st.dataframe(
+                        audit_results_df.style.apply(_highlight_variance, axis=1),
+                        use_container_width=True,
+                    )
+            elif tariff_json is None:
+                st.caption("💡 Upload a tariff logic JSON above to also get an automated "
+                           "bill audit (expected vs. actual charges per month).")
 
             out_filename = Path(uploaded_file.name).stem + "_monthly_history.xlsx"
             st.download_button(
