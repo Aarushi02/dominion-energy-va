@@ -99,6 +99,29 @@ def load_audit_engine(path: str):
 # SECTION 1: Bill Upload (PDF -> Monthly History Excel)
 # ============================================================
 
+@st.cache_data(show_spinner=False)
+def process_pdf(file_bytes: bytes):
+    """
+    The expensive part: OCR + monthly table extraction. Cached on the
+    raw file bytes, so re-running the script (e.g. from clicking the
+    download button, which triggers a full Streamlit rerun like any
+    other widget interaction) reuses this result instead of redoing
+    OCR from scratch every time.
+    """
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
+        tmp.write(file_bytes)
+        tmp_path = tmp.name
+
+    try:
+        images = convert_from_path(tmp_path, dpi=300)
+        page_texts = [pytesseract.image_to_string(img, config="--psm 6") for img in images]
+        monthly_long_df = extract_monthly_tables(images, page_texts)
+    finally:
+        Path(tmp_path).unlink(missing_ok=True)
+
+    return monthly_long_df
+
+
 def render_bill_upload():
     st.title("⚡ Dominion Account Profile -> Monthly History")
     st.write(
@@ -113,63 +136,75 @@ def render_bill_upload():
         st.info("Upload a PDF to get started.")
         return
 
-    with st.status("Processing PDF...", expanded=True) as status:
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
-            tmp.write(uploaded_file.read())
-            tmp_path = tmp.name
+    file_bytes = uploaded_file.read()
 
-        st.write("Running OCR on each page...")
-        images = convert_from_path(tmp_path, dpi=300)
-        page_texts = [pytesseract.image_to_string(img, config="--psm 6") for img in images]
+    with st.spinner("Processing PDF (this only happens once per file)..."):
+        monthly_long_df = process_pdf(file_bytes)
 
-        st.write("Extracting monthly history tables...")
-        monthly_long_df = extract_monthly_tables(images, page_texts)
-
-        if monthly_long_df.empty:
-            status.update(label="No monthly history tables found", state="error")
-            st.error(
-                "No 'Historical Electricity Usage' tables were found in this PDF. "
-                "Make sure you uploaded a Dominion Electric Account Profile report."
-            )
-            Path(tmp_path).unlink(missing_ok=True)
-            return
-
-        monthly_wide_by_year = pivot_monthly_wide_by_year(monthly_long_df)
-        years_found = sorted(monthly_wide_by_year.keys())
-        st.write(f"Found monthly history for: {', '.join(years_found)}")
-
-        buffer = io.BytesIO()
-        with pd.ExcelWriter(buffer, engine="openpyxl") as writer:
-            for year in years_found:
-                monthly_wide_by_year[year].to_excel(
-                    writer, sheet_name=f"Monthly_Detail_{year}", index=False
-                )
-        buffer.seek(0)
-
-        status.update(label="Done", state="complete")
-        st.success(f"Extracted {len(years_found)} year(s) of monthly history.")
-
-        for year in years_found:
-            with st.expander(f"Preview: {year}"):
-                st.dataframe(monthly_wide_by_year[year], use_container_width=True)
-
-        out_filename = Path(uploaded_file.name).stem + "_monthly_history.xlsx"
-        st.download_button(
-            label="⬇️ Download Monthly History Excel",
-            data=buffer,
-            file_name=out_filename,
-            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    if monthly_long_df.empty:
+        st.error(
+            "No 'Historical Electricity Usage' tables were found in this PDF. "
+            "Make sure you uploaded a Dominion Electric Account Profile report."
         )
+        return
 
-        st.info("💡 Go to **Audit Calculation** in the sidebar to run a bill audit "
-                "on this spreadsheet.")
+    monthly_wide_by_year = pivot_monthly_wide_by_year(monthly_long_df)
+    years_found = sorted(monthly_wide_by_year.keys())
+    st.success(f"Extracted {len(years_found)} year(s) of monthly history: {', '.join(years_found)}")
 
-        Path(tmp_path).unlink(missing_ok=True)
+    buffer = io.BytesIO()
+    with pd.ExcelWriter(buffer, engine="openpyxl") as writer:
+        for year in years_found:
+            monthly_wide_by_year[year].to_excel(
+                writer, sheet_name=f"Monthly_Detail_{year}", index=False
+            )
+    buffer.seek(0)
+
+    for year in years_found:
+        with st.expander(f"Preview: {year}"):
+            st.dataframe(monthly_wide_by_year[year], use_container_width=True)
+
+    out_filename = Path(uploaded_file.name).stem + "_monthly_history.xlsx"
+    st.download_button(
+        label="⬇️ Download Monthly History Excel",
+        data=buffer,
+        file_name=out_filename,
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+
+    st.info("💡 Go to **Audit Calculation** in the sidebar to run a bill audit "
+            "on this spreadsheet.")
 
 
 # ============================================================
 # SECTION 2: Audit Calculation (spreadsheet -> audit results)
 # ============================================================
+
+@st.cache_data(show_spinner=False)
+def process_audit(file_bytes: bytes, tariff_json_path: str):
+    """
+    The expensive part: parsing the spreadsheet and running the audit
+    calculation. Cached on the uploaded file's bytes (+ tariff path,
+    so a different/updated tariff JSON correctly invalidates the
+    cache). Without this, clicking the download button below -- like
+    any Streamlit widget interaction -- triggers a full script rerun
+    and would otherwise re-parse + re-audit from scratch every time.
+
+    Note: loads the engine internally via load_audit_engine() rather
+    than taking it as a parameter, since DominionAuditEngine objects
+    aren't easily hashable for cache_data's key -- load_audit_engine
+    is itself cached (via cache_resource), so calling it again here is
+    free after the first load, not a redundant re-parse of the JSON.
+    """
+    engine = load_audit_engine(tariff_json_path)
+    monthly_long_df = read_monthly_detail_spreadsheet(io.BytesIO(file_bytes))
+
+    if monthly_long_df.empty:
+        return monthly_long_df, pd.DataFrame()
+
+    audit_results_df = run_audit(monthly_long_df, engine)
+    return monthly_long_df, audit_results_df
+
 
 def render_audit_calculation():
     st.title("🔍 Bill Audit Calculation")
@@ -196,22 +231,17 @@ def render_audit_calculation():
         st.info("Upload a spreadsheet to run the audit.")
         return
 
-    with st.status("Running audit...", expanded=True) as status:
-        st.write("Reading monthly history spreadsheet...")
-        monthly_long_df = read_monthly_detail_spreadsheet(spreadsheet_file)
+    file_bytes = spreadsheet_file.read()
 
-        if monthly_long_df.empty:
-            status.update(label="No monthly data found", state="error")
-            st.error(
-                "No 'Monthly_Detail_<year>' sheets found in this file. "
-                "Make sure you uploaded the Excel file from the Bill Upload section."
-            )
-            return
+    with st.spinner("Running audit (this only happens once per file)..."):
+        monthly_long_df, audit_results_df = process_audit(file_bytes, TARIFF_JSON_PATH)
 
-        st.write("Calculating expected charges per month...")
-        audit_results_df = run_audit(monthly_long_df, engine)
-
-        status.update(label="Done", state="complete")
+    if monthly_long_df.empty:
+        st.error(
+            "No 'Monthly_Detail_<year>' sheets found in this file. "
+            "Make sure you uploaded the Excel file from the Bill Upload section."
+        )
+        return
 
     if audit_results_df.empty:
         st.warning("No auditable months found (missing usage or rate data).")
