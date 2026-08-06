@@ -52,6 +52,28 @@ def build_audit_rows(monthly_long_df: pd.DataFrame) -> pd.DataFrame:
         if pd.isna(billed_kwh) or pd.isna(billed_rate):
             continue  # nothing to audit for a blank/missing month
 
+        # bill_date: prefer "Bill To" (end of the billing period -- the
+        # natural date to check a rider's withdrawal status against),
+        # fall back to "Bill From", then to an approximate month-end
+        # date if neither made it through extraction. Without this,
+        # DominionAuditEngine has no usable date and silently INCLUDES
+        # withdrawn riders (confirmed real gap -- this field was never
+        # populated at all before this fix).
+        bill_date = None
+        for date_field in ("Bill To", "Bill From"):
+            raw = r.get(date_field)
+            if pd.notna(raw):
+                parsed = pd.to_datetime(raw, errors="coerce")
+                if pd.notna(parsed):
+                    bill_date = parsed
+                    break
+        if bill_date is None:
+            # last resort: approximate as the last day of the month
+            try:
+                bill_date = pd.Period(f"{r['year']}-{r['month']}", freq="M").end_time
+            except Exception:
+                bill_date = None
+
         rows.append({
             "year": r["year"],
             "month": r["month"],
@@ -67,6 +89,7 @@ def build_audit_rows(monthly_long_df: pd.DataFrame) -> pd.DataFrame:
             # tariff's actual 10,000 kWh demand-billing threshold).
             # Leaving is_demand unset lets DominionAuditEngine fall
             # back to its own billed_kwh >= 10,000 rule instead.
+            "bill_date": bill_date,
             "bill_amount": float(actual_bill) if pd.notna(actual_bill) else 0.0,
         })
 
