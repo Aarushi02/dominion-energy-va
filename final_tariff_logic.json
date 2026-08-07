@@ -1,31 +1,48 @@
 [
   {
     "sc_code": "SCHEDULE 100",
-    "description": "Non-Demand Billing",
+    "description": "Municipal, County, Housing and Other Authorities Miscellaneous Light and Power Service - Non-Demand Billing",
+    "billing_model": "usage_based",
     "logic_steps": [
       {
-        "step_name": "Basic Customer Charge (Metered)",
+        "step_name": "Basic Customer Charge - Metered Service",
         "charge_type": "fixed_fee",
         "value": 7.59,
         "period": "monthly"
       },
       {
-        "step_name": "Basic Customer Charge (Unmetered)",
+        "step_name": "Basic Customer Charge - Unmetered Service",
         "charge_type": "fixed_fee",
         "value": 2.76,
         "period": "monthly"
-      },
-      {
-        "step_name": "Distribution Energy Charge",
-        "charge_type": "per_kwh",
-        "value": 0.01619
-      },
-      {
-        "step_name": "Electricity Supply Energy Charge",
-        "charge_type": "per_kwh",
-        "value": 0.0442
       }
     ],
+    "charge_blocks": [
+      {
+        "block_name": "Distribution Energy Charge",
+        "basis": "kwh",
+        "condition": null,
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.01619
+        }
+      },
+      {
+        "block_name": "Electricity Supply Energy Charge",
+        "basis": "kwh",
+        "condition": null,
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.0442
+        }
+      }
+    ],
+    "minimum_charge": {
+      "basis": "contracted for pursuant to Section VI of the Terms and Conditions",
+      "value": null
+    },
     "riders_note": "subject to all applicable riders (values merged separately)",
     "source_schedule": "SCHEDULE 100",
     "source_pages": "1-4",
@@ -187,40 +204,64 @@
   },
   {
     "sc_code": "SCHEDULE 100",
-    "description": "Demand Billing",
+    "description": "Municipal, County, Housing and Other Authorities Miscellaneous Light and Power Service - Demand Billing",
+    "billing_model": "usage_based",
     "logic_steps": [
       {
         "step_name": "Basic Customer Charge",
         "charge_type": "fixed_fee",
         "value": 7.59,
         "period": "monthly"
-      },
-      {
-        "step_name": "Distribution Energy Charge",
-        "charge_type": "per_kwh",
-        "value": 0.01619
-      },
-      {
-        "step_name": "Electricity Supply Energy Charge (First 150 kWh per kW)",
-        "charge_type": "per_kwh",
-        "value": 0.0442
-      },
-      {
-        "step_name": "Electricity Supply Energy Charge (Next 150 kWh per kW)",
-        "charge_type": "per_kwh",
-        "value": 0.0332
-      },
-      {
-        "step_name": "Electricity Supply Energy Charge (Next 150 kWh per kW)",
-        "charge_type": "per_kwh",
-        "value": 0.02684
-      },
-      {
-        "step_name": "Electricity Supply Energy Charge (Additional kWh)",
-        "charge_type": "per_kwh",
-        "value": 0.02037
       }
     ],
+    "charge_blocks": [
+      {
+        "block_name": "Distribution Energy Charge",
+        "basis": "kwh",
+        "condition": null,
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.01619
+        }
+      },
+      {
+        "block_name": "Electricity Supply Energy Charge",
+        "basis": "kwh",
+        "condition": null,
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "tiered",
+          "tiers": [
+            {
+              "threshold": 150,
+              "threshold_basis": "per_kw_of_es_demand",
+              "rate": 0.0442
+            },
+            {
+              "threshold": 150,
+              "threshold_basis": "per_kw_of_es_demand",
+              "rate": 0.0332
+            },
+            {
+              "threshold": 150,
+              "threshold_basis": "per_kw_of_es_demand",
+              "rate": 0.02684
+            },
+            {
+              "threshold": null,
+              "threshold_basis": "per_kw_of_es_demand",
+              "rate": 0.02037
+            }
+          ]
+        }
+      }
+    ],
+    "minimum_charge": {
+      "basis": "contracted for pursuant to Section VI of the Terms and Conditions",
+      "value": null
+    },
+    "demand_determination_note": "kW demand determined as highest average kW load in any 30-minute interval during billing month",
     "riders_note": "subject to all applicable riders (values merged separately)",
     "source_schedule": "SCHEDULE 100",
     "source_pages": "1-4",
@@ -383,31 +424,53 @@
   {
     "sc_code": "SCHEDULE 102",
     "description": "Municipal and County Traffic Control Service",
+    "billing_model": "usage_based",
     "logic_steps": [
       {
-        "step_name": "Basic Customer Charge (Metered)",
+        "step_name": "Basic Customer Charge for Metered Service",
         "charge_type": "fixed_fee",
         "value": 7.59,
-        "period": "monthly"
+        "period": "monthly",
+        "condition": "per Meter"
       },
       {
-        "step_name": "Basic Customer Charge (Unmetered)",
+        "step_name": "Basic Customer Charge for Unmetered Service",
         "charge_type": "fixed_fee",
         "value": 2.76,
-        "period": "monthly"
-      },
-      {
-        "step_name": "Distribution Energy Charge",
-        "charge_type": "per_kwh",
-        "value": 0.01128
-      },
-      {
-        "step_name": "Electricity Supply Energy Charge",
-        "charge_type": "per_kwh",
-        "value": 0.03293
+        "period": "monthly",
+        "condition": "when kWh usage is 49 kWh or less per month"
       }
     ],
+    "charge_blocks": [
+      {
+        "block_name": "Distribution Energy Charge",
+        "basis": "kwh",
+        "condition": null,
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.01128
+        }
+      },
+      {
+        "block_name": "Electricity Supply Energy Charge",
+        "basis": "kwh",
+        "condition": null,
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.03293
+        }
+      }
+    ],
+    "minimum_charge": {
+      "basis": "as contracted for pursuant to Section VI of the Terms and Conditions",
+      "value": null
+    },
     "riders_note": "subject to all applicable riders (values merged separately)",
+    "notes": [
+      "For unmetered service, kWh is estimated based on connected load multiplied by hours usage."
+    ],
     "source_schedule": "SCHEDULE 102",
     "source_pages": "4-6",
     "riders_priced": [
@@ -568,28 +631,46 @@
   },
   {
     "sc_code": "SCHEDULE 110",
-    "description": "Non-Demand Billing",
+    "description": "Municipal, County, Housing and Other Authorities - Non-Demand Billing",
+    "billing_model": "usage_based",
     "logic_steps": [
       {
-        "step_name": "Basic Customer Charge (Metered)",
+        "step_name": "Basic Customer Charge",
         "charge_type": "fixed_fee",
         "value": 7.59,
         "period": "monthly"
+      }
+    ],
+    "charge_blocks": [
+      {
+        "block_name": "Distribution Energy Charge",
+        "basis": "kwh",
+        "condition": null,
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.01376
+        }
       },
       {
-        "step_name": "Distribution Energy Charge",
-        "charge_type": "per_kwh",
-        "value": 0.01376
+        "block_name": "Electricity Supply Energy Charge - Summer",
+        "basis": "kwh",
+        "condition": "Summer (June through September)",
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.04677
+        }
       },
       {
-        "step_name": "Electricity Supply Energy Charge (Summer)",
-        "charge_type": "per_kwh",
-        "value": 0.04677
-      },
-      {
-        "step_name": "Electricity Supply Energy Charge (Base)",
-        "charge_type": "per_kwh",
-        "value": 0.04163
+        "block_name": "Electricity Supply Energy Charge - Base",
+        "basis": "kwh",
+        "condition": "Base (October through May)",
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.04163
+        }
       }
     ],
     "riders_note": "subject to all applicable riders (values merged separately)",
@@ -753,60 +834,95 @@
   },
   {
     "sc_code": "SCHEDULE 110",
-    "description": "Demand Billing",
+    "description": "Municipal, County, Housing and Other Authorities - Demand Billing",
+    "billing_model": "usage_based",
     "logic_steps": [
       {
-        "step_name": "Basic Customer Charge (Metered)",
+        "step_name": "Basic Customer Charge",
         "charge_type": "fixed_fee",
         "value": 7.59,
         "period": "monthly"
-      },
-      {
-        "step_name": "Distribution Energy Charge",
-        "charge_type": "per_kwh",
-        "value": 0.01376
-      },
-      {
-        "step_name": "Electricity Supply Energy Charge (Summer, First 150 kWh per kW)",
-        "charge_type": "per_kwh",
-        "value": 0.04677
-      },
-      {
-        "step_name": "Electricity Supply Energy Charge (Summer, Next 150 kWh per kW)",
-        "charge_type": "per_kwh",
-        "value": 0.03577
-      },
-      {
-        "step_name": "Electricity Supply Energy Charge (Summer, Next 150 kWh per kW)",
-        "charge_type": "per_kwh",
-        "value": 0.0294
-      },
-      {
-        "step_name": "Electricity Supply Energy Charge (Summer, Additional kWh)",
-        "charge_type": "per_kwh",
-        "value": 0.02294
-      },
-      {
-        "step_name": "Electricity Supply Energy Charge (Base, First 150 kWh per kW)",
-        "charge_type": "per_kwh",
-        "value": 0.04163
-      },
-      {
-        "step_name": "Electricity Supply Energy Charge (Base, Next 150 kWh per kW)",
-        "charge_type": "per_kwh",
-        "value": 0.03065
-      },
-      {
-        "step_name": "Electricity Supply Energy Charge (Base, Next 150 kWh per kW)",
-        "charge_type": "per_kwh",
-        "value": 0.02427
-      },
-      {
-        "step_name": "Electricity Supply Energy Charge (Base, Additional kWh)",
-        "charge_type": "per_kwh",
-        "value": 0.01779
       }
     ],
+    "charge_blocks": [
+      {
+        "block_name": "Distribution Energy Charge",
+        "basis": "kwh",
+        "condition": null,
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.01376
+        }
+      },
+      {
+        "block_name": "Electricity Supply Energy Charge",
+        "basis": "kwh",
+        "condition": "Summer (June through September)",
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "tiered",
+          "tiers": [
+            {
+              "threshold": 150,
+              "threshold_basis": "per_kw_of_es_demand",
+              "rate": 0.04677
+            },
+            {
+              "threshold": 150,
+              "threshold_basis": "per_kw_of_es_demand",
+              "rate": 0.03577
+            },
+            {
+              "threshold": 150,
+              "threshold_basis": "per_kw_of_es_demand",
+              "rate": 0.0294
+            },
+            {
+              "threshold": null,
+              "threshold_basis": "per_kw_of_es_demand",
+              "rate": 0.02294
+            }
+          ]
+        }
+      },
+      {
+        "block_name": "Electricity Supply Energy Charge",
+        "basis": "kwh",
+        "condition": "Base (October through May)",
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "tiered",
+          "tiers": [
+            {
+              "threshold": 150,
+              "threshold_basis": "per_kw_of_es_demand",
+              "rate": 0.04163
+            },
+            {
+              "threshold": 150,
+              "threshold_basis": "per_kw_of_es_demand",
+              "rate": 0.03065
+            },
+            {
+              "threshold": 150,
+              "threshold_basis": "per_kw_of_es_demand",
+              "rate": 0.02427
+            },
+            {
+              "threshold": null,
+              "threshold_basis": "per_kw_of_es_demand",
+              "rate": 0.01779
+            }
+          ]
+        }
+      }
+    ],
+    "minimum_charge": {
+      "basis": "contracted for pursuant to Section VI of the Terms and Conditions",
+      "value": null
+    },
+    "demand_determination_note": "kW demand determined as highest average kW load in any 30-minute interval during billing month",
     "riders_note": "subject to all applicable riders (values merged separately)",
     "source_schedule": "SCHEDULE 110",
     "source_pages": "6-9",
@@ -968,30 +1084,52 @@
   },
   {
     "sc_code": "SCHEDULE 120",
-    "description": "Water Pumping, Sewage Pumping and Sewage Disposal Service",
+    "description": "Municipal, County, and Other Authorities Water Pumping, Sewage Pumping and Sewage Disposal Service",
+    "billing_model": "usage_based",
     "logic_steps": [
       {
         "step_name": "Basic Customer Charge",
         "charge_type": "fixed_fee",
         "value": 7.59,
         "period": "monthly"
-      },
-      {
-        "step_name": "Distribution Energy Charge",
-        "charge_type": "per_kwh",
-        "value": 0.0167
-      },
-      {
-        "step_name": "Electricity Supply Energy Charge (On-peak)",
-        "charge_type": "per_kwh",
-        "value": 0.04289
-      },
-      {
-        "step_name": "Electricity Supply Energy Charge (Off-peak)",
-        "charge_type": "per_kwh",
-        "value": 0.02637
       }
     ],
+    "charge_blocks": [
+      {
+        "block_name": "Distribution Energy Charge",
+        "basis": "kwh",
+        "condition": null,
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.0167
+        }
+      },
+      {
+        "block_name": "Electricity Supply Energy Charge",
+        "basis": "kwh",
+        "condition": "On-peak",
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.04289
+        }
+      },
+      {
+        "block_name": "Electricity Supply Energy Charge",
+        "basis": "kwh",
+        "condition": "Off-peak",
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.02637
+        }
+      }
+    ],
+    "minimum_charge": {
+      "basis": "contracted minimum charge pursuant to Section VI of the Terms and Conditions",
+      "value": null
+    },
     "riders_note": "subject to all applicable riders (values merged separately)",
     "source_schedule": "SCHEDULE 120",
     "source_pages": "9-11",
@@ -1153,98 +1291,148 @@
   },
   {
     "sc_code": "SCHEDULE 130",
-    "description": "Large Miscellaneous Light and Power Service",
+    "description": "Municipal and County Large Miscellaneous Light and Power Service",
+    "billing_model": "usage_based",
     "logic_steps": [
       {
         "step_name": "Basic Customer Charge",
         "charge_type": "fixed_fee",
         "value": 105.85,
         "period": "monthly"
-      },
-      {
-        "step_name": "Distribution Demand Charge (Primary Voltage Customer)",
-        "charge_type": "per_kw",
-        "tiers": [
-          {
-            "tier_name": "First 700 kW",
-            "value": 2.407
-          },
-          {
-            "tier_name": "Next 4,300 kW",
-            "value": 1.926
-          },
-          {
-            "tier_name": "Additional kW",
-            "value": 1.657
-          }
-        ]
-      },
-      {
-        "step_name": "Distribution Demand Charge (Secondary Voltage Customer)",
-        "charge_type": "per_kw",
-        "tiers": [
-          {
-            "tier_name": "First 700 kW",
-            "value": 3.553
-          },
-          {
-            "tier_name": "Next 4,300 kW",
-            "value": 2.843
-          },
-          {
-            "tier_name": "Additional kW",
-            "value": 2.446
-          }
-        ]
-      },
-      {
-        "step_name": "rkVA Demand Charge",
-        "charge_type": "per_rkva",
-        "value": 0.191
-      },
-      {
-        "step_name": "Electricity Supply Demand Charge",
-        "charge_type": "per_kw",
-        "value": 7.931
-      },
-      {
-        "step_name": "Electricity Supply Adjustment Demand Charge",
-        "charge_type": "per_kw",
-        "tiers": [
-          {
-            "tier_name": "First 700 kW",
-            "value": -1.011
-          },
-          {
-            "tier_name": "Next 4,300 kW",
-            "value": -0.809
-          },
-          {
-            "tier_name": "Additional kW",
-            "value": -0.697
-          }
-        ]
-      },
-      {
-        "step_name": "Electricity Supply kWh Charge",
-        "charge_type": "per_kwh",
-        "tiers": [
-          {
-            "tier_name": "First 24,000 ES kWh",
-            "value": 0.01763
-          },
-          {
-            "tier_name": "Next 186,000 ES kWh",
-            "value": 0.01007
-          },
-          {
-            "tier_name": "Additional ES kWh",
-            "value": 0.00667
-          }
-        ]
       }
     ],
-    "riders_note": "Each kWh used and/or kW, as applicable, is subject to all applicable riders (values merged separately)",
+    "charge_blocks": [
+      {
+        "block_name": "Distribution Demand Charge",
+        "basis": "kw_distribution_demand",
+        "condition": "Primary Voltage Customer",
+        "unit": "per_kw",
+        "rate_structure": {
+          "type": "tiered",
+          "tiers": [
+            {
+              "threshold": 700,
+              "threshold_basis": "flat",
+              "rate": 2.407
+            },
+            {
+              "threshold": 4300,
+              "threshold_basis": "flat",
+              "rate": 1.926
+            },
+            {
+              "threshold": null,
+              "threshold_basis": "flat",
+              "rate": 1.657
+            }
+          ]
+        }
+      },
+      {
+        "block_name": "Distribution Demand Charge",
+        "basis": "kw_distribution_demand",
+        "condition": "Secondary Voltage Customer",
+        "unit": "per_kw",
+        "rate_structure": {
+          "type": "tiered",
+          "tiers": [
+            {
+              "threshold": 700,
+              "threshold_basis": "flat",
+              "rate": 3.553
+            },
+            {
+              "threshold": 4300,
+              "threshold_basis": "flat",
+              "rate": 2.843
+            },
+            {
+              "threshold": null,
+              "threshold_basis": "flat",
+              "rate": 2.446
+            }
+          ]
+        }
+      },
+      {
+        "block_name": "rkVA Demand Charge",
+        "basis": "rkva",
+        "condition": null,
+        "unit": "per_rkva",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.191
+        }
+      },
+      {
+        "block_name": "Electricity Supply Demand Charge",
+        "basis": "kw_es_demand",
+        "condition": null,
+        "unit": "per_kw",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 7.931
+        }
+      },
+      {
+        "block_name": "Electricity Supply Adjustment Demand Charge",
+        "basis": "kw_distribution_demand",
+        "condition": null,
+        "unit": "per_kw",
+        "rate_structure": {
+          "type": "tiered",
+          "tiers": [
+            {
+              "threshold": 700,
+              "threshold_basis": "flat",
+              "rate": -1.011
+            },
+            {
+              "threshold": 4300,
+              "threshold_basis": "flat",
+              "rate": -0.809
+            },
+            {
+              "threshold": null,
+              "threshold_basis": "flat",
+              "rate": -0.697
+            }
+          ]
+        }
+      },
+      {
+        "block_name": "Electricity Supply kWh Charge",
+        "basis": "kwh",
+        "condition": null,
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "tiered",
+          "tiers": [
+            {
+              "threshold": 24000,
+              "threshold_basis": "flat",
+              "rate": 0.01763
+            },
+            {
+              "threshold": 186000,
+              "threshold_basis": "flat",
+              "rate": 0.01007
+            },
+            {
+              "threshold": null,
+              "threshold_basis": "flat",
+              "rate": 0.00667
+            }
+          ]
+        }
+      }
+    ],
+    "minimum_charge": {
+      "basis": "sum of Basic Customer Charge, Electricity Supply Demand Charge, and Electricity Supply Adjustment Demand Charge",
+      "value": null
+    },
+    "demand_determination_note": "The kW of demand billed is the highest of: current month's 30-min peak, 90% of prior summer peak, or 50 kW. If demand is 1,000 kW or more, it is the highest of: current month's on-peak 30-min peak, 90% of prior summer on-peak peak, or 1,000 kW.",
+    "riders_note": "subject to all applicable riders (values merged separately)",
     "source_schedule": "SCHEDULE 130",
     "source_pages": "11-16",
     "riders_priced": [
@@ -1405,94 +1593,143 @@
   },
   {
     "sc_code": "SCHEDULE 131",
-    "description": "Thermal Storage Billing",
+    "description": "Municipal and County Thermal Storage",
+    "billing_model": "usage_based",
     "logic_steps": [
       {
         "step_name": "Basic Customer Charge",
         "charge_type": "fixed_fee",
         "value": 96.93,
         "period": "monthly"
-      },
-      {
-        "step_name": "Distribution Demand Charge (Primary Voltage Customer)",
-        "charge_type": "per_kw",
-        "tiers": [
-          {
-            "tier_name": "First 700 kW",
-            "value": 2.205
-          },
-          {
-            "tier_name": "Next 4,300 kW",
-            "value": 1.763
-          },
-          {
-            "tier_name": "Additional kW",
-            "value": 1.517
-          }
-        ]
-      },
-      {
-        "step_name": "Distribution Demand Charge (Secondary Voltage Customer)",
-        "charge_type": "per_kw",
-        "tiers": [
-          {
-            "tier_name": "First 700 kW",
-            "value": 3.253
-          },
-          {
-            "tier_name": "Next 4,300 kW",
-            "value": 2.603
-          },
-          {
-            "tier_name": "Additional kW",
-            "value": 2.24
-          }
-        ]
-      },
-      {
-        "step_name": "rkVA Demand Charge",
-        "charge_type": "per_rkva",
-        "value": 0.175
-      },
-      {
-        "step_name": "Electricity Supply Demand Charge",
-        "charge_type": "per_kw",
-        "value": 7.931
-      },
-      {
-        "step_name": "Electricity Supply Adjustment Demand Charge",
-        "charge_type": "per_kw",
-        "tiers": [
-          {
-            "tier_name": "First 700 kW",
-            "value": -1.042
-          },
-          {
-            "tier_name": "Next 4,300 kW",
-            "value": -0.833
-          },
-          {
-            "tier_name": "Additional kW",
-            "value": -0.717
-          }
-        ]
-      },
-      {
-        "step_name": "Electricity Supply Energy Charge",
-        "charge_type": "per_kwh",
-        "tiers": [
-          {
-            "tier_name": "First 210 kWh per kW of Electricity Supply Demand",
-            "value": 0.01007
-          },
-          {
-            "tier_name": "Additional ES kWh",
-            "value": 0.00667
-          }
-        ]
       }
     ],
-    "riders_note": "Each kWh used and/or kW, as applicable, is subject to all applicable riders (values merged separately)",
+    "charge_blocks": [
+      {
+        "block_name": "Distribution Demand Charge",
+        "basis": "kw_distribution_demand",
+        "condition": "Primary Voltage Customer",
+        "unit": "per_kw",
+        "rate_structure": {
+          "type": "tiered",
+          "tiers": [
+            {
+              "threshold": 700,
+              "threshold_basis": "flat",
+              "rate": 2.205
+            },
+            {
+              "threshold": 4300,
+              "threshold_basis": "flat",
+              "rate": 1.763
+            },
+            {
+              "threshold": null,
+              "threshold_basis": "flat",
+              "rate": 1.517
+            }
+          ]
+        }
+      },
+      {
+        "block_name": "Distribution Demand Charge",
+        "basis": "kw_distribution_demand",
+        "condition": "Secondary Voltage Customer",
+        "unit": "per_kw",
+        "rate_structure": {
+          "type": "tiered",
+          "tiers": [
+            {
+              "threshold": 700,
+              "threshold_basis": "flat",
+              "rate": 3.253
+            },
+            {
+              "threshold": 4300,
+              "threshold_basis": "flat",
+              "rate": 2.603
+            },
+            {
+              "threshold": null,
+              "threshold_basis": "flat",
+              "rate": 2.24
+            }
+          ]
+        }
+      },
+      {
+        "block_name": "rkVA Demand Charge",
+        "basis": "rkva",
+        "condition": null,
+        "unit": "per_rkva",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.175
+        }
+      },
+      {
+        "block_name": "Electricity Supply Demand Charge",
+        "basis": "kw_es_demand",
+        "condition": null,
+        "unit": "per_kw",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 7.931
+        }
+      },
+      {
+        "block_name": "Electricity Supply Adjustment Demand",
+        "basis": "kw_distribution_demand",
+        "condition": null,
+        "unit": "per_kw",
+        "rate_structure": {
+          "type": "tiered",
+          "tiers": [
+            {
+              "threshold": 700,
+              "threshold_basis": "flat",
+              "rate": -1.042
+            },
+            {
+              "threshold": 4300,
+              "threshold_basis": "flat",
+              "rate": -0.833
+            },
+            {
+              "threshold": null,
+              "threshold_basis": "flat",
+              "rate": -0.717
+            }
+          ]
+        }
+      },
+      {
+        "block_name": "Electricity Supply Energy Charge",
+        "basis": "kwh",
+        "condition": null,
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "tiered",
+          "tiers": [
+            {
+              "threshold": 210,
+              "threshold_basis": "per_kw_of_es_demand",
+              "rate": 0.01007
+            },
+            {
+              "threshold": null,
+              "threshold_basis": "flat",
+              "rate": 0.00667
+            }
+          ]
+        }
+      }
+    ],
+    "minimum_charge": {
+      "basis": "sum of Basic Customer Charge, Electricity Supply Demand Charge, and Electricity Supply Adjustment Demand",
+      "value": null
+    },
+    "demand_determination_note": "The kW of demand billed under Paragraph II.B.1. shall be the highest of: current month's 30-min peak during on-peak hours, 90% of the highest kW of demand during June through September of the preceding eleven billing months, or 50 kW. Off-peak hours may be included if demand exceeds on-peak by more than the installed capacity of the thermal storage system.",
+    "riders_note": "subject to all applicable riders (values merged separately)",
     "source_schedule": "SCHEDULE 131",
     "source_pages": "16-20",
     "riders_priced": [
@@ -1653,127 +1890,86 @@
   },
   {
     "sc_code": "SCHEDULE 132",
-    "description": "Large Miscellaneous Light and Power Service - Variable Pricing",
+    "description": "Municipal and County Large Miscellaneous Light and Power Service - Variable Pricing",
+    "billing_model": "variable_pricing",
     "logic_steps": [
       {
         "step_name": "Basic Customer Charge",
         "charge_type": "fixed_fee",
         "value": 191.04,
         "period": "monthly"
-      },
-      {
-        "step_name": "Distribution Demand Charge (Primary Voltage Customer)",
-        "charge_type": "per_kw",
-        "value": 1.295,
-        "tier": "First 5,000 kW"
-      },
-      {
-        "step_name": "Distribution Demand Charge (Primary Voltage Customer)",
-        "charge_type": "per_kw",
-        "value": 0.975,
-        "tier": "Additional kW"
-      },
-      {
-        "step_name": "Distribution Demand Charge (Secondary Voltage Customer)",
-        "charge_type": "per_kw",
-        "value": 3.306
-      },
-      {
-        "step_name": "Electricity Supply Contract Demand Charge",
-        "charge_type": "per_kw",
-        "value": 0.0
-      },
-      {
-        "step_name": "Electricity Supply Adjustment Demand Charge (Primary Voltage Customer)",
-        "charge_type": "per_kw",
-        "value": -0.215,
-        "tier": "First 5,000 kW"
-      },
-      {
-        "step_name": "Electricity Supply Adjustment Demand Charge (Primary Voltage Customer)",
-        "charge_type": "per_kw",
-        "value": -0.128,
-        "tier": "Additional kW"
-      },
-      {
-        "step_name": "Electricity Supply Adjustment Demand Charge (Secondary Voltage Customer)",
-        "charge_type": "per_kw",
-        "value": -0.77
-      },
-      {
-        "step_name": "Electricity Supply Energy Charge (On-Peak May 1 - September 30)",
-        "charge_type": "per_kwh",
-        "value": 0.31918,
-        "period": "On-Peak A"
-      },
-      {
-        "step_name": "Electricity Supply Energy Charge (Off-Peak May 1 - September 30)",
-        "charge_type": "per_kwh",
-        "value": 0.03035,
-        "period": "Off-Peak A"
-      },
-      {
-        "step_name": "Electricity Supply Energy Charge (On-Peak May 1 - September 30)",
-        "charge_type": "per_kwh",
-        "value": 0.01941,
-        "period": "On-Peak B"
-      },
-      {
-        "step_name": "Electricity Supply Energy Charge (Off-Peak May 1 - September 30)",
-        "charge_type": "per_kwh",
-        "value": 0.0106,
-        "period": "Off-Peak B"
-      },
-      {
-        "step_name": "Electricity Supply Energy Charge (On-Peak May 1 - September 30)",
-        "charge_type": "per_kwh",
-        "value": 0.0106,
-        "period": "On-Peak C"
-      },
-      {
-        "step_name": "Electricity Supply Energy Charge (Off-Peak May 1 - September 30)",
-        "charge_type": "per_kwh",
-        "value": 0.00539,
-        "period": "Off-Peak C"
-      },
-      {
-        "step_name": "Electricity Supply Energy Charge (On-Peak October 1 - April 30)",
-        "charge_type": "per_kwh",
-        "value": 0.31918,
-        "period": "On-Peak A"
-      },
-      {
-        "step_name": "Electricity Supply Energy Charge (Off-Peak October 1 - April 30)",
-        "charge_type": "per_kwh",
-        "value": 0.03603,
-        "period": "Off-Peak A"
-      },
-      {
-        "step_name": "Electricity Supply Energy Charge (On-Peak October 1 - April 30)",
-        "charge_type": "per_kwh",
-        "value": 0.01941,
-        "period": "On-Peak B"
-      },
-      {
-        "step_name": "Electricity Supply Energy Charge (Off-Peak October 1 - April 30)",
-        "charge_type": "per_kwh",
-        "value": 0.01177,
-        "period": "Off-Peak B"
-      },
-      {
-        "step_name": "Electricity Supply Energy Charge (On-Peak October 1 - April 30)",
-        "charge_type": "per_kwh",
-        "value": 0.01177,
-        "period": "On-Peak C"
-      },
-      {
-        "step_name": "Electricity Supply Energy Charge (Off-Peak October 1 - April 30)",
-        "charge_type": "per_kwh",
-        "value": 0.0079,
-        "period": "Off-Peak C"
       }
     ],
-    "riders_note": "Each kWh used and/or kW, as applicable, is subject to all applicable riders (values merged separately)",
+    "charge_blocks": [
+      {
+        "block_name": "Distribution Demand Charge",
+        "basis": "kw_distribution_demand",
+        "condition": "Primary Voltage Customer",
+        "unit": "per_kw",
+        "rate_structure": {
+          "type": "tiered",
+          "tiers": [
+            {
+              "threshold": 5000,
+              "threshold_basis": "flat",
+              "rate": 1.295
+            },
+            {
+              "threshold": null,
+              "threshold_basis": "flat",
+              "rate": 0.975
+            }
+          ]
+        }
+      },
+      {
+        "block_name": "Distribution Demand Charge",
+        "basis": "kw_distribution_demand",
+        "condition": "Secondary Voltage Customer",
+        "unit": "per_kw",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 3.306
+        }
+      },
+      {
+        "block_name": "Electricity Supply Adjustment Demand Charge",
+        "basis": "kw_distribution_demand",
+        "condition": "Primary Voltage Customer",
+        "unit": "per_kw",
+        "rate_structure": {
+          "type": "tiered",
+          "tiers": [
+            {
+              "threshold": 5000,
+              "threshold_basis": "flat",
+              "rate": -0.215
+            },
+            {
+              "threshold": null,
+              "threshold_basis": "flat",
+              "rate": -0.128
+            }
+          ]
+        }
+      },
+      {
+        "block_name": "Electricity Supply Adjustment Demand Charge",
+        "basis": "kw_distribution_demand",
+        "condition": "Secondary Voltage Customer",
+        "unit": "per_kw",
+        "rate_structure": {
+          "type": "flat",
+          "rate": -0.77
+        }
+      }
+    ],
+    "minimum_charge": {
+      "basis": "sum of Basic Customer Charge, Distribution Demand Charge, and Electricity Supply Contract Demand Charge",
+      "value": null
+    },
+    "riders_note": "subject to all applicable riders (values merged separately)",
+    "demand_determination_note": "Electricity Supply Peak Demand is the higher of the highest average kW demand or 85% of the highest average kVA demand in the current billing month.",
     "source_schedule": "SCHEDULE 132",
     "source_pages": "20-25",
     "riders_priced": [
@@ -1934,41 +2130,75 @@
   },
   {
     "sc_code": "SCHEDULE 134",
-    "description": "Large Miscellaneous Light and Power Service, Transmission or Primary Voltage",
+    "description": "Municipal and County Large Miscellaneous Light and Power Service, Transmission or Primary Voltage",
+    "billing_model": "usage_based",
     "logic_steps": [
       {
         "step_name": "Basic Customer Charge",
         "charge_type": "fixed_fee",
         "value": 96.93,
         "period": "monthly"
-      },
-      {
-        "step_name": "Distribution Contract Demand Charge (First 5,000 kW)",
-        "charge_type": "per_kw",
-        "value": 2.112
-      },
-      {
-        "step_name": "Distribution Contract Demand Charge (Additional kW)",
-        "charge_type": "per_kw",
-        "value": 1.305
-      },
-      {
-        "step_name": "On-Peak Electricity Supply Demand Charge",
-        "charge_type": "per_kw",
-        "value": 8.48
-      },
-      {
-        "step_name": "On-Peak Electricity Supply kWh Charge",
-        "charge_type": "per_kwh",
-        "value": 0.543
-      },
-      {
-        "step_name": "Off-Peak Electricity Supply kWh Charge",
-        "charge_type": "per_kwh",
-        "value": 0.37
       }
     ],
-    "riders_note": "Each kWh used and/or kW, as applicable, is subject to all applicable riders (values merged separately)",
+    "charge_blocks": [
+      {
+        "block_name": "Distribution Contract Demand Charge",
+        "basis": "kw_contract_demand",
+        "condition": null,
+        "unit": "per_kw",
+        "rate_structure": {
+          "type": "tiered",
+          "tiers": [
+            {
+              "threshold": 5000,
+              "threshold_basis": "flat",
+              "rate": 2.112
+            },
+            {
+              "threshold": null,
+              "threshold_basis": "flat",
+              "rate": 1.305
+            }
+          ]
+        }
+      },
+      {
+        "block_name": "On-Peak Electricity Supply Demand Charge",
+        "basis": "kw_es_demand",
+        "condition": "On-Peak",
+        "unit": "per_kw",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 8.48
+        }
+      },
+      {
+        "block_name": "Electricity Supply kWh Charge",
+        "basis": "kwh",
+        "condition": "On-Peak",
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.00543
+        }
+      },
+      {
+        "block_name": "Electricity Supply kWh Charge",
+        "basis": "kwh",
+        "condition": "Off-Peak",
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.0037
+        }
+      }
+    ],
+    "minimum_charge": {
+      "basis": "as may be contracted for",
+      "value": null
+    },
+    "demand_determination_note": "Distribution Peak Demand is the higher of the highest average kW demand or 85% of the highest average kVA demand. Distribution Contract Demand is the maximum demand to be provided, not less than 1,500 kW, and increases if Distribution Peak Demand exceeds it. On-Peak Electricity Supply Demand is the highest of the current month's on-peak kW, 90% of the highest kW during June-September of the previous year, or 1,000 kW.",
+    "riders_note": "subject to all applicable riders (values merged separately)",
     "source_schedule": "SCHEDULE 134",
     "source_pages": "25-29",
     "riders_priced": [
@@ -2129,110 +2359,125 @@
   },
   {
     "sc_code": "SCHEDULE 150",
-    "description": "Roadway, Directional and Area Lighting Service",
+    "description": "Municipal and County Roadway, Directional and Area Lighting Service - High Pressure Sodium",
+    "billing_model": "per_fixture",
+    "fixture_rates": [
+      {
+        "fixture_label": "5,000 Lumens, 82 Wattage",
+        "distribution_charge_per_unit": 7.94,
+        "supply_charge_per_unit": 0.91,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "8,000 Lumens, 120 Wattage",
+        "distribution_charge_per_unit": 8.35,
+        "supply_charge_per_unit": 1.21,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "14,000 Lumens, 202 Wattage",
+        "distribution_charge_per_unit": 9.0,
+        "supply_charge_per_unit": 2.11,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "23,000 Lumens, 315 Wattage",
+        "distribution_charge_per_unit": 12.2,
+        "supply_charge_per_unit": 3.18,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "42,000 Lumens, 490 Wattage",
+        "distribution_charge_per_unit": 18.48,
+        "supply_charge_per_unit": 4.84,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "127,000 Lumens, 1,130 Wattage",
+        "distribution_charge_per_unit": 21.37,
+        "supply_charge_per_unit": 11.51,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "5,000 Lumens, 82 Wattage (Type 2)",
+        "distribution_charge_per_unit": 19.32,
+        "supply_charge_per_unit": 0.91,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "8,000 Lumens, 120 Wattage (Type 2)",
+        "distribution_charge_per_unit": 19.57,
+        "supply_charge_per_unit": 1.2,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "14,000 Lumens, 202 Wattage (Type 2)",
+        "distribution_charge_per_unit": 19.95,
+        "supply_charge_per_unit": 2.12,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "23,000 Lumens, 315 Wattage (Type 2)",
+        "distribution_charge_per_unit": 22.69,
+        "supply_charge_per_unit": 3.19,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "42,000 Lumens, 490 Wattage (Type 2)",
+        "distribution_charge_per_unit": 26.92,
+        "supply_charge_per_unit": 4.85,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "23,000 Lumens, 315 Wattage (Directional)",
+        "distribution_charge_per_unit": 22.56,
+        "supply_charge_per_unit": 3.18,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "42,000 Lumens, 490 Wattage (Directional)",
+        "distribution_charge_per_unit": 19.75,
+        "supply_charge_per_unit": 4.84,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "127,000 Lumens, 1,130 Wattage (Directional)",
+        "distribution_charge_per_unit": 22.46,
+        "supply_charge_per_unit": 11.5,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "23,000 Lumens, 315 Wattage (Expressway)",
+        "distribution_charge_per_unit": 39.42,
+        "supply_charge_per_unit": 3.18,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "42,000 Lumens, 490 Wattage (Expressway)",
+        "distribution_charge_per_unit": 40.25,
+        "supply_charge_per_unit": 4.84,
+        "period": "monthly"
+      }
+    ],
     "logic_steps": [
       {
-        "step_name": "Electricity Supply Service Charge for Type 1 Fixtures",
-        "charge_type": "per_kwh",
-        "value": 0.91,
-        "period": "monthly",
-        "details": {
-          "lumens": 5000,
-          "wattage": 82,
-          "kWh": 30
-        }
-      },
-      {
-        "step_name": "Distribution Service Charge for Type 1 Fixtures",
-        "charge_type": "fixed_fee",
-        "value": 7.94,
-        "period": "monthly",
-        "details": {
-          "lumens": 5000,
-          "wattage": 82,
-          "kWh": 30
-        }
-      },
-      {
-        "step_name": "Electricity Supply Service Charge for Type 2 Fixtures",
-        "charge_type": "per_kwh",
-        "value": 1.2,
-        "period": "monthly",
-        "details": {
-          "lumens": 8000,
-          "wattage": 120,
-          "kWh": 40
-        }
-      },
-      {
-        "step_name": "Distribution Service Charge for Type 2 Fixtures",
-        "charge_type": "fixed_fee",
-        "value": 19.57,
-        "period": "monthly",
-        "details": {
-          "lumens": 8000,
-          "wattage": 120,
-          "kWh": 40
-        }
-      },
-      {
-        "step_name": "Electricity Supply Service Charge for Directional Lighting",
-        "charge_type": "per_kwh",
-        "value": 3.18,
-        "period": "monthly",
-        "details": {
-          "lumens": 23000,
-          "wattage": 315,
-          "kWh": 105
-        }
-      },
-      {
-        "step_name": "Distribution Service Charge for Directional Lighting",
-        "charge_type": "fixed_fee",
-        "value": 22.56,
-        "period": "monthly",
-        "details": {
-          "lumens": 23000,
-          "wattage": 315,
-          "kWh": 105
-        }
-      },
-      {
-        "step_name": "Electricity Supply Service Charge for Expressway Lighting",
-        "charge_type": "per_kwh",
-        "value": 3.18,
-        "period": "monthly",
-        "details": {
-          "lumens": 23000,
-          "wattage": 315,
-          "kWh": 105
-        }
-      },
-      {
-        "step_name": "Distribution Service Charge for Expressway Lighting",
-        "charge_type": "fixed_fee",
-        "value": 39.42,
-        "period": "monthly",
-        "details": {
-          "lumens": 23000,
-          "wattage": 315,
-          "kWh": 105
-        }
-      },
-      {
-        "step_name": "Additional Distribution Service Charge for Fluted Poles",
+        "step_name": "Additional Distribution Service Charge for Aluminum Fluted Decorative Pole",
         "charge_type": "fixed_fee",
         "value": 20.85,
         "period": "monthly"
       },
       {
-        "step_name": "Minimum Charge",
+        "step_name": "Additional Distribution Service Charge for Fiberglass Fluted Decorative Pole",
         "charge_type": "fixed_fee",
-        "value": "minimum charge as specified in Paragraph II.A.",
+        "value": 8.34,
         "period": "monthly"
       }
     ],
-    "riders_note": "Each kilowatthour used is subject to all applicable riders (values merged separately)",
+    "minimum_charge": {
+      "basis": "rate specified in Paragraph II. A.",
+      "value": null
+    },
+    "riders_note": "Each kilowatthour used is subject to all applicable riders.",
     "source_schedule": "SCHEDULE 150",
     "source_pages": "29-36",
     "riders_priced": [
@@ -2394,174 +2639,104 @@
   {
     "sc_code": "SCHEDULE 151",
     "description": "Municipal and County Roadway, Directional and Area Lighting Service",
-    "logic_steps": [
+    "billing_model": "per_fixture",
+    "fixture_rates": [
       {
-        "step_name": "Mercury Vapor Lighting Service Charge (125W)",
-        "charge_type": "fixed_fee",
-        "value": 7.75,
+        "fixture_label": "3,300 Lumens Mercury Vapor 125W",
+        "distribution_charge_per_unit": 7.75,
+        "supply_charge_per_unit": 1.21,
         "period": "monthly"
       },
       {
-        "step_name": "Mercury Vapor Electricity Supply Charge (125W)",
-        "charge_type": "per_kwh",
-        "value": 1.21
-      },
-      {
-        "step_name": "Mercury Vapor Lighting Service Charge (208W)",
-        "charge_type": "fixed_fee",
-        "value": 8.16,
+        "fixture_label": "7,000 Lumens Mercury Vapor 208W",
+        "distribution_charge_per_unit": 8.16,
+        "supply_charge_per_unit": 2.12,
         "period": "monthly"
       },
       {
-        "step_name": "Mercury Vapor Electricity Supply Charge (208W)",
-        "charge_type": "per_kwh",
-        "value": 2.12
-      },
-      {
-        "step_name": "Mercury Vapor Lighting Service Charge (294W)",
-        "charge_type": "fixed_fee",
-        "value": 10.23,
+        "fixture_label": "11,000 Lumens Mercury Vapor 294W",
+        "distribution_charge_per_unit": 10.23,
+        "supply_charge_per_unit": 3.03,
         "period": "monthly"
       },
       {
-        "step_name": "Mercury Vapor Electricity Supply Charge (294W)",
-        "charge_type": "per_kwh",
-        "value": 3.03
-      },
-      {
-        "step_name": "Mercury Vapor Lighting Service Charge (452W)",
-        "charge_type": "fixed_fee",
-        "value": 14.41,
+        "fixture_label": "20,000 Lumens Mercury Vapor 452W",
+        "distribution_charge_per_unit": 14.41,
+        "supply_charge_per_unit": 4.54,
         "period": "monthly"
       },
       {
-        "step_name": "Mercury Vapor Electricity Supply Charge (452W)",
-        "charge_type": "per_kwh",
-        "value": 4.54
-      },
-      {
-        "step_name": "Mercury Vapor Lighting Service Charge (765W)",
-        "charge_type": "fixed_fee",
-        "value": 21.93,
+        "fixture_label": "33,000 Lumens Mercury Vapor 765W",
+        "distribution_charge_per_unit": 21.93,
+        "supply_charge_per_unit": 7.55,
         "period": "monthly"
       },
       {
-        "step_name": "Mercury Vapor Electricity Supply Charge (765W)",
-        "charge_type": "per_kwh",
-        "value": 7.55
-      },
-      {
-        "step_name": "Mercury Vapor Lighting Service Charge (1080W)",
-        "charge_type": "fixed_fee",
-        "value": 26.45,
+        "fixture_label": "53,000 Lumens Mercury Vapor 1,080W",
+        "distribution_charge_per_unit": 26.45,
+        "supply_charge_per_unit": 10.89,
         "period": "monthly"
       },
       {
-        "step_name": "Mercury Vapor Electricity Supply Charge (1080W)",
-        "charge_type": "per_kwh",
-        "value": 10.89
-      },
-      {
-        "step_name": "Urbanlite Lighting Service Charge (150W)",
-        "charge_type": "fixed_fee",
-        "value": 26.31,
+        "fixture_label": "20,000 Lumens Urbanlite Mercury Vapor 452W",
+        "distribution_charge_per_unit": 26.31,
+        "supply_charge_per_unit": 4.54,
         "period": "monthly"
       },
       {
-        "step_name": "Urbanlite Electricity Supply Charge (150W)",
-        "charge_type": "per_kwh",
-        "value": 4.54
-      },
-      {
-        "step_name": "Sodium Vapor Lighting Service Charge (70W)",
-        "charge_type": "fixed_fee",
-        "value": 22.03,
+        "fixture_label": "14,000 Lumens Urbanlite Sodium Vapor 202W",
+        "distribution_charge_per_unit": 22.03,
+        "supply_charge_per_unit": 2.11,
         "period": "monthly"
       },
       {
-        "step_name": "Sodium Vapor Electricity Supply Charge (70W)",
-        "charge_type": "per_kwh",
-        "value": 2.11
-      },
-      {
-        "step_name": "Sodium Vapor Lighting Service Charge (105W)",
-        "charge_type": "fixed_fee",
-        "value": 22.39,
+        "fixture_label": "23,000 Lumens Urbanlite Sodium Vapor 315W",
+        "distribution_charge_per_unit": 22.39,
+        "supply_charge_per_unit": 3.18,
         "period": "monthly"
       },
       {
-        "step_name": "Sodium Vapor Electricity Supply Charge (105W)",
-        "charge_type": "per_kwh",
-        "value": 3.18
-      },
-      {
-        "step_name": "Directional Lighting Service Charge (First Unit)",
-        "charge_type": "fixed_fee",
-        "value": 16.26,
+        "fixture_label": "20,000 Lumens Directional Mercury Vapor 452W",
+        "distribution_charge_per_unit": 16.26,
+        "supply_charge_per_unit": 4.54,
         "period": "monthly"
       },
       {
-        "step_name": "Directional Lighting Service Charge (Each Additional Unit)",
-        "charge_type": "fixed_fee",
-        "value": 10.27,
+        "fixture_label": "53,000 Lumens Directional Mercury Vapor 1,080W",
+        "distribution_charge_per_unit": 24.78,
+        "supply_charge_per_unit": 10.89,
         "period": "monthly"
       },
       {
-        "step_name": "Directional Electricity Supply Charge (First Unit)",
-        "charge_type": "per_kwh",
-        "value": 4.54
-      },
-      {
-        "step_name": "Directional Electricity Supply Charge (Each Additional Unit)",
-        "charge_type": "per_kwh",
-        "value": 4.54
-      },
-      {
-        "step_name": "Incandescent Lighting Service Charge (70W)",
-        "charge_type": "fixed_fee",
-        "value": 8.1,
+        "fixture_label": "2,500 Lumens Incandescent 202W",
+        "distribution_charge_per_unit": 8.1,
+        "supply_charge_per_unit": 2.11,
         "period": "monthly"
       },
       {
-        "step_name": "Incandescent Electricity Supply Charge (70W)",
-        "charge_type": "per_kwh",
-        "value": 2.11
-      },
-      {
-        "step_name": "Incandescent Lighting Service Charge (110W)",
-        "charge_type": "fixed_fee",
-        "value": 8.44,
+        "fixture_label": "4,000 Lumens Incandescent 327W",
+        "distribution_charge_per_unit": 8.44,
+        "supply_charge_per_unit": 3.34,
         "period": "monthly"
       },
       {
-        "step_name": "Incandescent Electricity Supply Charge (110W)",
-        "charge_type": "per_kwh",
-        "value": 3.34
-      },
-      {
-        "step_name": "Incandescent Lighting Service Charge (150W)",
-        "charge_type": "fixed_fee",
-        "value": 6.43,
+        "fixture_label": "6,000 Lumens Incandescent 448W",
+        "distribution_charge_per_unit": 6.43,
+        "supply_charge_per_unit": 4.54,
         "period": "monthly"
       },
       {
-        "step_name": "Incandescent Electricity Supply Charge (150W)",
-        "charge_type": "per_kwh",
-        "value": 4.54
-      },
-      {
-        "step_name": "Incandescent Lighting Service Charge (230W)",
-        "charge_type": "fixed_fee",
-        "value": 6.47,
+        "fixture_label": "10,000 Lumens Incandescent 690W",
+        "distribution_charge_per_unit": 6.47,
+        "supply_charge_per_unit": 6.96,
         "period": "monthly"
-      },
-      {
-        "step_name": "Incandescent Electricity Supply Charge (230W)",
-        "charge_type": "per_kwh",
-        "value": 6.96
       }
     ],
-    "riders_note": "Each kilowatthour used is subject to all applicable riders (values merged separately)",
+    "minimum_charge": {
+      "basis": "rate specified in Section II.A.",
+      "value": null
+    },
+    "riders_note": "Each kilowatthour used is subject to all applicable riders.",
     "source_schedule": "SCHEDULE 151",
     "source_pages": "36-42",
     "riders_priced": [
@@ -2723,82 +2898,116 @@
   {
     "sc_code": "SCHEDULE 152",
     "description": "Municipal and County Street Lighting Fixtures on Bridges and Overpasses",
-    "logic_steps": [
+    "billing_model": "per_fixture",
+    "fixture_rates": [
       {
-        "step_name": "Monthly Charge for Street Lighting Facilities",
-        "charge_type": "fixed_fee",
-        "value": "not specified",
+        "fixture_label": "8,000 lumens high pressure sodium luminaire",
+        "distribution_charge_per_unit": 0,
+        "supply_charge_per_unit": 0,
         "period": "monthly"
       },
       {
-        "step_name": "Additional Charge for Bridge Poles",
-        "charge_type": "fixed_fee",
-        "value": "not specified",
+        "fixture_label": "14,000 lumens high pressure sodium luminaire",
+        "distribution_charge_per_unit": 0,
+        "supply_charge_per_unit": 0,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "23,000 lumens high pressure sodium luminaire",
+        "distribution_charge_per_unit": 0,
+        "supply_charge_per_unit": 0,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "42,000 lumens high pressure sodium luminaire",
+        "distribution_charge_per_unit": 0,
+        "supply_charge_per_unit": 0,
         "period": "monthly"
       }
     ],
+    "notes": "Monthly charges for lighting service are described in Schedule 150. Additional charges for bridge poles are stated in Schedule 150, Paragraph II.A.5.a.",
     "riders_note": "subject to all applicable riders (values merged separately)",
-    "reference": "Charges for roadway, directional and area lighting service as described in Schedule 150",
     "source_schedule": "SCHEDULE 152",
     "source_pages": "42-43"
   },
   {
     "sc_code": "SCHEDULE 153",
     "description": "Municipal and County Street Lighting - Special Fixtures",
+    "billing_model": "not_ratable",
     "logic_steps": [
       {
         "step_name": "Excess of Four Years\u2019 Revenue",
-        "charge_type": "fixed_fee",
-        "note": "plus applicable Tax Effect Recovery Factor (TERF)"
+        "charge_type": "informational",
+        "description": "Customer pays the excess of four years' revenue plus applicable Tax Effect Recovery Factor (TERF) for a standard lighting installation."
       },
       {
-        "step_name": "Charges pursuant to Schedule 150 or SSL",
-        "charge_type": "variable_fee",
-        "note": "for a standard lighting installation of the same luminaire type and size"
+        "step_name": "Charges for Standard Lighting Installation",
+        "charge_type": "informational",
+        "description": "All charges pursuant to Schedule 150 or SSL for a standard lighting installation of the same luminaire type and size, plus all applicable riders."
       },
       {
         "step_name": "Facilities Charge",
-        "charge_type": "variable_fee",
-        "note": "for the difference in cost between a standard lighting installation and the special lighting installation"
+        "charge_type": "informational",
+        "description": "Facilities charge pursuant to Schedule B for the difference in cost between a standard lighting installation and the special lighting installation."
       },
       {
-        "step_name": "Cost of Purchasing Special Fixtures/Poles/Parts",
-        "charge_type": "variable_fee",
-        "note": "greater of invoice cost plus 10% or invoice cost plus $50.00"
+        "step_name": "Cost of Special Fixtures/Poles",
+        "charge_type": "informational",
+        "description": "Customer pays the greater of the invoice cost plus 10% or the invoice cost plus $50.00 for purchasing any special fixtures, poles or parts for replacement or repair."
       }
     ],
     "riders_note": "subject to all applicable riders (values merged separately)",
+    "notes": "This schedule involves special agreements and conditions for municipal and county street lighting with special fixtures. It is not a standalone billable rate schedule.",
     "source_schedule": "SCHEDULE 153",
     "source_pages": "43-45"
   },
   {
     "sc_code": "SCHEDULE 154",
-    "description": "Municipal and County Service to Customer-Owned Street, Area and Other Outdoor Lighting Facilities",
+    "description": "Municipal and County Service to Customer-Owned Street, Area and Other Outdoor Lighting Facilities Operated Only During Night-Time Hours",
+    "billing_model": "usage_based",
     "logic_steps": [
       {
-        "step_name": "Basic Customer Charge (Metered)",
+        "step_name": "Basic Customer Charge for Metered Service",
         "charge_type": "fixed_fee",
         "value": 7.59,
         "period": "monthly"
       },
       {
-        "step_name": "Basic Customer Charge (Unmetered)",
+        "step_name": "Basic Customer Charge for Unmetered Service",
         "charge_type": "fixed_fee",
         "value": 2.76,
-        "period": "per Delivery Point"
-      },
-      {
-        "step_name": "Distribution kWh Charge",
-        "charge_type": "per_kwh",
-        "value": 0.0355
-      },
-      {
-        "step_name": "Electricity Supply kWh Charge",
-        "charge_type": "per_kwh",
-        "value": 0.00761
+        "period": "monthly",
+        "notes": "per Delivery Point"
       }
     ],
-    "riders_note": "Each kilowatthour used is subject to all applicable riders (values merged separately)",
+    "charge_blocks": [
+      {
+        "block_name": "Distribution kWh Charge",
+        "basis": "kwh",
+        "condition": null,
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.0355
+        }
+      },
+      {
+        "block_name": "Electricity Supply kWh Charge",
+        "basis": "kwh",
+        "condition": null,
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.00761
+        }
+      }
+    ],
+    "minimum_charge": {
+      "basis": "Basic Customer Charge",
+      "value": null
+    },
+    "riders_note": "subject to all applicable riders (values merged separately)",
+    "notes": "Unmetered service kWh is estimated based on connected load and usage hours.",
     "source_schedule": "SCHEDULE 154",
     "source_pages": "45-48",
     "riders_priced": [
@@ -2953,278 +3162,228 @@
   },
   {
     "sc_code": "SCHEDULE A",
-    "description": "Temporary Service Charge",
+    "description": "Municipal and County Temporary Service Charge",
+    "billing_model": "not_ratable",
     "logic_steps": [
       {
         "step_name": "Minimum Temporary Service Charge",
-        "charge_type": "fixed_fee",
-        "value": 23.95
-      },
-      {
-        "step_name": "Temporary Service Charge Calculation",
-        "charge_type": "variable_fee",
-        "note": "Estimated net cost of installing and removing service facilities, including all applicable overhead costs"
+        "charge_type": "informational",
+        "value": 23.95,
+        "notes": "The charge is the greater of the estimated net cost of installing and removing service facilities or $23.95."
       }
     ],
-    "riders_note": "subject to all applicable riders (values merged separately)",
+    "notes": "This schedule defines temporary service charges based on the net cost of installation and removal of service facilities. It is not a usage-based rate schedule.",
     "source_schedule": "SCHEDULE A",
     "source_pages": "48-49"
   },
   {
     "sc_code": "SCHEDULE B",
-    "description": "Excess Facilities Service Rate",
+    "description": "Municipal and County Excess Facilities Service Rate",
+    "billing_model": "not_ratable",
     "logic_steps": [
       {
-        "step_name": "Monthly Facilities Charge (Option A)",
+        "step_name": "Monthly Facilities Charge for Excess Distribution and Substation Facilities",
         "charge_type": "percentage_of_cost",
         "value": 1.211,
-        "period": "monthly",
-        "note": "of estimated new installed cost of all excess distribution and substation facilities"
+        "unit": "percent"
       },
       {
-        "step_name": "Monthly Facilities Charge (Option A)",
+        "step_name": "Monthly Facilities Charge for Excess Transmission Facilities",
         "charge_type": "percentage_of_cost",
         "value": 0.963,
-        "period": "monthly",
-        "note": "of estimated new installed cost of all excess transmission facilities"
+        "unit": "percent"
       },
       {
-        "step_name": "One-time Facilities Charge (Option B)",
-        "charge_type": "fixed_fee",
-        "note": "equal to estimated new installed cost of all excess distribution and substation facilities"
+        "step_name": "One-time Facilities Charge for Excess Distribution and Substation Facilities",
+        "charge_type": "cost_based",
+        "value": "estimated new installed cost"
       },
       {
-        "step_name": "Monthly Facilities Charge (Option B)",
+        "step_name": "Monthly Facilities Charge for Excess Distribution and Substation Facilities (Alternative)",
         "charge_type": "percentage_of_cost",
         "value": 0.339,
-        "period": "monthly",
-        "note": "of estimated new installed cost of all excess distribution and substation facilities"
+        "unit": "percent"
       },
       {
-        "step_name": "One-time Facilities Charge (Option B)",
-        "charge_type": "fixed_fee",
-        "note": "equal to estimated new installed cost of all excess transmission facilities"
+        "step_name": "One-time Facilities Charge for Excess Transmission Facilities",
+        "charge_type": "cost_based",
+        "value": "estimated new installed cost"
       },
       {
-        "step_name": "Monthly Facilities Charge (Option B)",
+        "step_name": "Monthly Facilities Charge for Excess Transmission Facilities (Alternative)",
         "charge_type": "percentage_of_cost",
         "value": 0.072,
-        "period": "monthly",
-        "note": "of estimated new installed cost of all excess transmission facilities"
+        "unit": "percent"
       }
     ],
-    "riders_note": "subject to all applicable riders (values merged separately)",
+    "notes": "This schedule provides charges for excess facilities and is not a standalone billable rate schedule. Charges are based on the estimated new installed cost of facilities and are subject to updates as per Virginia Jurisdictional Terms and Conditions.",
     "source_schedule": "SCHEDULE B",
     "source_pages": "49-50"
   },
   {
     "sc_code": "SCHEDULE C",
-    "description": "Miscellaneous and Standby Charges",
+    "description": "Municipal and County Miscellaneous and Standby Charges",
+    "billing_model": "not_ratable",
     "logic_steps": [
       {
         "step_name": "Service Connection Charge",
         "charge_type": "fixed_fee",
         "value": 25.31,
-        "period": "per service"
+        "unit": "per service"
       },
       {
         "step_name": "Minimum Temporary Service Charge",
         "charge_type": "fixed_fee",
         "value": 23.95,
-        "period": "per instance"
+        "unit": "per instance"
       },
       {
         "step_name": "Tax Effect Recovery Factor (TERF)",
         "charge_type": "factor",
-        "value": 1.15003
+        "value": 1.15003,
+        "note": "applied to contributions in aid of construction"
       },
       {
         "step_name": "Minimum Charge for Parallel or Standby Service",
-        "charge_type": "variable",
-        "details": "The greater of contract demand per kW at $3.01 or monthly minimum charge per Electricity Supply kWh at 2.803\u00a2 plus additional calculations."
+        "charge_type": "complex",
+        "note": "Charges as provided in Schedule 130 or 131, or calculated as per conditions in this schedule"
       },
       {
         "step_name": "Alternate Service Meter Minimum Charge",
         "charge_type": "fixed_fee",
         "value": 23.62,
-        "period": "per instance"
+        "unit": "minimum amount billed for electricity at alternate service meter"
       }
     ],
-    "riders_note": "subject to all applicable riders (values merged separately)",
+    "notes": "This schedule includes miscellaneous and standby charges, not a standalone billable rate schedule.",
     "source_schedule": "SCHEDULE C",
     "source_pages": "50-51"
   },
   {
     "sc_code": "SCHEDULE D",
     "description": "Municipal and County Luminaire Conversion Charges",
+    "billing_model": "not_ratable",
     "logic_steps": [
       {
-        "step_name": "Customer Charge for Conversion to SV Luminaire (Type 1)",
-        "charge_type": "fixed_fee",
+        "step_name": "Conversion Charge for Functional MH or MV to SV",
+        "charge_type": "flat_fee",
         "value": 149.0,
-        "period": "per luminaire"
+        "unit": "per luminaire"
       },
       {
-        "step_name": "Customer Charge for Conversion to Standard Basic or Standard Premium LED Luminaire (Non-Premium Rate)",
-        "charge_type": "fixed_fee",
+        "step_name": "Conversion Charge for Functional MH, MV, or SV to LED (Non-Premium)",
+        "charge_type": "flat_fee",
         "value": 130.0,
-        "period": "per luminaire"
+        "unit": "per luminaire"
       },
       {
-        "step_name": "Customer Charge for Conversion to Standard Basic or Standard Premium LED Luminaire (Premium Rate)",
-        "charge_type": "fixed_fee",
+        "step_name": "Conversion Charge for Functional MH, MV, or SV to LED (Premium)",
+        "charge_type": "flat_fee",
         "value": 386.0,
-        "period": "per luminaire"
-      },
-      {
-        "step_name": "Customer Charge Calculation for Other Requests",
-        "charge_type": "variable",
-        "note": "Total estimated project cost less applicable conversion credit per luminaire converted."
+        "unit": "per luminaire"
       }
     ],
-    "riders_note": "subject to all applicable riders (values merged separately)",
+    "notes": "This schedule outlines conversion charges for luminaires and is not a standalone billable rate schedule. Charges are based on conversion requests and existing luminaire types. The schedule includes provisions for conversion credits based on project costs and excess revenue calculations.",
     "source_schedule": "SCHEDULE D",
     "source_pages": "51-66"
   },
   {
     "sc_code": "SCHEDULE E",
     "description": "Municipal and County Street Lighting Patrol Service",
+    "billing_model": "flat_service_fee",
     "logic_steps": [
       {
         "step_name": "Patrolling Service Charge",
-        "charge_type": "fixed_fee",
+        "charge_type": "flat_rate",
         "value": 120.55,
-        "period": "per hour"
+        "unit": "per hour"
       }
     ],
-    "riders_note": "subject to all applicable riders (values merged separately)",
+    "notes": "The patrol rate is subject to adjustment for increased costs by the Company at the beginning of each succeeding year of this Agreement.",
     "source_schedule": "SCHEDULE E",
     "source_pages": "66-67"
   },
   {
     "sc_code": "SCHEDULE RG-CM",
     "description": "Renewable Generation Supply Service",
+    "billing_model": "not_ratable",
     "logic_steps": [
       {
-        "step_name": "Net Schedule RG-CM Settlement charge or credit",
-        "charge_type": "variable",
-        "value": "not specified",
-        "period": "monthly"
+        "step_name": "Net Schedule RG-CM Settlement",
+        "charge_type": "credit_or_charge",
+        "description": "A Net Schedule RG-CM Settlement charge or credit for each Renewable Facility as described in the Customer\u2019s Schedule RG-CM Agreement will be added to the Customer\u2019s monthly bill for service under the Principal Tariff."
       }
     ],
-    "riders_note": "subject to all applicable riders (values merged separately)",
+    "notes": "This schedule is a companion to an approved tariff and is applicable to VEPGA customers who have executed a Schedule RG-CM Agreement. It involves the purchase of renewable generation and the retirement of RECs on behalf of the customer. Charges and credits are determined by the terms of the Schedule RG-CM Agreement, not specified in this document.",
     "source_schedule": "SCHEDULE RG-CM",
     "source_pages": "67-71"
   },
   {
     "sc_code": "SCHEDULE SGCM",
-    "description": "Standby Generator",
+    "description": "Municipal and County Standby Generator",
+    "billing_model": "not_ratable",
     "logic_steps": [
       {
-        "step_name": "Monthly Charge for Metering Facilities",
+        "step_name": "Monthly Metering Charge",
         "charge_type": "fixed_fee",
         "value": 95,
         "period": "monthly"
-      },
-      {
-        "step_name": "Payment for Average Capacity Generated (Winter)",
-        "charge_type": "per_kw",
-        "value": 1.278,
-        "period": "monthly",
-        "season": "Winter"
-      },
-      {
-        "step_name": "Payment for Average Capacity Generated (Summer)",
-        "charge_type": "per_kw",
-        "value": 2.556,
-        "period": "monthly",
-        "season": "Summer"
       }
     ],
-    "riders_note": "subject to all applicable riders (values merged separately)",
+    "notes": "This schedule provides a standby generator service where customers are paid for operating their generators upon company request. Payments are based on contracted capacity levels and actual generation during requested periods. It is not a standalone billable rate schedule but rather a service agreement with specific operational and payment terms.",
     "source_schedule": "SCHEDULE SGCM",
     "source_pages": "71-74"
   },
   {
     "sc_code": "SCHEDULE SGCM-1",
-    "description": "Standby Generator Billing",
+    "description": "Municipal and County Standby Generator",
+    "billing_model": "not_ratable",
     "logic_steps": [
       {
-        "step_name": "Monthly Charge for Metering Facilities",
+        "step_name": "Monthly Metering Charge",
         "charge_type": "fixed_fee",
         "value": 95,
         "period": "monthly"
-      },
-      {
-        "step_name": "Payment for Average Capacity Generated (Winter)",
-        "charge_type": "per_kw",
-        "value": 4.5,
-        "period": "monthly"
-      },
-      {
-        "step_name": "Payment for Average Capacity Generated (Summer)",
-        "charge_type": "per_kw",
-        "value": 8.0,
-        "period": "monthly"
       }
     ],
-    "riders_note": "subject to all applicable riders (values merged separately)",
+    "notes": "This schedule is for standby generator operation and includes payments to the customer for capacity maintained during company requests. It is not a standalone billable rate schedule.",
     "source_schedule": "SCHEDULE SGCM-1",
     "source_pages": "74-77"
   },
   {
     "sc_code": "SCHEDULE SMH",
-    "description": "Streetscape Lighting Service",
-    "logic_steps": [
+    "description": "Municipal and County Streetscape Metal Halide Supplemental Outdoor Lighting Rate",
+    "billing_model": "per_fixture",
+    "fixture_rates": [
       {
-        "step_name": "Distribution Service Charge for 7,000 Lumens",
-        "charge_type": "per_kwh",
-        "value": 40.51,
+        "fixture_label": "7,000 Lumens, 100 Wattage",
+        "distribution_charge_per_unit": 40.51,
+        "supply_charge_per_unit": 1.23,
         "period": "monthly"
       },
       {
-        "step_name": "Distribution Service Charge for 10,000 Lumens",
-        "charge_type": "per_kwh",
-        "value": 41.98,
+        "fixture_label": "10,000 Lumens, 150 Wattage",
+        "distribution_charge_per_unit": 41.98,
+        "supply_charge_per_unit": 1.72,
         "period": "monthly"
       },
       {
-        "step_name": "Distribution Service Charge for 13,000 Lumens",
-        "charge_type": "per_kwh",
-        "value": 50.29,
+        "fixture_label": "13,000 Lumens, 200 Wattage",
+        "distribution_charge_per_unit": 50.29,
+        "supply_charge_per_unit": 2.3,
         "period": "monthly"
       },
       {
-        "step_name": "Distribution Service Charge for 24,000 Lumens",
-        "charge_type": "per_kwh",
-        "value": 50.79,
-        "period": "monthly"
-      },
-      {
-        "step_name": "Electricity Supply Service Charge for 7,000 Lumens",
-        "charge_type": "per_kwh",
-        "value": 1.23,
-        "period": "monthly"
-      },
-      {
-        "step_name": "Electricity Supply Service Charge for 10,000 Lumens",
-        "charge_type": "per_kwh",
-        "value": 1.72,
-        "period": "monthly"
-      },
-      {
-        "step_name": "Electricity Supply Service Charge for 13,000 Lumens",
-        "charge_type": "per_kwh",
-        "value": 2.3,
-        "period": "monthly"
-      },
-      {
-        "step_name": "Electricity Supply Service Charge for 24,000 Lumens",
-        "charge_type": "per_kwh",
-        "value": 3.66,
+        "fixture_label": "24,000 Lumens, 320 Wattage",
+        "distribution_charge_per_unit": 50.79,
+        "supply_charge_per_unit": 3.66,
         "period": "monthly"
       }
     ],
+    "minimum_charge": {
+      "basis": "rate specified in Paragraph II. A., plus all applicable riders",
+      "value": null
+    },
     "riders_note": "Each kilowatthour used is subject to all applicable riders.",
     "source_schedule": "SCHEDULE SMH",
     "source_pages": "77-81",
@@ -3380,444 +3539,161 @@
   },
   {
     "sc_code": "SCHEDULE SP",
-    "description": "Special Provisions for Municipal and County Services",
+    "description": "Municipal and County Special Provisions",
+    "billing_model": "not_ratable",
     "logic_steps": [
       {
-        "step_name": "Discount on per kWh charges for transformer-owned service",
-        "charge_type": "discount",
-        "value": 5,
-        "period": "percent"
+        "step_name": "Discount for Customer-owned Transformer",
+        "description": "5% discount on per kWh charges for flat miscellaneous light and power rate schedules (Schedules 100, 110, 120)."
       },
       {
-        "step_name": "Discount on per kWh charges for demand schedules",
-        "charge_type": "discount",
-        "value": 2,
-        "period": "percent"
+        "step_name": "Discount for Demand Schedules",
+        "description": "2% discount on per kWh charges for demand schedules (Schedules 130, 131)."
       },
       {
-        "step_name": "Reduction in Electricity Supply Energy Off-peak kWh rate for street lights",
-        "charge_type": "reduction",
-        "value": 0.005,
-        "period": "per_kwh"
-      },
-      {
-        "step_name": "Minimum charge",
-        "charge_type": "minimum",
-        "note": "Shall not be less than the Basic Customer Charge as stated in the appropriate rate schedule."
+        "step_name": "Street Light Service Discount",
+        "description": "1/2\u00a2 reduction in the Electricity Supply Energy Off-peak kWh rate for metered off-peak kWh used for Customer-owned street lights."
       }
     ],
-    "riders_note": "Each applicable kWh used is subject to all applicable riders (values merged separately)",
+    "minimum_charge": {
+      "basis": "Basic Customer Charge as stated in the appropriate rate schedule",
+      "value": null
+    },
+    "notes": "This schedule provides discounts and special provisions applicable to certain services and is not a standalone billable rate schedule.",
     "source_schedule": "SCHEDULE SP",
     "source_pages": "81-82"
   },
   {
     "sc_code": "SCHEDULE SSL",
-    "description": "Solid State Outdoor Lighting Service - Standard Basic",
-    "logic_steps": [
+    "description": "Municipal and County Solid State Outdoor Lighting",
+    "billing_model": "per_fixture",
+    "fixture_rates": [
       {
-        "step_name": "Standard Basic LED Distribution Charge",
-        "charge_type": "tiered_fixed_fee",
-        "tiers": [
-          {
-            "tier": 1,
-            "operating_range": "0 \u2212 9 kWh",
-            "value": 7.86,
-            "period": "monthly"
-          },
-          {
-            "tier": 2,
-            "operating_range": "10 \u2212 19 kWh",
-            "value": 9.04,
-            "period": "monthly"
-          },
-          {
-            "tier": 3,
-            "operating_range": "20 \u2212 29 kWh",
-            "value": 9.87,
-            "period": "monthly"
-          },
-          {
-            "tier": 4,
-            "operating_range": "30 \u2212 39 kWh",
-            "value": 10.17,
-            "period": "monthly"
-          },
-          {
-            "tier": 5,
-            "operating_range": "40 \u2212 49 kWh",
-            "value": 11.71,
-            "period": "monthly"
-          },
-          {
-            "tier": 6,
-            "operating_range": "50 \u2212 59 kWh",
-            "value": 13.56,
-            "period": "monthly"
-          },
-          {
-            "tier": 7,
-            "operating_range": "60 \u2212 69 kWh",
-            "value": 14.15,
-            "period": "monthly"
-          },
-          {
-            "tier": 8,
-            "operating_range": "70 \u2212 79 kWh",
-            "value": 14.68,
-            "period": "monthly"
-          },
-          {
-            "tier": 9,
-            "operating_range": "80 \u2212 89 kWh",
-            "value": 15.81,
-            "period": "monthly"
-          },
-          {
-            "tier": 10,
-            "operating_range": "90 \u2212 99 kWh",
-            "value": 16.29,
-            "period": "monthly"
-          }
-        ]
+        "fixture_label": "Standard Basic LED Tier 1 (0-9 kWh)",
+        "distribution_charge_per_unit": 7.86,
+        "supply_charge_per_unit": 0.15,
+        "period": "monthly"
       },
       {
-        "step_name": "Standard Basic LED Electricity Supply Charge",
-        "charge_type": "tiered_per_kwh",
-        "tiers": [
-          {
-            "tier": 1,
-            "operating_range": "0 \u2212 9 kWh",
-            "value": 0.15
-          },
-          {
-            "tier": 2,
-            "operating_range": "10 \u2212 19 kWh",
-            "value": 0.44
-          },
-          {
-            "tier": 3,
-            "operating_range": "20 \u2212 29 kWh",
-            "value": 0.73
-          },
-          {
-            "tier": 4,
-            "operating_range": "30 \u2212 39 kWh",
-            "value": 1.02
-          },
-          {
-            "tier": 5,
-            "operating_range": "40 \u2212 49 kWh",
-            "value": 1.32
-          },
-          {
-            "tier": 6,
-            "operating_range": "50 \u2212 59 kWh",
-            "value": 1.61
-          },
-          {
-            "tier": 7,
-            "operating_range": "60 \u2212 69 kWh",
-            "value": 1.9
-          },
-          {
-            "tier": 8,
-            "operating_range": "70 \u2212 79 kWh",
-            "value": 2.19
-          },
-          {
-            "tier": 9,
-            "operating_range": "80 \u2212 89 kWh",
-            "value": 2.49
-          },
-          {
-            "tier": 10,
-            "operating_range": "90 \u2212 99 kWh",
-            "value": 2.78
-          }
-        ]
+        "fixture_label": "Standard Basic LED Tier 2 (10-19 kWh)",
+        "distribution_charge_per_unit": 9.04,
+        "supply_charge_per_unit": 0.44,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Basic LED Tier 3 (20-29 kWh)",
+        "distribution_charge_per_unit": 9.87,
+        "supply_charge_per_unit": 0.73,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Basic LED Tier 4 (30-39 kWh)",
+        "distribution_charge_per_unit": 10.17,
+        "supply_charge_per_unit": 1.02,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Basic LED Tier 5 (40-49 kWh)",
+        "distribution_charge_per_unit": 11.71,
+        "supply_charge_per_unit": 1.32,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Basic LED Tier 6 (50-59 kWh)",
+        "distribution_charge_per_unit": 13.56,
+        "supply_charge_per_unit": 1.61,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Basic LED Tier 7 (60-69 kWh)",
+        "distribution_charge_per_unit": 14.15,
+        "supply_charge_per_unit": 1.9,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Basic LED Tier 8 (70-79 kWh)",
+        "distribution_charge_per_unit": 14.68,
+        "supply_charge_per_unit": 2.19,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Basic LED Tier 9 (80-89 kWh)",
+        "distribution_charge_per_unit": 15.81,
+        "supply_charge_per_unit": 2.49,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Basic LED Tier 10 (90-99 kWh)",
+        "distribution_charge_per_unit": 16.29,
+        "supply_charge_per_unit": 2.78,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Premium LED Tier 1 (0-9 kWh)",
+        "distribution_charge_per_unit": 24.16,
+        "supply_charge_per_unit": 0.15,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Premium LED Tier 2 (10-19 kWh)",
+        "distribution_charge_per_unit": 24.34,
+        "supply_charge_per_unit": 0.44,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Premium LED Tier 3 (20-29 kWh)",
+        "distribution_charge_per_unit": 24.67,
+        "supply_charge_per_unit": 0.73,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Premium LED Tier 4 (30-39 kWh)",
+        "distribution_charge_per_unit": 24.99,
+        "supply_charge_per_unit": 1.02,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Premium LED Tier 5 (40-49 kWh)",
+        "distribution_charge_per_unit": 25.89,
+        "supply_charge_per_unit": 1.32,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Premium LED Tier 6 (50-59 kWh)",
+        "distribution_charge_per_unit": 26.01,
+        "supply_charge_per_unit": 1.61,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Premium LED Tier 7 (60-69 kWh)",
+        "distribution_charge_per_unit": 28.5,
+        "supply_charge_per_unit": 1.9,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Premium LED Tier 8 (70-79 kWh)",
+        "distribution_charge_per_unit": 28.63,
+        "supply_charge_per_unit": 2.19,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Premium LED Tier 9 (80-89 kWh)",
+        "distribution_charge_per_unit": 29.35,
+        "supply_charge_per_unit": 2.49,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Premium LED Tier 10 (90-99 kWh)",
+        "distribution_charge_per_unit": 29.47,
+        "supply_charge_per_unit": 2.78,
+        "period": "monthly"
       }
     ],
-    "riders_note": "Each kilowatthour used is subject to all applicable riders (values merged separately)",
-    "source_schedule": "SCHEDULE SSL",
-    "source_pages": "82-89",
-    "riders_priced": [
-      {
-        "schedule": "SCHEDULE SSL",
-        "rider_name": "DIST-CM",
-        "value": 0.004063,
-        "unit": "kwh",
-        "withdrawn_date": null
-      },
-      {
-        "schedule": "SCHEDULE SSL",
-        "rider_name": "CCR-CM",
-        "value": 0.001242,
-        "unit": "kwh",
-        "withdrawn_date": null
-      },
-      {
-        "schedule": "SCHEDULE SSL",
-        "rider_name": "CE-CM",
-        "value": 0.001673,
-        "unit": "kwh",
-        "withdrawn_date": null
-      },
-      {
-        "schedule": "SCHEDULE SSL",
-        "rider_name": "E-CM",
-        "value": 0.00073,
-        "unit": "kwh",
-        "withdrawn_date": null
-      },
-      {
-        "schedule": "SCHEDULE SSL",
-        "rider_name": "GEN-CM",
-        "value": 0.00432,
-        "unit": "kwh",
-        "withdrawn_date": null
-      },
-      {
-        "schedule": "SCHEDULE SSL",
-        "rider_name": "OSW-CM",
-        "value": 0.0070030000000000005,
-        "unit": "kwh",
-        "withdrawn_date": null
-      },
-      {
-        "schedule": "SCHEDULE SSL",
-        "rider_name": "PIPP-CM",
-        "value": 0.0,
-        "unit": "kwh",
-        "withdrawn_date": null
-      },
-      {
-        "schedule": "SCHEDULE SSL",
-        "rider_name": "RBB-CM",
-        "value": 0.000473,
-        "unit": "kwh",
-        "withdrawn_date": null
-      },
-      {
-        "schedule": "SCHEDULE SSL",
-        "rider_name": "RPS-CM",
-        "value": 0.008637,
-        "unit": "kwh",
-        "withdrawn_date": null
-      },
-      {
-        "schedule": "SCHEDULE SSL",
-        "rider_name": "SMR-CM",
-        "value": 0.000222,
-        "unit": "kwh",
-        "withdrawn_date": null
-      },
-      {
-        "schedule": "SCHEDULE SSL",
-        "rider_name": "SNA-CM",
-        "value": 0.0026989999999999996,
-        "unit": "kwh",
-        "withdrawn_date": null
-      },
-      {
-        "schedule": "SCHEDULE SSL",
-        "rider_name": "T-CM",
-        "value": 0.01213,
-        "unit": "kwh",
-        "withdrawn_date": null
-      },
-      {
-        "schedule": "SCHEDULE SSL",
-        "rider_name": "B-CM",
-        "value": 0.00052,
-        "unit": "kwh",
-        "withdrawn_date": "2025-07-01"
-      },
-      {
-        "schedule": "SCHEDULE SSL",
-        "rider_name": "BW-CM",
-        "value": 0.00201,
-        "unit": "kwh",
-        "withdrawn_date": "2025-07-01"
-      },
-      {
-        "schedule": "SCHEDULE SSL",
-        "rider_name": "GT-CM",
-        "value": 0.00248,
-        "unit": "kwh",
-        "withdrawn_date": "2025-07-01"
-      },
-      {
-        "schedule": "SCHEDULE SSL",
-        "rider_name": "GV-CM",
-        "value": 0.0017499999999999998,
-        "unit": "kwh",
-        "withdrawn_date": "2025-07-01"
-      },
-      {
-        "schedule": "SCHEDULE SSL",
-        "rider_name": "U PHASE 1-CM",
-        "value": 0.00172,
-        "unit": "kwh",
-        "withdrawn_date": "2025-07-01"
-      },
-      {
-        "schedule": "SCHEDULE SSL",
-        "rider_name": "U PHASE 2-CM",
-        "value": 0.0019500000000000001,
-        "unit": "kwh",
-        "withdrawn_date": "2025-07-01"
-      },
-      {
-        "schedule": "SCHEDULE SSL",
-        "rider_name": "US-2-CM",
-        "value": 0.00013,
-        "unit": "kwh",
-        "withdrawn_date": "2025-07-01"
-      },
-      {
-        "schedule": "SCHEDULE SSL",
-        "rider_name": "US-3-CM",
-        "value": 0.00052,
-        "unit": "kwh",
-        "withdrawn_date": "2025-07-01"
-      },
-      {
-        "schedule": "SCHEDULE SSL",
-        "rider_name": "US-4-CM",
-        "value": 0.00018999999999999998,
-        "unit": "kwh",
-        "withdrawn_date": "2025-07-01"
-      }
-    ]
-  },
-  {
-    "sc_code": "SCHEDULE SSL",
-    "description": "Solid State Outdoor Lighting Service - Standard Premium",
-    "logic_steps": [
-      {
-        "step_name": "Standard Premium LED Distribution Charge",
-        "charge_type": "tiered_fixed_fee",
-        "tiers": [
-          {
-            "tier": 1,
-            "operating_range": "0 \u2212 9 kWh",
-            "value": 24.16,
-            "period": "monthly"
-          },
-          {
-            "tier": 2,
-            "operating_range": "10 \u2212 19 kWh",
-            "value": 24.34,
-            "period": "monthly"
-          },
-          {
-            "tier": 3,
-            "operating_range": "20 \u2212 29 kWh",
-            "value": 24.67,
-            "period": "monthly"
-          },
-          {
-            "tier": 4,
-            "operating_range": "30 \u2212 39 kWh",
-            "value": 24.99,
-            "period": "monthly"
-          },
-          {
-            "tier": 5,
-            "operating_range": "40 \u2212 49 kWh",
-            "value": 25.89,
-            "period": "monthly"
-          },
-          {
-            "tier": 6,
-            "operating_range": "50 \u2212 59 kWh",
-            "value": 26.01,
-            "period": "monthly"
-          },
-          {
-            "tier": 7,
-            "operating_range": "60 \u2212 69 kWh",
-            "value": 28.5,
-            "period": "monthly"
-          },
-          {
-            "tier": 8,
-            "operating_range": "70 \u2212 79 kWh",
-            "value": 28.63,
-            "period": "monthly"
-          },
-          {
-            "tier": 9,
-            "operating_range": "80 \u2212 89 kWh",
-            "value": 29.35,
-            "period": "monthly"
-          },
-          {
-            "tier": 10,
-            "operating_range": "90 \u2212 99 kWh",
-            "value": 29.47,
-            "period": "monthly"
-          }
-        ]
-      },
-      {
-        "step_name": "Standard Premium LED Electricity Supply Charge",
-        "charge_type": "tiered_per_kwh",
-        "tiers": [
-          {
-            "tier": 1,
-            "operating_range": "0 \u2212 9 kWh",
-            "value": 0.15
-          },
-          {
-            "tier": 2,
-            "operating_range": "10 \u2212 19 kWh",
-            "value": 0.44
-          },
-          {
-            "tier": 3,
-            "operating_range": "20 \u2212 29 kWh",
-            "value": 0.73
-          },
-          {
-            "tier": 4,
-            "operating_range": "30 \u2212 39 kWh",
-            "value": 1.02
-          },
-          {
-            "tier": 5,
-            "operating_range": "40 \u2212 49 kWh",
-            "value": 1.32
-          },
-          {
-            "tier": 6,
-            "operating_range": "50 \u2212 59 kWh",
-            "value": 1.61
-          },
-          {
-            "tier": 7,
-            "operating_range": "60 \u2212 69 kWh",
-            "value": 1.9
-          },
-          {
-            "tier": 8,
-            "operating_range": "70 \u2212 79 kWh",
-            "value": 2.19
-          },
-          {
-            "tier": 9,
-            "operating_range": "80 \u2212 89 kWh",
-            "value": 2.49
-          },
-          {
-            "tier": 10,
-            "operating_range": "90 \u2212 99 kWh",
-            "value": 2.78
-          }
-        ]
-      }
-    ],
-    "riders_note": "Each kilowatthour used is subject to all applicable riders (values merged separately)",
+    "minimum_charge": {
+      "basis": "rate specified in Paragraph II. A.",
+      "value": null
+    },
+    "riders_note": "Each kilowatthour used is subject to all applicable riders.",
     "source_schedule": "SCHEDULE SSL",
     "source_pages": "82-89",
     "riders_priced": [
