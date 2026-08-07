@@ -282,6 +282,89 @@ def render_audit_calculation():
 # SECTION 3: Tariff Viewer (browse the pre-bundled tariff JSON)
 # ============================================================
 
+def _billing_model_badge(billing_model):
+    labels = {
+        "usage_based": "⚡ Usage-based (kWh/kW)",
+        "per_fixture": "💡 Per-fixture (equipment count)",
+        "flat_service_fee": "🔧 Flat service fee",
+        "variable_pricing": "📈 Variable/market pricing",
+        "not_ratable": "📄 Not independently billable",
+    }
+    return labels.get(billing_model, billing_model or "Unclassified")
+
+
+def _render_charge_blocks(charge_blocks):
+    """
+    Renders each charge_block as its own small table. Tiered rates get
+    exploded into one row per tier (with a 'Tier' column showing the
+    threshold), flat rates get a single row -- both shown with the
+    same columns so they're easy to scan side by side.
+    """
+    if not charge_blocks:
+        st.caption("No charge blocks extracted for this entry.")
+        return
+
+    # group by block_name so voltage/season variants of the "same"
+    # charge (e.g. two "Distribution Demand Charge" blocks, one per
+    # voltage class) are visually grouped rather than interleaved
+    seen_names = []
+    grouped = {}
+    for b in charge_blocks:
+        name = b.get("block_name", "Charge")
+        if name not in grouped:
+            grouped[name] = []
+            seen_names.append(name)
+        grouped[name].append(b)
+
+    for name in seen_names:
+        st.markdown(f"*{name}*")
+        rows = []
+        for b in grouped[name]:
+            condition = b.get("condition") or "—"
+            basis = b.get("basis", "")
+            unit = b.get("unit", "")
+            rs = b.get("rate_structure", {}) or {}
+
+            if rs.get("type") == "tiered":
+                for i, tier in enumerate(rs.get("tiers", []), start=1):
+                    threshold = tier.get("threshold")
+                    tbasis = tier.get("threshold_basis", "flat")
+                    if threshold is None:
+                        tier_label = "Additional (open-ended)"
+                    elif tbasis == "flat":
+                        tier_label = f"Tier {i}: up to {threshold:,.0f}"
+                    else:
+                        tier_label = f"Tier {i}: up to {threshold:,.0f} × demand ({tbasis})"
+                    rows.append({
+                        "Condition": condition,
+                        "Basis": basis,
+                        "Tier": tier_label,
+                        "Rate": tier.get("rate"),
+                        "Unit": unit,
+                    })
+            elif rs.get("type") == "flat":
+                rows.append({
+                    "Condition": condition,
+                    "Basis": basis,
+                    "Tier": "—",
+                    "Rate": rs.get("rate"),
+                    "Unit": unit,
+                })
+
+        if rows:
+            st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
+
+
+def _render_fixture_rates(fixture_rates):
+    if not fixture_rates:
+        st.caption("No fixture rate table extracted for this entry.")
+        return
+    df = pd.DataFrame(fixture_rates)
+    display_cols = [c for c in ["fixture_label", "distribution_charge_per_unit",
+                                  "supply_charge_per_unit", "period"] if c in df.columns]
+    st.dataframe(df[display_cols], use_container_width=True, hide_index=True)
+
+
 def render_tariff_viewer():
     st.title("📋 Tariff Viewer")
     st.write("Browse the rates loaded from the tariff logic file.")
@@ -312,34 +395,78 @@ def render_tariff_viewer():
     for entry in entries:
         description = entry.get("description") or "General"
         eff_date = entry.get("_effective_date")
+        billing_model = entry.get("billing_model")
 
-        with st.expander(f"{description}" + (f" (effective {eff_date})" if eff_date else ""), expanded=True):
+        header = f"{description}" + (f" (effective {eff_date})" if eff_date else "")
+        with st.expander(header, expanded=True):
+            st.caption(_billing_model_badge(billing_model))
+
             logic_steps = entry.get("logic_steps", [])
             riders = entry.get("riders_priced", [])
+            charge_blocks = entry.get("charge_blocks", [])
+            fixture_rates = entry.get("fixture_rates", [])
 
-            st.markdown("**Base Charges**")
-            if logic_steps:
-                steps_df = pd.DataFrame(logic_steps)
-                # keep the columns that actually matter for a rate readout
-                display_cols = [c for c in ["step_name", "charge_type", "value", "period"] if c in steps_df.columns]
+            # Fixed-fee / customer charges -- present regardless of
+            # billing_model (this is what makes SGCM-1-style PARTIAL
+            # billing possible: a real fee even on an otherwise
+            # non-standard schedule)
+            fixed_fee_steps = [s for s in logic_steps if (s.get("charge_type") or "") == "fixed_fee"]
+            if fixed_fee_steps:
+                st.markdown("**Fixed Charges**")
+                steps_df = pd.DataFrame(fixed_fee_steps)
+                display_cols = [c for c in ["step_name", "value", "period"] if c in steps_df.columns]
                 st.dataframe(steps_df[display_cols], use_container_width=True, hide_index=True)
-            else:
-                st.caption("No base charges extracted for this entry.")
 
+            # Usage-based schedules: charge_blocks
+            if billing_model == "usage_based":
+                st.markdown("**Usage-Based Charges**")
+                _render_charge_blocks(charge_blocks)
+
+            # Per-fixture schedules: fixture_rates
+            elif billing_model == "per_fixture":
+                st.markdown("**Fixture Rate Table**")
+                _render_fixture_rates(fixture_rates)
+
+            # Other non-fixed-fee logic_steps (older schema, or
+            # flat_service_fee/variable_pricing schedules with a
+            # single miscellaneous rate)
+            other_steps = [s for s in logic_steps if (s.get("charge_type") or "") != "fixed_fee"]
+            if other_steps:
+                st.markdown("**Other Charges**")
+                other_df = pd.DataFrame(other_steps)
+                display_cols = [c for c in other_df.columns if c not in ("charge_type",)]
+                st.dataframe(other_df[display_cols], use_container_width=True, hide_index=True)
+
+            min_charge = entry.get("minimum_charge")
+            if min_charge and (min_charge.get("value") is not None or min_charge.get("basis")):
+                if min_charge.get("value") is not None:
+                    st.caption(f"💵 Minimum charge: ${min_charge['value']:.2f} ({min_charge.get('basis', '')})")
+                else:
+                    st.caption(f"💵 Minimum charge: {min_charge.get('basis', 'see tariff text')} "
+                               f"(not a fixed number -- not auto-enforced)")
+
+            demand_note = entry.get("demand_determination_note")
+            if demand_note:
+                st.caption(f"📏 Demand determination: {demand_note}")
+
+            if entry.get("notes"):
+                st.caption(f"ℹ️ {entry['notes']}")
             if entry.get("riders_note"):
                 st.caption(f"ℹ️ {entry['riders_note']}")
 
             st.markdown("**Riders**")
             if riders:
                 riders_df = pd.DataFrame(riders)
-                display_cols = [c for c in ["rider_name", "value", "unit"] if c in riders_df.columns]
+                display_cols = [c for c in ["rider_name", "value", "unit", "withdrawn_date"] if c in riders_df.columns]
                 st.dataframe(riders_df[display_cols], use_container_width=True, hide_index=True)
 
                 total_kwh_riders = sum(r["value"] for r in riders if r.get("unit") == "kwh")
                 total_kw_riders = sum(r["value"] for r in riders if r.get("unit") == "kw")
+                withdrawn_count = sum(1 for r in riders if r.get("withdrawn_date"))
                 st.caption(
                     f"Rider totals: **${total_kwh_riders:.5f}/kWh** + **${total_kw_riders:.5f}/kW** "
                     f"across {len(riders)} rider(s)"
+                    + (f" ({withdrawn_count} withdrawn as of a listed date)" if withdrawn_count else "")
                 )
             else:
                 st.caption("No priced riders found for this schedule.")
