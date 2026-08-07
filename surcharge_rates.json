@@ -1,0 +1,143 @@
+{
+  "source": "Virginia Jurisdiction Sales and Use Tax Surcharge",
+  "effective_date": "2026-01-01",
+  "rates": [
+    {
+      "schedule_codes": [
+        "1",
+        "1G",
+        "1P",
+        "1S",
+        "1T",
+        "1W",
+        "DP-R",
+        "1EV",
+        "EV"
+      ],
+      "condition": null,
+      "rate_per_kwh": 0.000921
+    },
+    {
+      "schedule_codes": [
+        "GS-1",
+        "DP-1"
+      ],
+      "condition": null,
+      "rate_per_kwh": 0.000847
+    },
+    {
+      "schedule_codes": [
+        "GS-2"
+      ],
+      "condition": null,
+      "rate_per_kwh": 0.000712
+    },
+    {
+      "schedule_codes": [
+        "GS-2T"
+      ],
+      "condition": null,
+      "rate_per_kwh": 0.000712
+    },
+    {
+      "schedule_codes": [
+        "DP-2"
+      ],
+      "condition": null,
+      "rate_per_kwh": 0.000712
+    },
+    {
+      "schedule_codes": [
+        "GS-3",
+        "GS-3 EV",
+        "MBR",
+        "SCR"
+      ],
+      "condition": "Secondary",
+      "rate_per_kwh": 0.000541
+    },
+    {
+      "schedule_codes": [
+        "GS-4",
+        "MBR",
+        "SCR"
+      ],
+      "condition": "Primary and Transmission",
+      "rate_per_kwh": 0.00044
+    },
+    {
+      "schedule_codes": [
+        "5"
+      ],
+      "condition": null,
+      "rate_per_kwh": 0.000712
+    },
+    {
+      "schedule_codes": [
+        "5C"
+      ],
+      "condition": null,
+      "rate_per_kwh": 0.000917
+    },
+    {
+      "schedule_codes": [
+        "5P"
+      ],
+      "condition": null,
+      "rate_per_kwh": 0.000917
+    },
+    {
+      "schedule_codes": [
+        "6"
+      ],
+      "condition": null,
+      "rate_per_kwh": 0.000541
+    },
+    {
+      "schedule_codes": [
+        "6TS"
+      ],
+      "condition": null,
+      "rate_per_kwh": 0.000541
+    },
+    {
+      "schedule_codes": [
+        "7"
+      ],
+      "condition": null,
+      "rate_per_kwh": 0.000847
+    },
+    {
+      "schedule_codes": [
+        "8"
+      ],
+      "condition": null,
+      "rate_per_kwh": 0.00044
+    },
+    {
+      "schedule_codes": [
+        "10"
+      ],
+      "condition": "Secondary",
+      "rate_per_kwh": 0.000541
+    },
+    {
+      "schedule_codes": [
+        "10"
+      ],
+      "condition": "Primary and Transmission",
+      "rate_per_kwh": 0.00044
+    },
+    {
+      "schedule_codes": [
+        "24",
+        "25",
+        "27",
+        "28",
+        "29"
+      ],
+      "condition": null,
+      "rate_per_kwh": 0.001627
+    }
+  ]
+}
