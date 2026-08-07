@@ -497,13 +497,7 @@ def load_surcharge_rates(path: str):
 
 def render_surcharge_viewer():
     st.title("💰 Sales & Use Tax Surcharge")
-    st.write(
-        "Virginia Jurisdiction Sales and Use Tax Surcharge rates, per kWh. "
-        "This is a separate rate table from the VEPGA municipal/county tariff "
-        "-- schedule codes here (e.g. GS-1, MBR, SCR) use a different naming "
-        "convention and don't correspond 1:1 with the VEPGA schedule codes "
-        "in the Tariff Viewer section."
-    )
+    
 
     if not Path(SURCHARGE_JSON_PATH).exists():
         st.error(
