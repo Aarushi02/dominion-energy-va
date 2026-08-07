@@ -37,6 +37,14 @@ st.set_page_config(page_title="Dominion Bill Processing", page_icon="⚡")
 # run -- so the audit section never needs a per-session upload.
 TARIFF_JSON_PATH = "final_tariff_logic.json"
 
+# Path to the Sales and Use Tax Surcharge rate table -- a separate,
+# smaller dataset with its OWN schedule-naming convention (e.g. "GS-1",
+# "MBR", "SCR"), distinct from the VEPGA municipal/county schedule
+# codes in TARIFF_JSON_PATH. Kept as its own file since it's a
+# different jurisdiction's rate structure, not part of the VEPGA
+# tariff document.
+SURCHARGE_JSON_PATH = "surcharge_rates.json"
+
 
 # ============================================================
 # AUTH -- unchanged from before
@@ -82,7 +90,7 @@ with st.sidebar:
         st.rerun()
 
     st.divider()
-    section = st.radio("Section", ["📄 Bill Upload", "🔍 Audit Calculation", "📋 Tariff Viewer"])
+    section = st.radio("Section", ["📄 Bill Upload", "🔍 Audit Calculation", "📋 Tariff Viewer", "💰 Sales & Use Tax Surcharge"])
 
 
 # ============================================================
@@ -477,6 +485,70 @@ def render_tariff_viewer():
 
 
 # ============================================================
+# SECTION 4: Sales & Use Tax Surcharge (separate, smaller rate table)
+# ============================================================
+
+@st.cache_data(show_spinner=False)
+def load_surcharge_rates(path: str):
+    import json
+    with open(path, "r") as f:
+        return json.load(f)
+
+
+def render_surcharge_viewer():
+    st.title("💰 Sales & Use Tax Surcharge")
+    st.write(
+        "Virginia Jurisdiction Sales and Use Tax Surcharge rates, per kWh. "
+        "This is a separate rate table from the VEPGA municipal/county tariff "
+        "-- schedule codes here (e.g. GS-1, MBR, SCR) use a different naming "
+        "convention and don't correspond 1:1 with the VEPGA schedule codes "
+        "in the Tariff Viewer section."
+    )
+
+    if not Path(SURCHARGE_JSON_PATH).exists():
+        st.error(
+            f"Surcharge rate file not found at `{SURCHARGE_JSON_PATH}`. "
+            f"This file needs to be committed to the repo alongside the app."
+        )
+        return
+
+    data = load_surcharge_rates(SURCHARGE_JSON_PATH)
+    rates = data.get("rates", [])
+    if not rates:
+        st.warning("No surcharge rates found in the file.")
+        return
+
+    source = data.get("source")
+    eff_date = data.get("effective_date")
+    caption_parts = []
+    if source:
+        caption_parts.append(source)
+    if eff_date:
+        caption_parts.append(f"effective on and after {eff_date}")
+    if caption_parts:
+        st.caption(" \u2014 ".join(caption_parts))
+
+    # flatten for display: one row per schedule code (so "GS-3, GS-3 EV,
+    # MBR, SCR" becomes 4 separate searchable rows, not one combined cell)
+    rows = []
+    for e in rates:
+        for code in e.get("schedule_codes", []):
+            rows.append({
+                "Schedule": code,
+                "Condition": e.get("condition") or "\u2014",
+                "Rate ($/kWh)": e.get("rate_per_kwh"),
+            })
+    df = pd.DataFrame(rows).sort_values("Schedule").reset_index(drop=True)
+
+    search = st.text_input("Search schedule code", "")
+    if search:
+        df = df[df["Schedule"].str.contains(search, case=False, na=False)]
+
+    st.dataframe(df, use_container_width=True, hide_index=True)
+    st.caption(f"{len(df)} schedule/condition row(s) shown.")
+
+
+# ============================================================
 # ROUTE
 # ============================================================
 
@@ -484,5 +556,7 @@ if section == "📄 Bill Upload":
     render_bill_upload()
 elif section == "🔍 Audit Calculation":
     render_audit_calculation()
-else:
+elif section == "📋 Tariff Viewer":
     render_tariff_viewer()
+else:
+    render_surcharge_viewer()
