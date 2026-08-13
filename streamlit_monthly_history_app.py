@@ -28,7 +28,7 @@ from dominion_pdf_to_spreadsheet import (
     pivot_monthly_wide_by_year,
 )
 from dominion_audit_engine import DominionAuditEngine
-from audit_integration import run_audit, read_monthly_detail_spreadsheet
+from audit_integration import run_audit, read_monthly_detail_spreadsheet, format_audit_text_report
 
 st.set_page_config(page_title="Dominion Bill Processing", page_icon="⚡")
 
@@ -260,30 +260,30 @@ def render_audit_calculation():
         st.info(f"{skipped} month(s) skipped -- no tariff logic found "
                 f"for that schedule in `{TARIFF_JSON_PATH}`.")
 
-    def _highlight_variance(row):
-        if row["status"] != "SUCCESS":
-            return [""] * len(row)
-        threshold = max(10.0, 0.05 * abs(row["actual_bill"]))
-        color = "background-color: #ffcccc" if abs(row["variance"]) > threshold else ""
-        return [color] * len(row)
+    account_label = Path(spreadsheet_file.name).stem.replace("_monthly_history", "").replace("_", " ")
+    report_text = format_audit_text_report(audit_results_df, account_label=account_label)
 
-    st.dataframe(
-        audit_results_df.style.apply(_highlight_variance, axis=1),
-        use_container_width=True,
-    )
+    st.text_area("Audit Report", report_text, height=500)
 
-    out_buffer = io.BytesIO()
-    with pd.ExcelWriter(out_buffer, engine="openpyxl") as writer:
-        audit_results_df.to_excel(writer, sheet_name="Audit_Results", index=False)
-    out_buffer.seek(0)
-
-    out_filename = Path(spreadsheet_file.name).stem + "_audit_results.xlsx"
-    st.download_button(
-        label="⬇️ Download Audit Results Excel",
-        data=out_buffer,
-        file_name=out_filename,
-        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    )
+    col1, col2 = st.columns(2)
+    with col1:
+        st.download_button(
+            label="⬇️ Download Audit Report (.txt)",
+            data=report_text,
+            file_name=Path(spreadsheet_file.name).stem + "_audit_report.txt",
+            mime="text/plain",
+        )
+    with col2:
+        out_buffer = io.BytesIO()
+        with pd.ExcelWriter(out_buffer, engine="openpyxl") as writer:
+            audit_results_df.to_excel(writer, sheet_name="Audit_Results", index=False)
+        out_buffer.seek(0)
+        st.download_button(
+            label="⬇️ Download Audit Results (.xlsx)",
+            data=out_buffer,
+            file_name=Path(spreadsheet_file.name).stem + "_audit_results.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        )
 
 
 # ============================================================
@@ -497,7 +497,13 @@ def load_surcharge_rates(path: str):
 
 def render_surcharge_viewer():
     st.title("💰 Sales & Use Tax Surcharge")
-    
+    st.write(
+        "Virginia Jurisdiction Sales and Use Tax Surcharge rates, per kWh. "
+        "This is a separate rate table from the VEPGA municipal/county tariff "
+        "-- schedule codes here (e.g. GS-1, MBR, SCR) use a different naming "
+        "convention and don't correspond 1:1 with the VEPGA schedule codes "
+        "in the Tariff Viewer section."
+    )
 
     if not Path(SURCHARGE_JSON_PATH).exists():
         st.error(
