@@ -28,7 +28,7 @@ from dominion_pdf_to_spreadsheet import (
     pivot_monthly_wide_by_year,
 )
 from dominion_audit_engine import DominionAuditEngine
-from audit_integration import run_audit, read_monthly_detail_spreadsheet, format_audit_text_report
+from audit_integration import run_audit, read_monthly_detail_spreadsheet, compare_schedules
 
 st.set_page_config(page_title="Dominion Bill Processing", page_icon="⚡")
 
@@ -260,30 +260,72 @@ def render_audit_calculation():
         st.info(f"{skipped} month(s) skipped -- no tariff logic found "
                 f"for that schedule in `{TARIFF_JSON_PATH}`.")
 
-    account_label = Path(spreadsheet_file.name).stem.replace("_monthly_history", "").replace("_", " ")
-    report_text = format_audit_text_report(audit_results_df, account_label=account_label)
+    def _highlight_variance(row):
+        if row["status"] != "SUCCESS":
+            return [""] * len(row)
+        threshold = max(10.0, 0.05 * abs(row["actual_bill"]))
+        color = "background-color: #ffcccc" if abs(row["variance"]) > threshold else ""
+        return [color] * len(row)
 
-    st.text_area("Audit Report", report_text, height=500)
+    st.subheader("Audit Results (as actually billed)")
+    st.dataframe(
+        audit_results_df.style.apply(_highlight_variance, axis=1),
+        use_container_width=True,
+    )
 
-    col1, col2 = st.columns(2)
-    with col1:
-        st.download_button(
-            label="⬇️ Download Audit Report (.txt)",
-            data=report_text,
-            file_name=Path(spreadsheet_file.name).stem + "_audit_report.txt",
-            mime="text/plain",
-        )
-    with col2:
-        out_buffer = io.BytesIO()
-        with pd.ExcelWriter(out_buffer, engine="openpyxl") as writer:
-            audit_results_df.to_excel(writer, sheet_name="Audit_Results", index=False)
-        out_buffer.seek(0)
-        st.download_button(
-            label="⬇️ Download Audit Results (.xlsx)",
-            data=out_buffer,
-            file_name=Path(spreadsheet_file.name).stem + "_audit_results.xlsx",
-            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        )
+    out_buffer = io.BytesIO()
+    with pd.ExcelWriter(out_buffer, engine="openpyxl") as writer:
+        audit_results_df.to_excel(writer, sheet_name="Audit_Results", index=False)
+    out_buffer.seek(0)
+
+    st.download_button(
+        label="⬇️ Download Audit Results (.xlsx)",
+        data=out_buffer,
+        file_name=Path(spreadsheet_file.name).stem + "_audit_results.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+
+    # ---------------- Schedule comparison ----------------
+    st.divider()
+    st.subheader("Compare Against Other Schedule(s)")
+    st.write(
+        "See what the same actual monthly usage would have cost under a "
+        "different rate schedule -- e.g. checking whether a cheaper schedule "
+        "was available."
+    )
+
+    billed_schedules = sorted(audit_results_df["schedule"].dropna().unique())
+    all_schedules = sorted(engine.tariff_map.keys())
+    comparison_options = [s for s in all_schedules if s not in billed_schedules]
+
+    selected_schedules = st.multiselect(
+        "Select schedule(s) to compare against",
+        options=comparison_options,
+        default=[],
+    )
+
+    if selected_schedules:
+        compare_targets = billed_schedules + selected_schedules
+        with st.spinner("Calculating comparison..."):
+            comparison_df = compare_schedules(monthly_long_df, engine, compare_targets)
+
+        if comparison_df.empty:
+            st.warning("Comparison could not be calculated for this data.")
+        else:
+            st.dataframe(comparison_df, use_container_width=True)
+
+            comp_buffer = io.BytesIO()
+            with pd.ExcelWriter(comp_buffer, engine="openpyxl") as writer:
+                comparison_df.to_excel(writer, sheet_name="Schedule_Comparison", index=False)
+            comp_buffer.seek(0)
+            st.download_button(
+                label="⬇️ Download Schedule Comparison (.xlsx)",
+                data=comp_buffer,
+                file_name=Path(spreadsheet_file.name).stem + "_schedule_comparison.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            )
+    else:
+        st.caption("Select one or more schedules above to run the comparison.")
 
 
 # ============================================================
