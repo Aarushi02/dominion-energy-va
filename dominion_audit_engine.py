@@ -577,8 +577,20 @@ class DominionAuditEngine:
     # Core calculation
     # -----------------------------------------------------------------
 
-    def calculate_expected_bill(self, row: pd.Series) -> dict:
-        sc_code = _normalize_sc_code(row.get("service_class") or row.get("rate_schedule") or row.get("current_rate"))
+    def calculate_expected_bill(self, row: pd.Series, override_schedule: Optional[str] = None) -> dict:
+        """
+        override_schedule: if given, calculates using THIS schedule's
+        rates against the row's usage, instead of whatever schedule the
+        bill was actually billed under (row['service_class']). Lets you
+        compare "what would this month's actual usage have cost under
+        Schedule X" -- e.g. the same Schedule 100 vs 130 comparison used
+        in the City of VA Beach savings analysis workbook. The row's
+        real billed schedule is still recorded in the result as
+        'billed_schedule' for reference, separate from 'sc_code' (the
+        schedule actually used for this calculation).
+        """
+        billed_schedule = _normalize_sc_code(row.get("service_class") or row.get("rate_schedule") or row.get("current_rate"))
+        sc_code = _normalize_sc_code(override_schedule) if override_schedule else billed_schedule
         billing_type = _select_billing_type_for_row(row)
 
         bill_date = row.get("read_date") or row.get("bill_date")
@@ -657,6 +669,7 @@ class DominionAuditEngine:
                 return {
                     "status": "PARTIAL",
                     "sc_code": sc_code,
+                    "billed_schedule": billed_schedule,
                     "billing_type": billing_type,
                     "actual_bill": round(actual, 2),
                     "expected_bill": round(total_expected, 2),
@@ -667,6 +680,7 @@ class DominionAuditEngine:
             return {
                 "status": "SKIPPED",
                 "sc_code": sc_code,
+                "billed_schedule": billed_schedule,
                 "expected_bill": 0.0,
                 "variance": 0.0,
                 "trace": [f"Schedule {sc_code}: {reason}"],
@@ -737,6 +751,7 @@ class DominionAuditEngine:
             return {
                 "status": "SUCCESS",
                 "sc_code": sc_code,
+                "billed_schedule": billed_schedule,
                 "billing_type": billing_type,
                 "actual_bill": round(actual, 2),
                 "expected_bill": round(total_expected, 2),
@@ -765,6 +780,7 @@ class DominionAuditEngine:
             return {
                 "status": "SUCCESS",
                 "sc_code": sc_code,
+                "billed_schedule": billed_schedule,
                 "billing_type": billing_type,
                 "actual_bill": round(actual, 2),
                 "expected_bill": round(total_expected, 2),
@@ -908,6 +924,7 @@ class DominionAuditEngine:
         return {
             "status": "SUCCESS",
             "sc_code": sc_code,
+            "billed_schedule": billed_schedule,
             "billing_type": billing_type,
             "actual_bill": round(actual, 2),
             "expected_bill": round(total_expected, 2),
