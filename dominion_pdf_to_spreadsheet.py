@@ -1,14 +1,5 @@
-# ------------------------------------------------------------------
 # Dominion Energy "Electric Account Profile" PDF -> Spreadsheet
-# Handles OCR (the PDF has no text layer), key-value field extraction,
-# annual summary table extraction, and monthly rate/charge table
-# extraction, writing everything out to a multi-sheet Excel workbook.
-#
-# Style follows utility_bill_doc_processor.py (normspace/pull helpers,
-# DataFrame -> Excel), adapted for this document's layout, which is a
-# scanned/rendered "Account Profile" report rather than the tabular
-# "Monthly Electric History" bill the reference script targets.
-# ------------------------------------------------------------------
+# Handles OCR (the PDF has no text layer)
 
 import os
 import re
@@ -21,9 +12,6 @@ import pytesseract
 from pytesseract import Output
 from pdf2image import convert_from_path
 
-# ============================================================
-# CONFIG
-# ============================================================
 
 CONFIG = {
     "INPUT_PDF": "/mnt/user-data/uploads/County_of_Louisa_Account_Profile_001603782051_Dominion_VEPGA.pdf",
@@ -31,9 +19,8 @@ CONFIG = {
     "OCR_DPI": 300,
 }
 
-# ============================================================
-# HELPERS (mirrors utility_bill_doc_processor.py conventions)
-# ============================================================
+
+# HELPERS 
 
 def normspace(s: str) -> str:
     if s is None:
@@ -76,31 +63,20 @@ def parse_intlike(tok):
     except ValueError:
         return None
 
-
-# ============================================================
 # OCR
-# ============================================================
 
 def ocr_pages(pdf_path, dpi=300):
     """Returns a list of page texts (index 0 = page 1)."""
     images = convert_from_path(pdf_path, dpi=dpi)
     pages = []
     for img in images:
-        # psm 6: assume a uniform block of text -> keeps rows/columns
-        # more coherent for this layout than the default psm 3.
         txt = pytesseract.image_to_string(img, config="--psm 6")
         pages.append(txt)
     return pages
 
 
 def ocr_two_column_page(img, split_frac=0.42):
-    """
-    The Account Profile page (page 2) is laid out in two columns
-    (left = key-value fields, right = manager box + annual summary
-    table). OCR'ing the whole page as one block interleaves the two
-    columns' text on the same lines and corrupts both. Cropping and
-    OCR'ing each column separately fixes this.
-    """
+
     w, h = img.size
     left = img.crop((0, 0, int(w * split_frac), h))
     right = img.crop((int(w * (split_frac - 0.03)), 0, w, h))
@@ -108,10 +84,7 @@ def ocr_two_column_page(img, split_frac=0.42):
     right_txt = pytesseract.image_to_string(right, config="--psm 6")
     return left_txt, right_txt
 
-
-# ============================================================
 # PAGE 2: ACCOUNT PROFILE (key-value fields) + ANNUAL SUMMARY TABLE
-# ============================================================
 
 def extract_account_profile(left_col_text, right_col_text, page1_text):
     """
@@ -172,15 +145,10 @@ def extract_annual_summary(text):
         })
     return pd.DataFrame(rows)
 
-
-# ============================================================
-# MONTHLY DETAIL TABLES (one per "Historical Electricity Usage - YEAR" page)
-# ============================================================
+# MONTHLY DETAIL TABLES
 
 MONTH_HEADERS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN",
                   "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"]
-
-# Row labels we expect as line items in the monthly bill-summary table.
 KNOWN_LABELS = [
     "Bill From", "Bill To", "Billing Days", "Billed Rate",
     "Total Consumption", "Demand",
@@ -197,7 +165,6 @@ KNOWN_LABELS = [
     "Subtotal", "Facility Charges", "Total Charges",
 ]
 
-# Sort longest-first so e.g. "Rider US-2 kWh" matches before "Rider U2 kWh".
 _LABELS_SORTED = sorted(KNOWN_LABELS, key=len, reverse=True)
 
 
@@ -207,13 +174,6 @@ def extract_year_from_header(text):
 
 
 def _find_month_columns(word_data):
-    """
-    Returns {month_abbrev: x_center} for whichever month headers are
-    present on this page (e.g. only JAN-JUN on a YTD page).
-    Requires an exact-case ALL-CAPS match, since the page also contains
-    title-case month mentions elsewhere (e.g. "As of Jul 8, 2026") that
-    would otherwise be mistaken for a table column header.
-    """
     cols = {}
     n = len(word_data["text"])
     for i in range(n):
@@ -225,13 +185,6 @@ def _find_month_columns(word_data):
 
 
 def _match_label(tokens):
-    """
-    Given the list of text tokens for a row (in reading order), strip
-    any leading footnote markers (*, **), then greedily match the
-    longest known label from the start of the row and return
-    (label, remaining_tokens_with_positions) or (None, tokens) if no
-    label matches -> row is not a data row we care about.
-    """
     tokens = list(tokens)
     while tokens and re.fullmatch(r"\*+", tokens[0]["text"]):
         tokens = tokens[1:]
@@ -257,14 +210,6 @@ def _is_noise_row(raw_text):
 
 
 def _looks_like_data_row(tokens):
-    """
-    Heuristic to decide whether an unmatched row is worth warning about.
-    Plain header/section text (e.g. "Bill Determinants", "Bill Summary",
-    the month-header row itself, footnotes) has no money/number-like
-    tokens after the label and would just be noise; a row with at least
-    one such token but no recognized label is the actual risk case
-    (a real charge/rider line item that KNOWN_LABELS doesn't cover).
-    """
     for t in tokens:
         txt = t["text"]
         if re.fullmatch(MONEY_RE, txt) or re.fullmatch(r"\d{1,2}/\d{1,2}/\d{2,4}", txt) or re.fullmatch(r"VE-\d+", txt):
@@ -273,22 +218,6 @@ def _looks_like_data_row(tokens):
 
 
 def extract_monthly_tables(pdf_images, page_texts, warn_unmatched=True):
-    """
-    Position-aware extraction: reads word-level bounding boxes so each
-    value is assigned to a month by x-coordinate proximity to that
-    month's column header, rather than by left-to-right token order.
-    This correctly handles months where Dominion's PDF omits a $0.00
-    cell entirely instead of printing it (a plain left-to-right token
-    fill would shift every later month's value into the wrong column).
-
-    If warn_unmatched=True, any row that has numeric/dollar/date tokens
-    but doesn't start with a label in KNOWN_LABELS is printed as a
-    warning -- this is the main defense against silently dropping a
-    charge/rider line item that a new document introduces and this
-    version of the script doesn't know about yet.
-
-    Returns a long-format DataFrame: [year, month, line_item, value].
-    """
     all_rows = []
     unmatched_summary = []
 
@@ -303,13 +232,10 @@ def extract_monthly_tables(pdf_images, page_texts, warn_unmatched=True):
         month_cols = _find_month_columns(data)
         if not month_cols:
             continue
-        # half the typical column spacing, used as a max-distance cutoff
-        # so a token never gets assigned to the wrong-but-nearest column
         spacings = sorted(month_cols.values())
         gaps = [b - a for a, b in zip(spacings, spacings[1:])]
         max_dist = (sum(gaps) / len(gaps)) / 2 if gaps else 100
 
-        # group word tokens into rows via (block, par, line)
         rows = {}
         for i in range(n):
             txt = data["text"][i].strip()
@@ -333,15 +259,13 @@ def extract_monthly_tables(pdf_images, page_texts, warn_unmatched=True):
 
             for vt in value_tokens:
                 x_center = vt["left"] + vt["width"] / 2
-                # nearest month column, but only if within max_dist
                 nearest_month, nearest_dist = None, None
                 for month, cx in month_cols.items():
                     d = abs(x_center - cx)
                     if nearest_dist is None or d < nearest_dist:
                         nearest_month, nearest_dist = month, d
                 if nearest_month is None or nearest_dist > max_dist:
-                    continue  # stray token (e.g. OCR noise), skip
-
+                    continue  
                 tok = vt["text"]
                 if label in ("Bill From", "Bill To", "Billed Rate"):
                     value = tok
@@ -360,13 +284,11 @@ def extract_monthly_tables(pdf_images, page_texts, warn_unmatched=True):
                 })
 
     df = pd.DataFrame(all_rows)
-    # a label+month can only legitimately appear once per page; if OCR
-    # noise produces a duplicate, keep the first (leftmost-token) hit
     if not df.empty:
         df = df.drop_duplicates(subset=["year", "month", "line_item"], keep="first")
 
     if warn_unmatched and unmatched_summary:
-        print(f"⚠️  {len(unmatched_summary)} row(s) with data-like tokens did not match "
+        print(f"  {len(unmatched_summary)} row(s) with data-like tokens did not match "
               f"any label in KNOWN_LABELS -- these rows were SKIPPED, not extracted:")
         for u in unmatched_summary:
             print(f"    [{u['year']}] {u['row_text']}")
@@ -377,12 +299,6 @@ def extract_monthly_tables(pdf_images, page_texts, warn_unmatched=True):
 
 
 def pivot_monthly_wide_by_year(monthly_long_df):
-    """
-    Returns {year: wide_df} where each wide_df has one row per
-    line_item (in the same order the line items appear in the source
-    PDF, i.e. KNOWN_LABELS order -- not alphabetical) and one column
-    per month present for that year.
-    """
     if monthly_long_df.empty:
         return {}
 
@@ -399,8 +315,6 @@ def pivot_monthly_wide_by_year(monthly_long_df):
         months_present = [m for m in MONTH_HEADERS if m in wide.columns]
         wide = wide.reindex(columns=months_present)
 
-        # sort rows by their position in the source PDF instead of
-        # pivot_table's default alphabetical index order
         wide = wide.reindex(
             sorted(wide.index, key=lambda li: label_order.get(li, len(label_order)))
         )
@@ -409,10 +323,7 @@ def pivot_monthly_wide_by_year(monthly_long_df):
 
     return out
 
-
-# ============================================================
 # MAIN
-# ============================================================
 
 def main():
     print("===== Dominion Account Profile PDF -> Spreadsheet =====")
