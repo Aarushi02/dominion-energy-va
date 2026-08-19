@@ -341,10 +341,37 @@ def _render_fixture_rates(fixture_rates):
         st.caption("No fixture rate table extracted for this entry.")
         return
     df = pd.DataFrame(fixture_rates)
-    display_cols = [c for c in ["fixture_label", "distribution_charge_per_unit",
-                                  "supply_charge_per_unit", "period"] if c in df.columns]
-    st.dataframe(df[display_cols], use_container_width=True, hide_index=True)
 
+    has_additional = "distribution_charge_additional_unit" in df.columns
+
+    if has_additional:
+        display_cols = [c for c in [
+            "fixture_label",
+            "distribution_charge_per_unit",
+            "distribution_charge_additional_unit",
+            "supply_charge_per_unit",
+            "supply_charge_additional_unit",
+            "period",
+        ] if c in df.columns]
+        rename_map = {
+            "distribution_charge_per_unit": "Distribution ($/unit, first unit per pole)",
+            "distribution_charge_additional_unit": "Distribution ($/unit, each additional unit)",
+            "supply_charge_per_unit": "Supply ($/unit, first unit per pole)",
+            "supply_charge_additional_unit": "Supply ($/unit, each additional unit)",
+        }
+        st.dataframe(
+            df[display_cols].rename(columns=rename_map),
+            use_container_width=True,
+            hide_index=True,
+        )
+        if "additional_unit_note" in df.columns:
+            notes = df[df["additional_unit_note"].notna()][["fixture_label", "additional_unit_note"]]
+            for _, row in notes.iterrows():
+                st.caption(f"ℹ️ {row['fixture_label']}: {row['additional_unit_note']}")
+    else:
+        display_cols = [c for c in ["fixture_label", "distribution_charge_per_unit",
+                                      "supply_charge_per_unit", "period"] if c in df.columns]
+        st.dataframe(df[display_cols], use_container_width=True, hide_index=True)
 
 def render_tariff_viewer():
     st.title("📋 Tariff Viewer")
