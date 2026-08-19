@@ -1,18 +1,4 @@
-# ------------------------------------------------------------------
 # Streamlit app: Dominion Bill Processing
-#
-# Two sections, selected via sidebar:
-#   1. Bill Upload      -- PDF -> Monthly History Excel (unchanged
-#                           conversion logic from before)
-#   2. Audit Calculation -- upload an already-converted Monthly History
-#                           Excel (from section 1, or a prior session)
-#                           and run it against a PRE-BUNDLED tariff
-#                           logic JSON (no upload needed each time --
-#                           see TARIFF_JSON_PATH below).
-#
-# The tariff JSON must be committed to the repo alongside this file.
-# Update TARIFF_JSON_PATH if you rename it or add versioned tariffs.
-# ------------------------------------------------------------------
 
 import io
 import tempfile
@@ -32,23 +18,11 @@ from audit_integration import run_audit, read_monthly_detail_spreadsheet, compar
 
 st.set_page_config(page_title="Dominion Bill Processing", page_icon="⚡")
 
-# Path to the pre-bundled tariff logic JSON. Commit this file to the
-# repo -- e.g. `final_tariff_logic.json` from a dominion_tariff_pipeline_v2.py
-# run -- so the audit section never needs a per-session upload.
 TARIFF_JSON_PATH = "final_tariff_logic.json"
 
-# Path to the Sales and Use Tax Surcharge rate table -- a separate,
-# smaller dataset with its OWN schedule-naming convention (e.g. "GS-1",
-# "MBR", "SCR"), distinct from the VEPGA municipal/county schedule
-# codes in TARIFF_JSON_PATH. Kept as its own file since it's a
-# different jurisdiction's rate structure, not part of the VEPGA
-# tariff document.
 SURCHARGE_JSON_PATH = "surcharge_rates.json"
 
-
-# ============================================================
-# AUTH -- unchanged from before
-# ============================================================
+# AUTHENTICATION
 
 def check_login():
     if st.session_state.get("authenticated"):
@@ -92,30 +66,15 @@ with st.sidebar:
     st.divider()
     section = st.radio("Section", ["📄 Bill Upload", "🔍 Audit Calculation", "📋 Tariff Viewer", "💰 Sales & Use Tax Surcharge"])
 
-
-# ============================================================
-# Cache the audit engine so the tariff JSON isn't re-parsed on
-# every rerun -- only reloads if the file's path/mtime changes.
-# ============================================================
-
 @st.cache_resource
 def load_audit_engine(path: str):
     return DominionAuditEngine(path)
 
-
-# ============================================================
 # SECTION 1: Bill Upload (PDF -> Monthly History Excel)
-# ============================================================
 
 @st.cache_data(show_spinner=False)
 def process_pdf(file_bytes: bytes):
-    """
-    The expensive part: OCR + monthly table extraction. Cached on the
-    raw file bytes, so re-running the script (e.g. from clicking the
-    download button, which triggers a full Streamlit rerun like any
-    other widget interaction) reuses this result instead of redoing
-    OCR from scratch every time.
-    """
+    
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
         tmp.write(file_bytes)
         tmp_path = tmp.name
@@ -146,7 +105,7 @@ def render_bill_upload():
 
     file_bytes = uploaded_file.read()
 
-    with st.spinner("Processing PDF (this only happens once per file)..."):
+    with st.spinner("Processing PDF..."):
         monthly_long_df = process_pdf(file_bytes)
 
     if monthly_long_df.empty:
@@ -183,27 +142,11 @@ def render_bill_upload():
     st.info("💡 Go to **Audit Calculation** in the sidebar to run a bill audit "
             "on this spreadsheet.")
 
-
-# ============================================================
-# SECTION 2: Audit Calculation (spreadsheet -> audit results)
-# ============================================================
+# SECTION 2: Audit Calculation
 
 @st.cache_data(show_spinner=False)
 def process_audit(file_bytes: bytes, tariff_json_path: str):
-    """
-    The expensive part: parsing the spreadsheet and running the audit
-    calculation. Cached on the uploaded file's bytes (+ tariff path,
-    so a different/updated tariff JSON correctly invalidates the
-    cache). Without this, clicking the download button below -- like
-    any Streamlit widget interaction -- triggers a full script rerun
-    and would otherwise re-parse + re-audit from scratch every time.
 
-    Note: loads the engine internally via load_audit_engine() rather
-    than taking it as a parameter, since DominionAuditEngine objects
-    aren't easily hashable for cache_data's key -- load_audit_engine
-    is itself cached (via cache_resource), so calling it again here is
-    free after the first load, not a redundant re-parse of the JSON.
-    """
     engine = load_audit_engine(tariff_json_path)
     monthly_long_df = read_monthly_detail_spreadsheet(io.BytesIO(file_bytes))
 
@@ -285,13 +228,12 @@ def render_audit_calculation():
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     )
 
-    # ---------------- Schedule comparison ----------------
+    #Schedule comparison
     st.divider()
     st.subheader("Compare Against Other Schedule(s)")
     st.write(
         "See what the same actual monthly usage would have cost under a "
-        "different rate schedule -- e.g. checking whether a cheaper schedule "
-        "was available."
+        "different rate schedule."
     )
 
     billed_schedules = sorted(audit_results_df["schedule"].dropna().unique())
@@ -327,10 +269,7 @@ def render_audit_calculation():
     else:
         st.caption("Select one or more schedules above to run the comparison.")
 
-
-# ============================================================
-# SECTION 3: Tariff Viewer (browse the pre-bundled tariff JSON)
-# ============================================================
+# SECTION 3: Tariff Viewer 
 
 def _billing_model_badge(billing_model):
     labels = {
@@ -344,19 +283,11 @@ def _billing_model_badge(billing_model):
 
 
 def _render_charge_blocks(charge_blocks):
-    """
-    Renders each charge_block as its own small table. Tiered rates get
-    exploded into one row per tier (with a 'Tier' column showing the
-    threshold), flat rates get a single row -- both shown with the
-    same columns so they're easy to scan side by side.
-    """
+
     if not charge_blocks:
         st.caption("No charge blocks extracted for this entry.")
         return
 
-    # group by block_name so voltage/season variants of the "same"
-    # charge (e.g. two "Distribution Demand Charge" blocks, one per
-    # voltage class) are visually grouped rather than interleaved
     seen_names = []
     grouped = {}
     for b in charge_blocks:
@@ -456,10 +387,6 @@ def render_tariff_viewer():
             charge_blocks = entry.get("charge_blocks", [])
             fixture_rates = entry.get("fixture_rates", [])
 
-            # Fixed-fee / customer charges -- present regardless of
-            # billing_model (this is what makes SGCM-1-style PARTIAL
-            # billing possible: a real fee even on an otherwise
-            # non-standard schedule)
             fixed_fee_steps = [s for s in logic_steps if (s.get("charge_type") or "") == "fixed_fee"]
             if fixed_fee_steps:
                 st.markdown("**Fixed Charges**")
@@ -467,19 +394,14 @@ def render_tariff_viewer():
                 display_cols = [c for c in ["step_name", "value", "period"] if c in steps_df.columns]
                 st.dataframe(steps_df[display_cols], use_container_width=True, hide_index=True)
 
-            # Usage-based schedules: charge_blocks
             if billing_model == "usage_based":
                 st.markdown("**Usage-Based Charges**")
                 _render_charge_blocks(charge_blocks)
 
-            # Per-fixture schedules: fixture_rates
             elif billing_model == "per_fixture":
                 st.markdown("**Fixture Rate Table**")
                 _render_fixture_rates(fixture_rates)
 
-            # Other non-fixed-fee logic_steps (older schema, or
-            # flat_service_fee/variable_pricing schedules with a
-            # single miscellaneous rate)
             other_steps = [s for s in logic_steps if (s.get("charge_type") or "") != "fixed_fee"]
             if other_steps:
                 st.markdown("**Other Charges**")
@@ -525,10 +447,7 @@ def render_tariff_viewer():
             if source_pages:
                 st.caption(f"Source: pages {source_pages} of the tariff document")
 
-
-# ============================================================
-# SECTION 4: Sales & Use Tax Surcharge (separate, smaller rate table)
-# ============================================================
+# SECTION 4: Sales & Use Tax Surcharge
 
 @st.cache_data(show_spinner=False)
 def load_surcharge_rates(path: str):
@@ -570,8 +489,6 @@ def render_surcharge_viewer():
     if caption_parts:
         st.caption(" \u2014 ".join(caption_parts))
 
-    # flatten for display: one row per schedule code (so "GS-3, GS-3 EV,
-    # MBR, SCR" becomes 4 separate searchable rows, not one combined cell)
     rows = []
     for e in rates:
         for code in e.get("schedule_codes", []):
@@ -589,10 +506,7 @@ def render_surcharge_viewer():
     st.dataframe(df, use_container_width=True, hide_index=True)
     st.caption(f"{len(df)} schedule/condition row(s) shown.")
 
-
-# ============================================================
 # ROUTE
-# ============================================================
 
 if section == "📄 Bill Upload":
     render_bill_upload()
