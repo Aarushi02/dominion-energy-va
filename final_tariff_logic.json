@@ -2366,97 +2366,135 @@
         "fixture_label": "5,000 Lumens, 82 Wattage",
         "distribution_charge_per_unit": 7.94,
         "supply_charge_per_unit": 0.91,
-        "period": "monthly"
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published for Type 1 fixtures; billed per pole as a single unit."
       },
       {
         "fixture_label": "8,000 Lumens, 120 Wattage",
         "distribution_charge_per_unit": 8.35,
         "supply_charge_per_unit": 1.21,
-        "period": "monthly"
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published for Type 1 fixtures; billed per pole as a single unit."
       },
       {
         "fixture_label": "14,000 Lumens, 202 Wattage",
         "distribution_charge_per_unit": 9.0,
         "supply_charge_per_unit": 2.11,
-        "period": "monthly"
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published for Type 1 fixtures; billed per pole as a single unit."
       },
       {
         "fixture_label": "23,000 Lumens, 315 Wattage",
         "distribution_charge_per_unit": 12.2,
         "supply_charge_per_unit": 3.18,
-        "period": "monthly"
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published for Type 1 fixtures; billed per pole as a single unit."
       },
       {
         "fixture_label": "42,000 Lumens, 490 Wattage",
         "distribution_charge_per_unit": 18.48,
         "supply_charge_per_unit": 4.84,
-        "period": "monthly"
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published for Type 1 fixtures; billed per pole as a single unit."
       },
       {
         "fixture_label": "127,000 Lumens, 1,130 Wattage",
         "distribution_charge_per_unit": 21.37,
         "supply_charge_per_unit": 11.51,
-        "period": "monthly"
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published for Type 1 fixtures; billed per pole as a single unit."
       },
       {
         "fixture_label": "5,000 Lumens, 82 Wattage (Type 2)",
         "distribution_charge_per_unit": 19.32,
         "supply_charge_per_unit": 0.91,
-        "period": "monthly"
+        "period": "monthly",
+        "distribution_charge_additional_unit": 8.36,
+        "supply_charge_additional_unit": 0.91
       },
       {
         "fixture_label": "8,000 Lumens, 120 Wattage (Type 2)",
         "distribution_charge_per_unit": 19.57,
         "supply_charge_per_unit": 1.2,
-        "period": "monthly"
+        "period": "monthly",
+        "distribution_charge_additional_unit": 8.73,
+        "supply_charge_additional_unit": 1.2
       },
       {
         "fixture_label": "14,000 Lumens, 202 Wattage (Type 2)",
         "distribution_charge_per_unit": 19.95,
         "supply_charge_per_unit": 2.12,
-        "period": "monthly"
+        "period": "monthly",
+        "distribution_charge_additional_unit": 9.19,
+        "supply_charge_additional_unit": 2.12
       },
       {
         "fixture_label": "23,000 Lumens, 315 Wattage (Type 2)",
         "distribution_charge_per_unit": 22.69,
         "supply_charge_per_unit": 3.19,
-        "period": "monthly"
+        "period": "monthly",
+        "distribution_charge_additional_unit": 11.19,
+        "supply_charge_additional_unit": 3.19
       },
       {
         "fixture_label": "42,000 Lumens, 490 Wattage (Type 2)",
         "distribution_charge_per_unit": 26.92,
         "supply_charge_per_unit": 4.85,
-        "period": "monthly"
+        "period": "monthly",
+        "distribution_charge_additional_unit": 12.68,
+        "supply_charge_additional_unit": 4.85
       },
       {
         "fixture_label": "23,000 Lumens, 315 Wattage (Directional)",
         "distribution_charge_per_unit": 22.56,
         "supply_charge_per_unit": 3.18,
-        "period": "monthly"
+        "period": "monthly",
+        "distribution_charge_additional_unit": 6.31,
+        "supply_charge_additional_unit": 3.18
       },
       {
         "fixture_label": "42,000 Lumens, 490 Wattage (Directional)",
         "distribution_charge_per_unit": 19.75,
         "supply_charge_per_unit": 4.84,
-        "period": "monthly"
+        "period": "monthly",
+        "distribution_charge_additional_unit": 9.63,
+        "supply_charge_additional_unit": 4.84
       },
       {
         "fixture_label": "127,000 Lumens, 1,130 Wattage (Directional)",
         "distribution_charge_per_unit": 22.46,
         "supply_charge_per_unit": 11.5,
-        "period": "monthly"
+        "period": "monthly",
+        "distribution_charge_additional_unit": 11.37,
+        "supply_charge_additional_unit": 11.5
       },
       {
         "fixture_label": "23,000 Lumens, 315 Wattage (Expressway)",
         "distribution_charge_per_unit": 39.42,
         "supply_charge_per_unit": 3.18,
-        "period": "monthly"
+        "period": "monthly",
+        "distribution_charge_additional_unit": 21.7,
+        "supply_charge_additional_unit": 3.18
       },
       {
         "fixture_label": "42,000 Lumens, 490 Wattage (Expressway)",
         "distribution_charge_per_unit": 40.25,
         "supply_charge_per_unit": 4.84,
-        "period": "monthly"
+        "period": "monthly",
+        "distribution_charge_additional_unit": 22.53,
+        "supply_charge_additional_unit": 4.84
       }
     ],
     "logic_steps": [
@@ -2645,91 +2683,134 @@
         "fixture_label": "3,300 Lumens Mercury Vapor 125W",
         "distribution_charge_per_unit": 7.75,
         "supply_charge_per_unit": 1.21,
-        "period": "monthly"
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published; billed per pole as a single unit."
       },
       {
         "fixture_label": "7,000 Lumens Mercury Vapor 208W",
         "distribution_charge_per_unit": 8.16,
         "supply_charge_per_unit": 2.12,
-        "period": "monthly"
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published; billed per pole as a single unit."
       },
       {
         "fixture_label": "11,000 Lumens Mercury Vapor 294W",
         "distribution_charge_per_unit": 10.23,
         "supply_charge_per_unit": 3.03,
-        "period": "monthly"
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published; billed per pole as a single unit."
       },
       {
         "fixture_label": "20,000 Lumens Mercury Vapor 452W",
         "distribution_charge_per_unit": 14.41,
         "supply_charge_per_unit": 4.54,
-        "period": "monthly"
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published; billed per pole as a single unit."
       },
       {
         "fixture_label": "33,000 Lumens Mercury Vapor 765W",
         "distribution_charge_per_unit": 21.93,
         "supply_charge_per_unit": 7.55,
-        "period": "monthly"
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published; billed per pole as a single unit."
       },
       {
         "fixture_label": "53,000 Lumens Mercury Vapor 1,080W",
         "distribution_charge_per_unit": 26.45,
         "supply_charge_per_unit": 10.89,
-        "period": "monthly"
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published; billed per pole as a single unit."
       },
       {
         "fixture_label": "20,000 Lumens Urbanlite Mercury Vapor 452W",
         "distribution_charge_per_unit": 26.31,
         "supply_charge_per_unit": 4.54,
-        "period": "monthly"
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published; billed per pole as a single unit."
       },
       {
         "fixture_label": "14,000 Lumens Urbanlite Sodium Vapor 202W",
         "distribution_charge_per_unit": 22.03,
         "supply_charge_per_unit": 2.11,
-        "period": "monthly"
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published; billed per pole as a single unit."
       },
       {
         "fixture_label": "23,000 Lumens Urbanlite Sodium Vapor 315W",
         "distribution_charge_per_unit": 22.39,
         "supply_charge_per_unit": 3.18,
-        "period": "monthly"
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published; billed per pole as a single unit."
       },
       {
         "fixture_label": "20,000 Lumens Directional Mercury Vapor 452W",
         "distribution_charge_per_unit": 16.26,
         "supply_charge_per_unit": 4.54,
-        "period": "monthly"
+        "period": "monthly",
+        "distribution_charge_additional_unit": 10.27,
+        "supply_charge_additional_unit": 4.54
       },
       {
         "fixture_label": "53,000 Lumens Directional Mercury Vapor 1,080W",
         "distribution_charge_per_unit": 24.78,
         "supply_charge_per_unit": 10.89,
-        "period": "monthly"
+        "period": "monthly",
+        "distribution_charge_additional_unit": 13.03,
+        "supply_charge_additional_unit": 10.89
       },
       {
         "fixture_label": "2,500 Lumens Incandescent 202W",
         "distribution_charge_per_unit": 8.1,
         "supply_charge_per_unit": 2.11,
-        "period": "monthly"
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published; billed per pole as a single unit."
       },
       {
         "fixture_label": "4,000 Lumens Incandescent 327W",
         "distribution_charge_per_unit": 8.44,
         "supply_charge_per_unit": 3.34,
-        "period": "monthly"
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published; billed per pole as a single unit."
       },
       {
         "fixture_label": "6,000 Lumens Incandescent 448W",
         "distribution_charge_per_unit": 6.43,
         "supply_charge_per_unit": 4.54,
-        "period": "monthly"
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published; billed per pole as a single unit."
       },
       {
         "fixture_label": "10,000 Lumens Incandescent 690W",
         "distribution_charge_per_unit": 6.47,
         "supply_charge_per_unit": 6.96,
-        "period": "monthly"
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published; billed per pole as a single unit."
       }
     ],
     "minimum_charge": {
@@ -3359,25 +3440,33 @@
         "fixture_label": "7,000 Lumens, 100 Wattage",
         "distribution_charge_per_unit": 40.51,
         "supply_charge_per_unit": 1.23,
-        "period": "monthly"
+        "period": "monthly",
+        "distribution_charge_additional_unit": 17.65,
+        "supply_charge_additional_unit": 1.23
       },
       {
         "fixture_label": "10,000 Lumens, 150 Wattage",
         "distribution_charge_per_unit": 41.98,
         "supply_charge_per_unit": 1.72,
-        "period": "monthly"
+        "period": "monthly",
+        "distribution_charge_additional_unit": 17.97,
+        "supply_charge_additional_unit": 1.72
       },
       {
         "fixture_label": "13,000 Lumens, 200 Wattage",
         "distribution_charge_per_unit": 50.29,
         "supply_charge_per_unit": 2.3,
-        "period": "monthly"
+        "period": "monthly",
+        "distribution_charge_additional_unit": 17.72,
+        "supply_charge_additional_unit": 2.3
       },
       {
         "fixture_label": "24,000 Lumens, 320 Wattage",
         "distribution_charge_per_unit": 50.79,
         "supply_charge_per_unit": 3.66,
-        "period": "monthly"
+        "period": "monthly",
+        "distribution_charge_additional_unit": 18.2,
+        "supply_charge_additional_unit": 3.66
       }
     ],
     "minimum_charge": {
