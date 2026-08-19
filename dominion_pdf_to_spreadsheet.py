@@ -12,14 +12,6 @@ import pytesseract
 from pytesseract import Output
 from pdf2image import convert_from_path
 
-
-CONFIG = {
-    "INPUT_PDF": "/mnt/user-data/uploads/County_of_Louisa_Account_Profile_001603782051_Dominion_VEPGA.pdf",
-    "OUT_XLSX": "/mnt/user-data/outputs/dominion_account_profile.xlsx",
-    "OCR_DPI": 300,
-}
-
-
 # HELPERS 
 
 def normspace(s: str) -> str:
@@ -323,56 +315,4 @@ def pivot_monthly_wide_by_year(monthly_long_df):
 
     return out
 
-# MAIN
-
-def main():
-    print("===== Dominion Account Profile PDF -> Spreadsheet =====")
-
-    if not os.path.exists(CONFIG["INPUT_PDF"]):
-        print("❌ ERROR: input PDF not found:", CONFIG["INPUT_PDF"])
-        sys.exit(1)
-
-    print("Running OCR (no text layer in this PDF)...")
-    images = convert_from_path(CONFIG["INPUT_PDF"], dpi=CONFIG["OCR_DPI"])
-    page_texts = [pytesseract.image_to_string(img, config="--psm 6") for img in images]
-    full_text = "\n".join(page_texts)
-
-    # Page 2 (index 1) is two-column: re-OCR it split into columns so
-    # the fields don't interleave with the annual-summary table text.
-    left_col_text, right_col_text = ocr_two_column_page(images[1])
-
-    # ---------------- Account profile (page ~2) ----------------
-    profile_fields = extract_account_profile(left_col_text, right_col_text, page_texts[0])
-    profile_df = pd.DataFrame(
-        [{"field": k, "value": v} for k, v in profile_fields.items()]
-    )
-
-    # ---------------- Annual summary table ----------------
-    annual_df = extract_annual_summary(right_col_text)
-
-    # ---------------- Monthly detail tables ----------------
-    monthly_long_df = extract_monthly_tables(images, page_texts)
-    monthly_wide_by_year = pivot_monthly_wide_by_year(monthly_long_df)
-
-    # ---------------- Diagnostics ----------------
-    print(f"Profile fields extracted: {profile_df['value'].astype(bool).sum()}/{len(profile_df)}")
-    print(f"Annual summary rows: {len(annual_df)}")
-    print(f"Monthly line-item x month cells: {len(monthly_long_df)}")
-    print(f"Monthly detail years found: {sorted(monthly_wide_by_year.keys())}")
-
-    # ---------------- Save ----------------
-    os.makedirs(os.path.dirname(CONFIG["OUT_XLSX"]), exist_ok=True)
-    with pd.ExcelWriter(CONFIG["OUT_XLSX"], engine="openpyxl") as writer:
-        profile_df.to_excel(writer, sheet_name="Account_Profile", index=False)
-        annual_df.to_excel(writer, sheet_name="Annual_Summary", index=False)
-        for year in sorted(monthly_wide_by_year.keys()):
-            monthly_wide_by_year[year].to_excel(
-                writer, sheet_name=f"Monthly_Detail_{year}", index=False
-            )
-        monthly_long_df.to_excel(writer, sheet_name="Monthly_Detail_Long", index=False)
-
-    print("✅ WROTE:", CONFIG["OUT_XLSX"])
-
-
-if __name__ == "__main__":
     main()
