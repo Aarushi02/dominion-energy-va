@@ -2,13 +2,6 @@
 Builds per-month audit input rows directly from the monthly billing
 table extracted by dominion_pdf_to_spreadsheet.py's extract_monthly_tables(),
 then runs each through DominionAuditEngine.
-
-No separate account-profile lookup needed: the monthly table already
-carries everything required per month --
-  "Total Consumption" -> billed_kwh
-  "Demand"             -> billed_demand
-  "Billed Rate"         -> which schedule to audit against (e.g. "VE-100")
-  "Total Charges"       -> the actual billed amount to compare against
 """
 
 import re
@@ -18,11 +11,7 @@ import pandas as pd
 
 def _normalize_billed_rate_to_sc_code(billed_rate: str) -> str:
     """
-    'VE-100' -> 'SCHEDULE 100'. Handles the VE-<code> style Dominion
-    prints in the "Billed Rate" row of its monthly history table --
-    different from the "Current Rate: Schedule 110" style used on the
-    Account Profile summary page, so this needs its own normalization,
-    not just reusing DominionAuditEngine's _normalize_sc_code as-is.
+    'VE-100' -> 'SCHEDULE 100'
     """
     if not billed_rate:
         return ""
@@ -51,15 +40,8 @@ def build_audit_rows(monthly_long_df: pd.DataFrame) -> pd.DataFrame:
         actual_bill = r.get("Total Charges")
 
         if pd.isna(billed_kwh) or pd.isna(billed_rate):
-            continue  # nothing to audit for a blank/missing month
+            continue  
 
-        # bill_date: prefer "Bill To" (end of the billing period -- the
-        # natural date to check a rider's withdrawal status against),
-        # fall back to "Bill From", then to an approximate month-end
-        # date if neither made it through extraction. Without this,
-        # DominionAuditEngine has no usable date and silently INCLUDES
-        # withdrawn riders (confirmed real gap -- this field was never
-        # populated at all before this fix).
         bill_date = None
         for date_field in ("Bill To", "Bill From"):
             raw = r.get(date_field)
@@ -69,7 +51,6 @@ def build_audit_rows(monthly_long_df: pd.DataFrame) -> pd.DataFrame:
                     bill_date = parsed
                     break
         if bill_date is None:
-            # last resort: approximate as the last day of the month
             try:
                 bill_date = pd.Period(f"{r['year']}-{r['month']}", freq="M").end_time
             except Exception:
@@ -81,26 +62,12 @@ def build_audit_rows(monthly_long_df: pd.DataFrame) -> pd.DataFrame:
             "service_class": _normalize_billed_rate_to_sc_code(billed_rate),
             "billed_kwh": float(billed_kwh),
             "billed_demand": float(billed_demand) if pd.notna(billed_demand) else 0.0,
-            # NOTE: deliberately NOT setting is_demand here. A nonzero
-            # "Demand" reading just means a demand meter recorded some
-            # peak kW -- it does NOT mean the account is billed under
-            # the schedule's Demand-Billing tier (confirmed bug: was
-            # setting is_demand=True for nearly every month just
-            # because demand > 0, even for months well under the
-            # tariff's actual 10,000 kWh demand-billing threshold).
-            # Leaving is_demand unset lets DominionAuditEngine fall
-            # back to its own billed_kwh >= 10,000 rule instead.
             "bill_date": bill_date,
             "bill_amount": float(actual_bill) if pd.notna(actual_bill) else 0.0,
         })
 
     result = pd.DataFrame(rows)
     if not result.empty:
-        # pivot_table sorts (year, month) alphabetically by default
-        # (APR, AUG, DEC, FEB... instead of calendar order) since month
-        # is a string column. Sort by the already-computed bill_date
-        # instead, which is a real date and sorts correctly regardless
-        # of month-name spelling/locale.
         result = result.sort_values("bill_date").reset_index(drop=True)
 
     return result
@@ -108,9 +75,7 @@ def build_audit_rows(monthly_long_df: pd.DataFrame) -> pd.DataFrame:
 
 def run_audit(monthly_long_df: pd.DataFrame, engine) -> pd.DataFrame:
     """
-    Returns a DataFrame: one row per audited month, with expected_bill,
-    variance, and a human-readable trace joined into one string (so it
-    fits cleanly in a single Excel cell).
+    Returns a the analysis DataFrame
     """
     audit_input = build_audit_rows(monthly_long_df)
     if audit_input.empty:
@@ -142,11 +107,6 @@ def read_monthly_detail_spreadsheet(file_obj) -> pd.DataFrame:
     Monthly_Detail_<year> sheet per year, wide format: rows=line_item,
     columns=JAN..DEC) back into the long format run_audit() expects:
     [year, month, line_item, value].
-
-    This is the reverse of pivot_monthly_wide_by_year() in
-    dominion_pdf_to_spreadsheet.py -- lets the audit section accept an
-    already-converted spreadsheet directly, rather than requiring the
-    original PDF to be re-uploaded and re-OCR'd.
     """
     xl = pd.ExcelFile(file_obj)
     all_rows = []
@@ -176,15 +136,7 @@ def read_monthly_detail_spreadsheet(file_obj) -> pd.DataFrame:
 
 
 def compare_schedules(monthly_long_df: pd.DataFrame, engine, schedule_codes: list) -> pd.DataFrame:
-    """
-    Runs every month's actual usage through each schedule in
-    schedule_codes (via DominionAuditEngine's override_schedule param),
-    returning one row per (month, schedule) so you can directly compare
-    what the same usage would have cost under different rate schedules
-    -- the same comparison pattern as the City of VA Beach Schedule
-    100 vs 130 savings analysis workbook, generalized to any schedules
-    you want to compare.
-    """
+    
     audit_input = build_audit_rows(monthly_long_df)
     if audit_input.empty:
         return pd.DataFrame()
@@ -209,8 +161,6 @@ def compare_schedules(monthly_long_df: pd.DataFrame, engine, schedule_codes: lis
     if df.empty:
         return df
 
-    # pivot wide: one column per compared schedule's calculated_amount,
-    # so savings between schedules are directly visible side by side
     wide = df.pivot_table(
         index=["year", "month", "billed_schedule", "billed_kwh", "billed_demand", "actual_bill"],
         columns="compared_schedule",
@@ -219,17 +169,6 @@ def compare_schedules(monthly_long_df: pd.DataFrame, engine, schedule_codes: lis
     ).reset_index()
 
     return wide
-
-
-# ---------------------------------------------------------------------
-# Text report generation, adapted from the National Grid
-# BillAuditReporter._format_text_report pattern to our schema (audit
-# results are keyed by year/month/schedule with a trace list, rather
-# than sc_code/bill_date/bill_account) and our own high-variance
-# definition (max($10, 5% of actual_bill), matching the same threshold
-# already used for the in-app red-highlighting, rather than their
-# literal >$0.05 check).
-# ---------------------------------------------------------------------
 
 def _is_high_variance(row) -> bool:
     if row.get("status") != "SUCCESS":
@@ -240,12 +179,7 @@ def _is_high_variance(row) -> bool:
 
 def format_audit_text_report(results_df: pd.DataFrame, account_label: str = "") -> str:
     """
-    Formats run_audit()'s output DataFrame into a text report: a
-    SUMMARY block (total variance, high-variance bill count, error/
-    skip count) followed by DETAILED RESULTS (one section per month,
-    including its full calculation trace) -- mirrors the structure of
-    BillAuditReporter._format_text_report, adapted to our audit
-    result schema.
+    Formats run_audit()'s output DataFrame into a text report
     """
     if results_df is None or results_df.empty:
         return "No audit results generated." + (f" (account: {account_label})" if account_label else "")
