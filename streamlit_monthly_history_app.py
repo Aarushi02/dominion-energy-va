@@ -391,13 +391,13 @@ def render_tariff_viewer():
 
     if not Path(tariff_path).exists():
         st.error(
-            f"Tariff logic file not found at `{TARIFF_JSON_PATH}`. "
+            f"Tariff logic file not found at `{tariff_path}`. "
             f"This file needs to be committed to the repo alongside the app "
             f"(output of dominion_tariff_pipeline_v2.py)."
         )
         return
 
-    engine = load_audit_engine(TARIFF_JSON_PATH)
+    engine = load_audit_engine(tariff_path)
     st.caption(f"Using tariff logic: `{tariff_path}`")
 
     schedule_codes = sorted(engine.tariff_map.keys())
