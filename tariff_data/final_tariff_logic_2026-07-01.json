@@ -139,7 +139,7 @@
         "withdrawn_date": null
       }
     ],
-    "_effective_date": "2025-07-01"
+    "_effective_date": "2026-07-01"
   },
   {
     "sc_code": "SCHEDULE 100",
@@ -297,7 +297,7 @@
         "withdrawn_date": null
       }
     ],
-    "_effective_date": "2025-07-01"
+    "_effective_date": "2026-07-01"
   },
   {
     "sc_code": "SCHEDULE 102",
@@ -440,7 +440,7 @@
         "withdrawn_date": null
       }
     ],
-    "_effective_date": "2025-07-01"
+    "_effective_date": "2026-07-01"
   },
   {
     "sc_code": "SCHEDULE 110",
@@ -582,7 +582,7 @@
         "withdrawn_date": null
       }
     ],
-    "_effective_date": "2025-07-01"
+    "_effective_date": "2026-07-01"
   },
   {
     "sc_code": "SCHEDULE 110",
@@ -771,7 +771,7 @@
         "withdrawn_date": null
       }
     ],
-    "_effective_date": "2025-07-01"
+    "_effective_date": "2026-07-01"
   },
   {
     "sc_code": "SCHEDULE 120",
@@ -917,7 +917,7 @@
         "withdrawn_date": null
       }
     ],
-    "_effective_date": "2025-07-01"
+    "_effective_date": "2026-07-01"
   },
   {
     "sc_code": "SCHEDULE 130",
@@ -1132,7 +1132,7 @@
         "withdrawn_date": null
       }
     ],
-    "_effective_date": "2025-07-01"
+    "_effective_date": "2026-07-01"
   },
   {
     "sc_code": "SCHEDULE 131",
@@ -1342,7 +1342,7 @@
         "withdrawn_date": null
       }
     ],
-    "_effective_date": "2025-07-01"
+    "_effective_date": "2026-07-01"
   },
   {
     "sc_code": "SCHEDULE 132",
@@ -1611,7 +1611,7 @@
         "withdrawn_date": null
       }
     ],
-    "_effective_date": "2025-07-01"
+    "_effective_date": "2026-07-01"
   },
   {
     "sc_code": "SCHEDULE 134",
@@ -1779,7 +1779,7 @@
         "withdrawn_date": null
       }
     ],
-    "_effective_date": "2025-07-01"
+    "_effective_date": "2026-07-01"
   },
   {
     "sc_code": "SCHEDULE 150",
@@ -2035,7 +2035,7 @@
         "withdrawn_date": null
       }
     ],
-    "_effective_date": "2025-07-01"
+    "_effective_date": "2026-07-01"
   },
   {
     "sc_code": "SCHEDULE 152",
@@ -2046,7 +2046,7 @@
     "riders_note": "subject to all applicable riders (values merged separately)",
     "source_schedule": "SCHEDULE 152",
     "source_pages": "91-92",
-    "_effective_date": "2025-07-01"
+    "_effective_date": "2026-07-01"
   },
   {
     "sc_code": "SCHEDULE 151",
@@ -2287,7 +2287,7 @@
         "withdrawn_date": null
       }
     ],
-    "_effective_date": "2025-07-01"
+    "_effective_date": "2026-07-01"
   },
   {
     "sc_code": "SCHEDULE 153",
@@ -2314,7 +2314,7 @@
     "notes": "This schedule is not a standalone billable rate schedule. It involves agreements and charges related to special street lighting fixtures and is subject to other schedules for standard charges.",
     "source_schedule": "SCHEDULE 153",
     "source_pages": "98-100",
-    "_effective_date": "2025-07-01"
+    "_effective_date": "2026-07-01"
   },
   {
     "sc_code": "SCHEDULE 154",
@@ -2457,7 +2457,7 @@
         "withdrawn_date": null
       }
     ],
-    "_effective_date": "2025-07-01"
+    "_effective_date": "2026-07-01"
   },
   {
     "sc_code": "SCHEDULE SGCM",
@@ -2488,7 +2488,7 @@
     "notes": "This schedule is for standby generation and involves payments to the customer based on capacity levels and operation requests. It is not a standalone billable rate schedule.",
     "source_schedule": "SCHEDULE SGCM",
     "source_pages": "103-106",
-    "_effective_date": "2025-07-01"
+    "_effective_date": "2026-07-01"
   },
   {
     "sc_code": "SCHEDULE SGCM-1",
@@ -2519,7 +2519,7 @@
     "notes": "This schedule provides a standby generator service where customers are paid for maintaining load during company-requested operations. Payments are based on contracted capacity levels and actual generation during requests, capped at the applicable season's contracted capacity level. It is not a standalone billable rate schedule. Applicable only to accounts receiving service under Schedule SGCM as of July 30, 1997.",
     "source_schedule": "SCHEDULE SGCM-1",
     "source_pages": "106-109",
-    "_effective_date": "2025-07-01"
+    "_effective_date": "2026-07-01"
   },
   {
     "sc_code": "SCHEDULE SMH",
@@ -2659,7 +2659,7 @@
         "withdrawn_date": null
       }
     ],
-    "_effective_date": "2025-07-01"
+    "_effective_date": "2026-07-01"
   },
   {
     "sc_code": "SCHEDULE SP",
@@ -2686,7 +2686,7 @@
     "notes": "This schedule provides discounts and reductions applicable to other rate schedules and is not a standalone billable rate schedule.",
     "source_schedule": "SCHEDULE SP",
     "source_pages": "113-114",
-    "_effective_date": "2025-07-01"
+    "_effective_date": "2026-07-01"
   },
   {
     "sc_code": "SCHEDULE SSL",
@@ -2914,7 +2914,7 @@
         "withdrawn_date": null
       }
     ],
-    "_effective_date": "2025-07-01"
+    "_effective_date": "2026-07-01"
   },
   {
     "sc_code": "SCHEDULE A",
@@ -2931,7 +2931,7 @@
     "notes": "This schedule describes temporary service charges based on the net cost of installation and removal of service facilities. It is not a standalone billable rate schedule.",
     "source_schedule": "SCHEDULE A",
     "source_pages": "120-121",
-    "_effective_date": "2025-07-01"
+    "_effective_date": "2026-07-01"
   },
   {
     "sc_code": "SCHEDULE B",
@@ -2978,7 +2978,7 @@
     "notes": "This schedule provides charges for excess facilities and is not a standalone billable rate schedule. Charges are based on the estimated new installed cost of excess facilities and are subject to updates as per Virginia Jurisdictional Terms and Conditions.",
     "source_schedule": "SCHEDULE B",
     "source_pages": "121-122",
-    "_effective_date": "2025-07-01"
+    "_effective_date": "2026-07-01"
   },
   {
     "sc_code": "SCHEDULE C",
@@ -3022,7 +3022,7 @@
     "notes": "This schedule includes miscellaneous and standby charges, not a standalone billable rate schedule.",
     "source_schedule": "SCHEDULE C",
     "source_pages": "122-123",
-    "_effective_date": "2025-07-01"
+    "_effective_date": "2026-07-01"
   },
   {
     "sc_code": "SCHEDULE D",
@@ -3045,7 +3045,7 @@
     "notes": "TERF applies to conversion charges as per federal Tax Cuts and Jobs Act of 2017.",
     "source_schedule": "SCHEDULE D",
     "source_pages": "123-127",
-    "_effective_date": "2025-07-01"
+    "_effective_date": "2026-07-01"
   },
   {
     "sc_code": "SCHEDULE E",
@@ -3062,7 +3062,7 @@
     "notes": "The patrol rate is subject to adjustment for increased costs by the Company at the beginning of each succeeding year of this Agreement.",
     "source_schedule": "SCHEDULE E",
     "source_pages": "127-129",
-    "_effective_date": "2025-07-01"
+    "_effective_date": "2026-07-01"
   },
   {
     "sc_code": "RIDER A",
@@ -3089,6 +3089,6 @@
     "notes": "The charge for service under Rate Schedules 100, 102, 110, 120, 130, 131, 132, 134, 150, 151, 154, SMH, and SSL shall be increased by 4.0868 cents per kilowatt-hour. Previously omitted from riders_priced arrays in this JSON; added per audit findings. Should be itemized separately from other CM riders per Colonial Heights precedent, not blended into rider totals.",
     "source_schedule": "RIDER A",
     "source_pages": "128",
-    "_effective_date": "2025-07-01"
+    "_effective_date": "2026-07-01"
   }
 ]
