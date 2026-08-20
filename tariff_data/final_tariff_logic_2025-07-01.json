@@ -201,7 +201,7 @@
         "unit": "kwh"
       }
     ],
-    "_effective_date": "2026-07-01"
+    "_effective_date": "2025-07-01"
   },
   {
     "sc_code": "SCHEDULE 100",
@@ -421,7 +421,7 @@
         "unit": "kwh"
       }
     ],
-    "_effective_date": "2026-07-01"
+    "_effective_date": "2025-07-01"
   },
   {
     "sc_code": "SCHEDULE 102",
@@ -630,7 +630,7 @@
         "unit": "kwh"
       }
     ],
-    "_effective_date": "2026-07-01"
+    "_effective_date": "2025-07-01"
   },
   {
     "sc_code": "SCHEDULE 110",
@@ -834,7 +834,7 @@
         "unit": "kwh"
       }
     ],
-    "_effective_date": "2026-07-01"
+    "_effective_date": "2025-07-01"
   },
   {
     "sc_code": "SCHEDULE 110",
@@ -1085,7 +1085,7 @@
         "unit": "kwh"
       }
     ],
-    "_effective_date": "2026-07-01"
+    "_effective_date": "2025-07-01"
   },
   {
     "sc_code": "SCHEDULE 120",
@@ -1293,7 +1293,7 @@
         "unit": "kwh"
       }
     ],
-    "_effective_date": "2026-07-01"
+    "_effective_date": "2025-07-01"
   },
   {
     "sc_code": "SCHEDULE 130",
@@ -1596,7 +1596,7 @@
         "unit": "kwh"
       }
     ],
-    "_effective_date": "2026-07-01"
+    "_effective_date": "2025-07-01"
   },
   {
     "sc_code": "SCHEDULE 131",
@@ -1894,7 +1894,7 @@
         "unit": "kwh"
       }
     ],
-    "_effective_date": "2026-07-01"
+    "_effective_date": "2025-07-01"
   },
   {
     "sc_code": "SCHEDULE 132",
@@ -2135,7 +2135,7 @@
         "unit": "kwh"
       }
     ],
-    "_effective_date": "2026-07-01"
+    "_effective_date": "2025-07-01"
   },
   {
     "sc_code": "SCHEDULE 134",
@@ -2365,7 +2365,7 @@
         "unit": "kwh"
       }
     ],
-    "_effective_date": "2026-07-01"
+    "_effective_date": "2025-07-01"
   },
   {
     "sc_code": "SCHEDULE 150",
@@ -2683,7 +2683,7 @@
         "unit": "kwh"
       }
     ],
-    "_effective_date": "2026-07-01"
+    "_effective_date": "2025-07-01"
   },
   {
     "sc_code": "SCHEDULE 151",
@@ -2986,7 +2986,7 @@
         "unit": "kwh"
       }
     ],
-    "_effective_date": "2026-07-01"
+    "_effective_date": "2025-07-01"
   },
   {
     "sc_code": "SCHEDULE 152",
@@ -3022,7 +3022,7 @@
     "riders_note": "subject to all applicable riders (values merged separately)",
     "source_schedule": "SCHEDULE 152",
     "source_pages": "42-43",
-    "_effective_date": "2026-07-01"
+    "_effective_date": "2025-07-01"
   },
   {
     "sc_code": "SCHEDULE 153",
@@ -3054,7 +3054,7 @@
     "notes": "This schedule involves special agreements and conditions for municipal and county street lighting with special fixtures. It is not a standalone billable rate schedule.",
     "source_schedule": "SCHEDULE 153",
     "source_pages": "43-45",
-    "_effective_date": "2026-07-01"
+    "_effective_date": "2025-07-01"
   },
   {
     "sc_code": "SCHEDULE 154",
@@ -3254,7 +3254,7 @@
         "withdrawn_date": "2025-07-01"
       }
     ],
-    "_effective_date": "2026-07-01"
+    "_effective_date": "2025-07-01"
   },
   {
     "sc_code": "SCHEDULE A",
@@ -3271,7 +3271,7 @@
     "notes": "This schedule defines temporary service charges based on the net cost of installation and removal of service facilities. It is not a usage-based rate schedule.",
     "source_schedule": "SCHEDULE A",
     "source_pages": "48-49",
-    "_effective_date": "2026-07-01"
+    "_effective_date": "2025-07-01"
   },
   {
     "sc_code": "SCHEDULE B",
@@ -3316,7 +3316,7 @@
     "notes": "This schedule provides charges for excess facilities and is not a standalone billable rate schedule. Charges are based on the estimated new installed cost of facilities and are subject to updates as per Virginia Jurisdictional Terms and Conditions.",
     "source_schedule": "SCHEDULE B",
     "source_pages": "49-50",
-    "_effective_date": "2026-07-01"
+    "_effective_date": "2025-07-01"
   },
   {
     "sc_code": "SCHEDULE C",
@@ -3356,7 +3356,7 @@
     "notes": "This schedule includes miscellaneous and standby charges, not a standalone billable rate schedule.",
     "source_schedule": "SCHEDULE C",
     "source_pages": "50-51",
-    "_effective_date": "2026-07-01"
+    "_effective_date": "2025-07-01"
   },
   {
     "sc_code": "SCHEDULE D",
@@ -3385,7 +3385,7 @@
     "notes": "This schedule outlines conversion charges for luminaires and is not a standalone billable rate schedule. Charges are based on conversion requests and existing luminaire types. The schedule includes provisions for conversion credits based on project costs and excess revenue calculations.",
     "source_schedule": "SCHEDULE D",
     "source_pages": "51-66",
-    "_effective_date": "2026-07-01"
+    "_effective_date": "2025-07-01"
   },
   {
     "sc_code": "SCHEDULE E",
@@ -3402,7 +3402,7 @@
     "notes": "The patrol rate is subject to adjustment for increased costs by the Company at the beginning of each succeeding year of this Agreement.",
     "source_schedule": "SCHEDULE E",
     "source_pages": "66-67",
-    "_effective_date": "2026-07-01"
+    "_effective_date": "2025-07-01"
   },
   {
     "sc_code": "SCHEDULE RG-CM",
@@ -3418,7 +3418,7 @@
     "notes": "This schedule is a companion to an approved tariff and is applicable to VEPGA customers who have executed a Schedule RG-CM Agreement. It involves the purchase of renewable generation and the retirement of RECs on behalf of the customer. Charges and credits are determined by the terms of the Schedule RG-CM Agreement, not specified in this document.",
     "source_schedule": "SCHEDULE RG-CM",
     "source_pages": "67-71",
-    "_effective_date": "2026-07-01"
+    "_effective_date": "2025-07-01"
   },
   {
     "sc_code": "SCHEDULE SGCM",
@@ -3435,7 +3435,7 @@
     "notes": "This schedule provides a standby generator service where customers are paid for operating their generators upon company request. Payments are based on contracted capacity levels and actual generation during requested periods. It is not a standalone billable rate schedule but rather a service agreement with specific operational and payment terms.",
     "source_schedule": "SCHEDULE SGCM",
     "source_pages": "71-74",
-    "_effective_date": "2026-07-01"
+    "_effective_date": "2025-07-01"
   },
   {
     "sc_code": "SCHEDULE SGCM-1",
@@ -3452,7 +3452,7 @@
     "notes": "This schedule is for standby generator operation and includes payments to the customer for capacity maintained during company requests. It is not a standalone billable rate schedule.",
     "source_schedule": "SCHEDULE SGCM-1",
     "source_pages": "74-77",
-    "_effective_date": "2026-07-01"
+    "_effective_date": "2025-07-01"
   },
   {
     "sc_code": "SCHEDULE SMH",
@@ -3648,7 +3648,7 @@
         "withdrawn_date": "2025-07-01"
       }
     ],
-    "_effective_date": "2026-07-01"
+    "_effective_date": "2025-07-01"
   },
   {
     "sc_code": "SCHEDULE SP",
@@ -3675,7 +3675,7 @@
     "notes": "This schedule provides discounts and special provisions applicable to certain services and is not a standalone billable rate schedule.",
     "source_schedule": "SCHEDULE SP",
     "source_pages": "81-82",
-    "_effective_date": "2026-07-01"
+    "_effective_date": "2025-07-01"
   },
   {
     "sc_code": "SCHEDULE SSL",
@@ -3959,6 +3959,6 @@
         "withdrawn_date": "2025-07-01"
       }
     ],
-    "_effective_date": "2026-07-01"
+    "_effective_date": "2025-07-01"
   }
 ]
