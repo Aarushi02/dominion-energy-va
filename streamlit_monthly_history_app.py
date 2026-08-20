@@ -20,6 +20,13 @@ st.set_page_config(page_title="Dominion Bill Processing", page_icon="⚡")
 
 TARIFF_JSON_PATH = "final_tariff_logic.json"
 
+TARIFF_FILES = {
+    "2025-07-01": "tariff_data/final_tariff_logic_2025-07-01.json",
+    "2026-07-01": "tariff_data/final_tariff_logic_2026-07-01.json",
+}
+
+SURCHARGE_JSON_PATH = "surcharge_rates.json"
+
 SURCHARGE_JSON_PATH = "surcharge_rates.json"
 
 # AUTHENTICATION
@@ -378,10 +385,6 @@ def render_tariff_viewer():
     st.title("📋 Tariff Viewer")
     st.write("Browse the rates loaded from the tariff logic file.")
 
-    TARIFF_FILES = {
-        "2025-07-01": "tariff_data/final_tariff_logic_2025-07-01.json",
-        "2026-07-01": "tariff_data/final_tariff_logic_2026-07-01.json",
-    }
     vintage = st.radio(
         "Tariff vintage",
         options=list(TARIFF_FILES.keys()),
