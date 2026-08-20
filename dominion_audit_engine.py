@@ -32,7 +32,11 @@ def _parse_effective_date(raw: Optional[str]) -> Optional[date]:
 
 
 def _extract_effective_date(item: dict) -> Optional[date]:
-    eff = item.get("effective_date") or (item.get("metadata") or {}).get("effective_date")
+    eff = (
+        item.get("_effective_date")
+        or item.get("effective_date")
+        or (item.get("metadata") or {}).get("effective_date")
+    )
     return _parse_effective_date(eff)
 
 # Billing-type (Non-Demand vs Demand) selection
@@ -334,35 +338,33 @@ def calculate_charge_blocks_bill(charge_blocks: List[dict], row: pd.Series, bill
 # Audit Engine
 
 class DominionAuditEngine:
-    """
-    Tariff audit engine for Dominion/VEPGA schedules, built from the
-    output of dominion_tariff_pipeline_v2.py (final_tariff_logic.json)
-    """
-
-    def __init__(self, tariff_definitions_path: str):
-        self.tariff_map = self._load_logic(tariff_definitions_path)
+    
+    def __init__(self, tariff_definitions_paths):
+        if isinstance(tariff_definitions_paths, str):
+            tariff_definitions_paths = [tariff_definitions_paths]
+        self.tariff_map = self._load_logic(tariff_definitions_paths)
 
     # Load tariff logic
    
-    def _load_logic(self, path: str) -> Dict[str, List[dict]]:
-        with open(path, "r") as f:
-            data = json.load(f)
-
-        if isinstance(data, dict) and "tariffs" in data:
-            data = data["tariffs"]
-
+    def _load_logic(self, paths) -> Dict[str, List[dict]]:
         mapping: Dict[str, List[dict]] = {}
-        for item in data:
-            sc = _normalize_sc_code(item.get("sc_code") or item.get("source_schedule"))
-            item["_effective_date"] = _extract_effective_date(item)
-            item["_billing_type"] = _classify_billing_type(item.get("description"))
-            mapping.setdefault(sc, []).append(item)
+        for path in paths:
+            with open(path, "r") as f:
+                data = json.load(f)
+
+            if isinstance(data, dict) and "tariffs" in data:
+                data = data["tariffs"]
+
+            for item in data:
+                sc = _normalize_sc_code(item.get("sc_code") or item.get("source_schedule"))
+                item["_effective_date"] = _extract_effective_date(item)
+                item["_billing_type"] = _classify_billing_type(item.get("description"))
+                mapping.setdefault(sc, []).append(item)
 
         for sc, items in mapping.items():
             items.sort(key=lambda x: (x["_effective_date"] is None, x["_effective_date"] or date.min))
 
         return mapping
-
     def _pick_logic_for_bill(self, sc_code: str, billing_type: str, bill_dt) -> Optional[dict]:
         versions = self.tariff_map.get(sc_code)
         if not versions:
