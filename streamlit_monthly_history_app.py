@@ -377,6 +377,18 @@ def render_tariff_viewer():
     st.title("📋 Tariff Viewer")
     st.write("Browse the rates loaded from the tariff logic file.")
 
+    TARIFF_FILES = {
+        "2025-07-01": "tariff_data/final_tariff_logic_2025-07-01.json",
+        "2026-07-01": "tariff_data/final_tariff_logic_2026-07-01.json",
+    }
+    vintage = st.radio(
+        "Tariff vintage",
+        options=list(TARIFF_FILES.keys()),
+        horizontal=True,
+        index=len(TARIFF_FILES) - 1,  # defaults to most recent
+    )
+    tariff_path = TARIFF_FILES[vintage]
+
     if not Path(TARIFF_JSON_PATH).exists():
         st.error(
             f"Tariff logic file not found at `{TARIFF_JSON_PATH}`. "
