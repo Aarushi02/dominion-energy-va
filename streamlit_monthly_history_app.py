@@ -164,16 +164,17 @@ def render_audit_calculation():
         "to check actual charges against tariff logic."
     )
 
-    if not Path(TARIFF_JSON_PATH).exists():
+    missing = [p for p in TARIFF_FILES.values() if not Path(p).exists()]
+    if missing:
         st.error(
-            f"Tariff logic file not found at `{TARIFF_JSON_PATH}`. "
-            f"This file needs to be committed to the repo alongside the app "
+            f"Tariff logic file(s) not found: {', '.join(f'`{p}`' for p in missing)}. "
+            f"These files need to be committed to the repo alongside the app "
             f"(output of dominion_tariff_pipeline_v2.py)."
         )
         return
 
-    engine = load_audit_engine(TARIFF_JSON_PATH)
-    st.caption(f"Using tariff logic: `{TARIFF_JSON_PATH}` "
+    engine = load_audit_engine(tuple(TARIFF_FILES.values()))
+    st.caption(f"Using tariff logic: {', '.join(f'`{p}`' for p in TARIFF_FILES.values())} "
                f"({len(engine.tariff_map)} schedule(s) loaded)")
 
     spreadsheet_file = st.file_uploader("Upload Monthly History Excel", type=["xlsx"])
@@ -185,7 +186,7 @@ def render_audit_calculation():
     file_bytes = spreadsheet_file.read()
 
     with st.spinner("Running audit (this only happens once per file)..."):
-        monthly_long_df, audit_results_df = process_audit(file_bytes, TARIFF_JSON_PATH)
+        monthly_long_df, audit_results_df = process_audit(file_bytes, tuple(TARIFF_FILES.values()))
 
     if monthly_long_df.empty:
         st.error(
@@ -201,7 +202,7 @@ def render_audit_calculation():
     skipped = (audit_results_df["status"] == "SKIPPED").sum()
     if skipped:
         st.info(f"{skipped} month(s) skipped -- no tariff logic found "
-                f"for that schedule in `{TARIFF_JSON_PATH}`.")
+                f"for that schedule in the loaded tariff files.")
 
     def _highlight_variance(row):
         if row["status"] != "SUCCESS":
