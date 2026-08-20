@@ -1,0 +1,3094 @@
+[
+  {
+    "sc_code": "SCHEDULE 100",
+    "description": "Municipal, County, Housing and Other Authorities Miscellaneous Light and Power Service - Non-Demand Billing",
+    "billing_model": "usage_based",
+    "logic_steps": [
+      {
+        "step_name": "Basic Customer Charge (Metered Service)",
+        "charge_type": "fixed_fee",
+        "value": 10.7,
+        "period": "monthly"
+      },
+      {
+        "step_name": "Basic Customer Charge (Unmetered Service)",
+        "charge_type": "fixed_fee",
+        "value": 4.79,
+        "period": "monthly"
+      }
+    ],
+    "charge_blocks": [
+      {
+        "block_name": "Distribution Energy Charge",
+        "basis": "kwh",
+        "condition": null,
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.026064
+        }
+      },
+      {
+        "block_name": "Electricity Supply Energy Charge",
+        "basis": "kwh",
+        "condition": null,
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.041162
+        }
+      }
+    ],
+    "minimum_charge": {
+      "basis": "contracted minimum charge",
+      "value": null
+    },
+    "riders_note": "subject to all applicable riders (values merged separately)",
+    "source_schedule": "SCHEDULE 100",
+    "source_pages": "51-54",
+    "riders_priced": [
+      {
+        "schedule": "SCHEDULE 100",
+        "rider_name": "CCR-CM",
+        "value": 0.0013950000000000002,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 100",
+        "rider_name": "CE-CM",
+        "value": 0.0050880000000000005,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 100",
+        "rider_name": "CERC-CM",
+        "value": 0.000511,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 100",
+        "rider_name": "DIST-CM",
+        "value": 0.005596,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 100",
+        "rider_name": "E-CM",
+        "value": 0.000256,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 100",
+        "rider_name": "GEN-CM",
+        "value": 0.004134,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 100",
+        "rider_name": "OSW-CM",
+        "value": 0.006717999999999999,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 100",
+        "rider_name": "PIPP-CM",
+        "value": 0.0,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 100",
+        "rider_name": "RPS-CM",
+        "value": 0.0053939999999999995,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 100",
+        "rider_name": "SMR-CM",
+        "value": 0.000124,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 100",
+        "rider_name": "SNA-CM",
+        "value": 0.002378,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 100",
+        "rider_name": "T-CM",
+        "value": 0.016007,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 100",
+        "rider_name": "Fuel Charge Rider A",
+        "value": 0.040868,
+        "unit": "kwh",
+        "withdrawn_date": null
+      }
+    ],
+    "_effective_date": "2025-07-01"
+  },
+  {
+    "sc_code": "SCHEDULE 100",
+    "description": "Municipal, County, Housing and Other Authorities Miscellaneous Light and Power Service - Demand Billing",
+    "billing_model": "usage_based",
+    "logic_steps": [
+      {
+        "step_name": "Basic Customer Charge",
+        "charge_type": "fixed_fee",
+        "value": 10.7,
+        "period": "monthly"
+      }
+    ],
+    "charge_blocks": [
+      {
+        "block_name": "Distribution Energy Charge",
+        "basis": "kwh",
+        "condition": null,
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.025083
+        }
+      },
+      {
+        "block_name": "Electricity Supply Energy Charge",
+        "basis": "kwh",
+        "condition": null,
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "tiered",
+          "tiers": [
+            {
+              "threshold": 150,
+              "threshold_basis": "per_kw_of_es_demand",
+              "rate": 0.041163
+            },
+            {
+              "threshold": 150,
+              "threshold_basis": "per_kw_of_es_demand",
+              "rate": 0.030918
+            },
+            {
+              "threshold": 150,
+              "threshold_basis": "per_kw_of_es_demand",
+              "rate": 0.024996
+            },
+            {
+              "threshold": null,
+              "threshold_basis": "per_kw_of_es_demand",
+              "rate": 0.01897
+            }
+          ]
+        }
+      }
+    ],
+    "minimum_charge": {
+      "basis": "contracted minimum charge",
+      "value": null
+    },
+    "demand_determination_note": "kW demand determined as highest average kW load in any 30-minute interval during billing month.",
+    "riders_note": "subject to all applicable riders (values merged separately)",
+    "source_schedule": "SCHEDULE 100",
+    "source_pages": "51-54",
+    "riders_priced": [
+      {
+        "schedule": "SCHEDULE 100",
+        "rider_name": "CCR-CM",
+        "value": 0.0013950000000000002,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 100",
+        "rider_name": "CE-CM",
+        "value": 0.0050880000000000005,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 100",
+        "rider_name": "CERC-CM",
+        "value": 0.000511,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 100",
+        "rider_name": "DIST-CM",
+        "value": 0.005596,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 100",
+        "rider_name": "E-CM",
+        "value": 0.000256,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 100",
+        "rider_name": "GEN-CM",
+        "value": 0.004134,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 100",
+        "rider_name": "OSW-CM",
+        "value": 0.006717999999999999,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 100",
+        "rider_name": "PIPP-CM",
+        "value": 0.0,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 100",
+        "rider_name": "RPS-CM",
+        "value": 0.0053939999999999995,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 100",
+        "rider_name": "SMR-CM",
+        "value": 0.000124,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 100",
+        "rider_name": "SNA-CM",
+        "value": 0.002378,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 100",
+        "rider_name": "T-CM",
+        "value": 0.016007,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 100",
+        "rider_name": "Fuel Charge Rider A",
+        "value": 0.040868,
+        "unit": "kwh",
+        "withdrawn_date": null
+      }
+    ],
+    "_effective_date": "2025-07-01"
+  },
+  {
+    "sc_code": "SCHEDULE 102",
+    "description": "Municipal and County Traffic Control Service",
+    "billing_model": "usage_based",
+    "logic_steps": [
+      {
+        "step_name": "Basic Customer Charge - Metered Service",
+        "charge_type": "fixed_fee",
+        "value": 16.54,
+        "period": "monthly"
+      },
+      {
+        "step_name": "Basic Customer Charge - Unmetered Service",
+        "charge_type": "fixed_fee",
+        "value": 10.63,
+        "period": "monthly",
+        "condition": "when current and historical kWh usage is 49 kWh or less per month"
+      }
+    ],
+    "charge_blocks": [
+      {
+        "block_name": "Distribution Energy Charge",
+        "basis": "kwh",
+        "condition": null,
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.033471
+        }
+      },
+      {
+        "block_name": "Electricity Supply Energy Charge",
+        "basis": "kwh",
+        "condition": null,
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.018495
+        }
+      }
+    ],
+    "minimum_charge": {
+      "basis": "as contracted for pursuant to Section VI of the Terms and Conditions",
+      "value": null
+    },
+    "riders_note": "subject to all applicable riders (values merged separately)",
+    "source_schedule": "SCHEDULE 102",
+    "source_pages": "54-56",
+    "riders_priced": [
+      {
+        "schedule": "SCHEDULE 102",
+        "rider_name": "CCR-CM",
+        "value": 0.0013950000000000002,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 102",
+        "rider_name": "CE-CM",
+        "value": 0.0050880000000000005,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 102",
+        "rider_name": "CERC-CM",
+        "value": 0.000511,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 102",
+        "rider_name": "DIST-CM",
+        "value": 0.005596,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 102",
+        "rider_name": "E-CM",
+        "value": 0.000256,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 102",
+        "rider_name": "GEN-CM",
+        "value": 0.004134,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 102",
+        "rider_name": "OSW-CM",
+        "value": 0.006717999999999999,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 102",
+        "rider_name": "PIPP-CM",
+        "value": 0.0,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 102",
+        "rider_name": "RPS-CM",
+        "value": 0.0053939999999999995,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 102",
+        "rider_name": "SMR-CM",
+        "value": 0.000124,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 102",
+        "rider_name": "SNA-CM",
+        "value": 0.002378,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 102",
+        "rider_name": "T-CM",
+        "value": 0.015653999999999998,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 102",
+        "rider_name": "Fuel Charge Rider A",
+        "value": 0.040868,
+        "unit": "kwh",
+        "withdrawn_date": null
+      }
+    ],
+    "_effective_date": "2025-07-01"
+  },
+  {
+    "sc_code": "SCHEDULE 110",
+    "description": "Municipal, County, Housing and Other Authorities - Non-Demand Billing",
+    "billing_model": "usage_based",
+    "logic_steps": [
+      {
+        "step_name": "Basic Customer Charge",
+        "charge_type": "fixed_fee",
+        "value": 10.7,
+        "period": "monthly"
+      }
+    ],
+    "charge_blocks": [
+      {
+        "block_name": "Distribution Energy Charge",
+        "basis": "kwh",
+        "condition": null,
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.022452
+        }
+      },
+      {
+        "block_name": "Electricity Supply Energy Charge - Summer",
+        "basis": "kwh",
+        "condition": "Summer (June through September)",
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.043556
+        }
+      },
+      {
+        "block_name": "Electricity Supply Energy Charge - Base",
+        "basis": "kwh",
+        "condition": "Base (October through May)",
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.038769
+        }
+      }
+    ],
+    "riders_note": "subject to all applicable riders (values merged separately)",
+    "source_schedule": "SCHEDULE 110",
+    "source_pages": "56-59",
+    "riders_priced": [
+      {
+        "schedule": "SCHEDULE 110",
+        "rider_name": "CCR-CM",
+        "value": 0.0013950000000000002,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 110",
+        "rider_name": "CE-CM",
+        "value": 0.0050880000000000005,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 110",
+        "rider_name": "CERC-CM",
+        "value": 0.000511,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 110",
+        "rider_name": "DIST-CM",
+        "value": 0.005596,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 110",
+        "rider_name": "E-CM",
+        "value": 0.000256,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 110",
+        "rider_name": "GEN-CM",
+        "value": 0.004134,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 110",
+        "rider_name": "OSW-CM",
+        "value": 0.006717999999999999,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 110",
+        "rider_name": "PIPP-CM",
+        "value": 0.0,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 110",
+        "rider_name": "RPS-CM",
+        "value": 0.0053939999999999995,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 110",
+        "rider_name": "SMR-CM",
+        "value": 0.000124,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 110",
+        "rider_name": "SNA-CM",
+        "value": 0.002378,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 110",
+        "rider_name": "T-CM",
+        "value": 0.016007,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 110",
+        "rider_name": "Fuel Charge Rider A",
+        "value": 0.040868,
+        "unit": "kwh",
+        "withdrawn_date": null
+      }
+    ],
+    "_effective_date": "2025-07-01"
+  },
+  {
+    "sc_code": "SCHEDULE 110",
+    "description": "Municipal, County, Housing and Other Authorities - Demand Billing",
+    "billing_model": "usage_based",
+    "logic_steps": [
+      {
+        "step_name": "Basic Customer Charge",
+        "charge_type": "fixed_fee",
+        "value": 10.7,
+        "period": "monthly"
+      }
+    ],
+    "charge_blocks": [
+      {
+        "block_name": "Distribution Energy Charge",
+        "basis": "kwh",
+        "condition": null,
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.021641
+        }
+      },
+      {
+        "block_name": "Electricity Supply Energy Charge - Summer",
+        "basis": "kwh",
+        "condition": "Summer (June through September)",
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "tiered",
+          "tiers": [
+            {
+              "threshold": 150,
+              "threshold_basis": "per_kw_of_es_demand",
+              "rate": 0.043556
+            },
+            {
+              "threshold": 150,
+              "threshold_basis": "per_kw_of_es_demand",
+              "rate": 0.033312
+            },
+            {
+              "threshold": 150,
+              "threshold_basis": "per_kw_of_es_demand",
+              "rate": 0.02738
+            },
+            {
+              "threshold": null,
+              "threshold_basis": "per_kw_of_es_demand",
+              "rate": 0.021364
+            }
+          ]
+        }
+      },
+      {
+        "block_name": "Electricity Supply Energy Charge - Base",
+        "basis": "kwh",
+        "condition": "Base (October through May)",
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "tiered",
+          "tiers": [
+            {
+              "threshold": 150,
+              "threshold_basis": "per_kw_of_es_demand",
+              "rate": 0.038769
+            },
+            {
+              "threshold": 150,
+              "threshold_basis": "per_kw_of_es_demand",
+              "rate": 0.028544
+            },
+            {
+              "threshold": 150,
+              "threshold_basis": "per_kw_of_es_demand",
+              "rate": 0.022602
+            },
+            {
+              "threshold": null,
+              "threshold_basis": "per_kw_of_es_demand",
+              "rate": 0.016567
+            }
+          ]
+        }
+      }
+    ],
+    "minimum_charge": {
+      "basis": "contracted minimum charge",
+      "value": null
+    },
+    "demand_determination_note": "kW demand is determined as the highest average kW load measured in any 30-minute interval during the billing month.",
+    "riders_note": "subject to all applicable riders (values merged separately)",
+    "source_schedule": "SCHEDULE 110",
+    "source_pages": "56-59",
+    "riders_priced": [
+      {
+        "schedule": "SCHEDULE 110",
+        "rider_name": "CCR-CM",
+        "value": 0.0013950000000000002,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 110",
+        "rider_name": "CE-CM",
+        "value": 0.0050880000000000005,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 110",
+        "rider_name": "CERC-CM",
+        "value": 0.000511,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 110",
+        "rider_name": "DIST-CM",
+        "value": 0.005596,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 110",
+        "rider_name": "E-CM",
+        "value": 0.000256,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 110",
+        "rider_name": "GEN-CM",
+        "value": 0.004134,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 110",
+        "rider_name": "OSW-CM",
+        "value": 0.006717999999999999,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 110",
+        "rider_name": "PIPP-CM",
+        "value": 0.0,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 110",
+        "rider_name": "RPS-CM",
+        "value": 0.0053939999999999995,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 110",
+        "rider_name": "SMR-CM",
+        "value": 0.000124,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 110",
+        "rider_name": "SNA-CM",
+        "value": 0.002378,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 110",
+        "rider_name": "T-CM",
+        "value": 0.016007,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 110",
+        "rider_name": "Fuel Charge Rider A",
+        "value": 0.040868,
+        "unit": "kwh",
+        "withdrawn_date": null
+      }
+    ],
+    "_effective_date": "2025-07-01"
+  },
+  {
+    "sc_code": "SCHEDULE 120",
+    "description": "Municipal, County, and Other Authorities Water Pumping, Sewage Pumping and Sewage Disposal Service",
+    "billing_model": "usage_based",
+    "logic_steps": [
+      {
+        "step_name": "Basic Customer Charge",
+        "charge_type": "fixed_fee",
+        "value": 10.7,
+        "period": "monthly"
+      }
+    ],
+    "charge_blocks": [
+      {
+        "block_name": "Distribution Energy Charge",
+        "basis": "kwh",
+        "condition": null,
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.025834
+        }
+      },
+      {
+        "block_name": "Electricity Supply Energy Charge",
+        "basis": "kwh",
+        "condition": "On-peak",
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.046027
+        }
+      },
+      {
+        "block_name": "Electricity Supply Energy Charge",
+        "basis": "kwh",
+        "condition": "Off-peak",
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.019939
+        }
+      }
+    ],
+    "minimum_charge": {
+      "basis": "contracted minimum charge per Section VI of the Terms and Conditions",
+      "value": null
+    },
+    "riders_note": "subject to all applicable riders (values merged separately)",
+    "source_schedule": "SCHEDULE 120",
+    "source_pages": "59-61",
+    "riders_priced": [
+      {
+        "schedule": "SCHEDULE 120",
+        "rider_name": "CCR-CM",
+        "value": 0.0013950000000000002,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 120",
+        "rider_name": "CE-CM",
+        "value": 0.0050880000000000005,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 120",
+        "rider_name": "CERC-CM",
+        "value": 0.000511,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 120",
+        "rider_name": "DIST-CM",
+        "value": 0.005596,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 120",
+        "rider_name": "E-CM",
+        "value": 0.000256,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 120",
+        "rider_name": "GEN-CM",
+        "value": 0.004134,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 120",
+        "rider_name": "OSW-CM",
+        "value": 0.006717999999999999,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 120",
+        "rider_name": "PIPP-CM",
+        "value": 0.0,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 120",
+        "rider_name": "RPS-CM",
+        "value": 0.0053939999999999995,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 120",
+        "rider_name": "SMR-CM",
+        "value": 0.000124,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 120",
+        "rider_name": "SNA-CM",
+        "value": 0.002378,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 120",
+        "rider_name": "T-CM",
+        "value": 0.020308000000000003,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 120",
+        "rider_name": "Fuel Charge Rider A",
+        "value": 0.040868,
+        "unit": "kwh",
+        "withdrawn_date": null
+      }
+    ],
+    "_effective_date": "2025-07-01"
+  },
+  {
+    "sc_code": "SCHEDULE 130",
+    "description": "Municipal and County Large Miscellaneous Light and Power Service",
+    "billing_model": "usage_based",
+    "logic_steps": [
+      {
+        "step_name": "Basic Customer Charge",
+        "charge_type": "fixed_fee",
+        "value": 112.28,
+        "period": "monthly"
+      }
+    ],
+    "charge_blocks": [
+      {
+        "block_name": "Distribution Demand Charge",
+        "basis": "kw_distribution_demand",
+        "condition": "Primary Voltage Customer",
+        "unit": "per_kw",
+        "rate_structure": {
+          "type": "tiered",
+          "tiers": [
+            {
+              "threshold": 700,
+              "threshold_basis": "flat",
+              "rate": 2.546
+            },
+            {
+              "threshold": 4300,
+              "threshold_basis": "flat",
+              "rate": 2.043
+            },
+            {
+              "threshold": null,
+              "threshold_basis": "flat",
+              "rate": 1.758
+            }
+          ]
+        }
+      },
+      {
+        "block_name": "Distribution Demand Charge",
+        "basis": "kw_distribution_demand",
+        "condition": "Secondary Voltage Customer",
+        "unit": "per_kw",
+        "rate_structure": {
+          "type": "tiered",
+          "tiers": [
+            {
+              "threshold": 700,
+              "threshold_basis": "flat",
+              "rate": 3.769
+            },
+            {
+              "threshold": 4300,
+              "threshold_basis": "flat",
+              "rate": 3.016
+            },
+            {
+              "threshold": null,
+              "threshold_basis": "flat",
+              "rate": 2.595
+            }
+          ]
+        }
+      },
+      {
+        "block_name": "rkVA Demand Charge",
+        "basis": "rkva",
+        "condition": null,
+        "unit": "per_rkva",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.203
+        }
+      },
+      {
+        "block_name": "Electricity Supply Demand Charge",
+        "basis": "kw_es_demand",
+        "condition": null,
+        "unit": "per_kw",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 7.287
+        }
+      },
+      {
+        "block_name": "Electricity Supply kWh Charge",
+        "basis": "kwh",
+        "condition": null,
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "tiered",
+          "tiers": [
+            {
+              "threshold": 24000,
+              "threshold_basis": "flat",
+              "rate": 0.019002
+            },
+            {
+              "threshold": 186000,
+              "threshold_basis": "flat",
+              "rate": 0.010852
+            },
+            {
+              "threshold": null,
+              "threshold_basis": "flat",
+              "rate": 0.007188
+            }
+          ]
+        }
+      }
+    ],
+    "minimum_charge": {
+      "basis": "sum of Distribution and ES demand/customer charges",
+      "value": null
+    },
+    "demand_determination_note": "The kW of demand billed under Paragraph II.B.1. shall be the highest of: current month's 30-min peak, 90% of prior summer peak, or 50 kW. If demand is 1,000 kW or more, it shall be the highest of: current month's on-peak 30-min peak, 90% of prior summer peak, or 1,000 kW.",
+    "riders_note": "subject to all applicable riders (values merged separately)",
+    "source_schedule": "SCHEDULE 130",
+    "source_pages": "61-66",
+    "riders_priced": [
+      {
+        "schedule": "SCHEDULE 130",
+        "rider_name": "CCR-CM",
+        "value": 0.0013950000000000002,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 130",
+        "rider_name": "CE-CM",
+        "value": 1.315,
+        "unit": "kw",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 130",
+        "rider_name": "CERC-CM",
+        "value": 0.132,
+        "unit": "kw",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 130",
+        "rider_name": "DIST-CM",
+        "value": 1.446,
+        "unit": "kw",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 130",
+        "rider_name": "E-CM",
+        "value": 0.066,
+        "unit": "kw",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 130",
+        "rider_name": "GEN-CM",
+        "value": 1.068,
+        "unit": "kw",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 130",
+        "rider_name": "OSW-CM",
+        "value": 1.736,
+        "unit": "kw",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 130",
+        "rider_name": "PIPP-CM",
+        "value": 0.0,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 130",
+        "rider_name": "RPS-CM",
+        "value": 0.0053939999999999995,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 130",
+        "rider_name": "SMR-CM",
+        "value": 0.032,
+        "unit": "kw",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 130",
+        "rider_name": "SNA-CM",
+        "value": 0.614,
+        "unit": "kw",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 130",
+        "rider_name": "T-CM",
+        "value": 4.804,
+        "unit": "kw",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 130",
+        "rider_name": "Fuel Charge Rider A",
+        "value": 0.040868,
+        "unit": "kwh",
+        "withdrawn_date": null
+      }
+    ],
+    "_effective_date": "2025-07-01"
+  },
+  {
+    "sc_code": "SCHEDULE 131",
+    "description": "Municipal and County Thermal Storage",
+    "billing_model": "usage_based",
+    "logic_steps": [
+      {
+        "step_name": "Basic Customer Charge",
+        "charge_type": "fixed_fee",
+        "value": 123.35,
+        "period": "monthly"
+      }
+    ],
+    "charge_blocks": [
+      {
+        "block_name": "Distribution Demand Charge",
+        "basis": "kw_distribution_demand",
+        "condition": "Primary Voltage Customer",
+        "unit": "per_kw",
+        "rate_structure": {
+          "type": "tiered",
+          "tiers": [
+            {
+              "threshold": 700,
+              "threshold_basis": "flat",
+              "rate": 2.805
+            },
+            {
+              "threshold": 4300,
+              "threshold_basis": "flat",
+              "rate": 2.244
+            },
+            {
+              "threshold": null,
+              "threshold_basis": "flat",
+              "rate": 1.931
+            }
+          ]
+        }
+      },
+      {
+        "block_name": "Distribution Demand Charge",
+        "basis": "kw_distribution_demand",
+        "condition": "Secondary Voltage Customer",
+        "unit": "per_kw",
+        "rate_structure": {
+          "type": "tiered",
+          "tiers": [
+            {
+              "threshold": 700,
+              "threshold_basis": "flat",
+              "rate": 4.14
+            },
+            {
+              "threshold": 4300,
+              "threshold_basis": "flat",
+              "rate": 3.313
+            },
+            {
+              "threshold": null,
+              "threshold_basis": "flat",
+              "rate": 2.85
+            }
+          ]
+        }
+      },
+      {
+        "block_name": "rkVA Demand Charge",
+        "basis": "rkva",
+        "condition": null,
+        "unit": "per_rkva",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.223
+        }
+      },
+      {
+        "block_name": "Electricity Supply Demand Charge",
+        "basis": "kw_es_demand",
+        "condition": null,
+        "unit": "per_kw",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 9.511
+        }
+      },
+      {
+        "block_name": "Electricity Supply Energy Charge",
+        "basis": "kwh",
+        "condition": null,
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "tiered",
+          "tiers": [
+            {
+              "threshold": 210,
+              "threshold_basis": "per_kw_of_es_demand",
+              "rate": 0.014207
+            },
+            {
+              "threshold": null,
+              "threshold_basis": "flat",
+              "rate": 0.009411
+            }
+          ]
+        }
+      }
+    ],
+    "minimum_charge": {
+      "basis": "sum of Distribution and ES demand/customer charges",
+      "value": null
+    },
+    "demand_determination_note": "The kW of demand billed under Paragraph II.B.1. shall be the highest of: current month's 30-min peak during on-peak hours, 90% of prior summer peak, or 50 kW floor. Off-peak hours may be included if they exceed on-peak demand by more than the installed capacity of the thermal storage system.",
+    "riders_note": "subject to all applicable riders (values merged separately)",
+    "source_schedule": "SCHEDULE 131",
+    "source_pages": "66-70",
+    "riders_priced": [
+      {
+        "schedule": "SCHEDULE 131",
+        "rider_name": "CCR-CM",
+        "value": 0.0013950000000000002,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 131",
+        "rider_name": "CE-CM",
+        "value": 1.315,
+        "unit": "kw",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 131",
+        "rider_name": "CERC-CM",
+        "value": 0.132,
+        "unit": "kw",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 131",
+        "rider_name": "DIST-CM",
+        "value": 1.446,
+        "unit": "kw",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 131",
+        "rider_name": "E-CM",
+        "value": 0.066,
+        "unit": "kw",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 131",
+        "rider_name": "GEN-CM",
+        "value": 1.068,
+        "unit": "kw",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 131",
+        "rider_name": "OSW-CM",
+        "value": 1.736,
+        "unit": "kw",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 131",
+        "rider_name": "PIPP-CM",
+        "value": 0.0,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 131",
+        "rider_name": "RPS-CM",
+        "value": 0.0053939999999999995,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 131",
+        "rider_name": "SMR-CM",
+        "value": 0.032,
+        "unit": "kw",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 131",
+        "rider_name": "SNA-CM",
+        "value": 0.614,
+        "unit": "kw",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 131",
+        "rider_name": "T-CM",
+        "value": 4.804,
+        "unit": "kw",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 131",
+        "rider_name": "Fuel Charge Rider A",
+        "value": 0.040868,
+        "unit": "kwh",
+        "withdrawn_date": null
+      }
+    ],
+    "_effective_date": "2025-07-01"
+  },
+  {
+    "sc_code": "SCHEDULE 132",
+    "description": "Municipal and County Large Miscellaneous Light and Power Service - Variable Pricing",
+    "billing_model": "variable_pricing",
+    "logic_steps": [
+      {
+        "step_name": "Basic Customer Charge",
+        "charge_type": "fixed_fee",
+        "value": 221.99,
+        "period": "monthly"
+      }
+    ],
+    "charge_blocks": [
+      {
+        "block_name": "Distribution Demand Charge",
+        "basis": "kw_distribution_demand",
+        "condition": "Primary Voltage Customer",
+        "unit": "per_kw",
+        "rate_structure": {
+          "type": "tiered",
+          "tiers": [
+            {
+              "threshold": 5000,
+              "threshold_basis": "flat",
+              "rate": 1.505
+            },
+            {
+              "threshold": null,
+              "threshold_basis": "flat",
+              "rate": 1.133
+            }
+          ]
+        }
+      },
+      {
+        "block_name": "Distribution Demand Charge",
+        "basis": "kw_distribution_demand",
+        "condition": "Secondary Voltage Customer",
+        "unit": "per_kw",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 3.842
+        }
+      },
+      {
+        "block_name": "Electricity Supply Energy Charge",
+        "basis": "kwh",
+        "condition": "May 1 - September 30, Classification A, On-Peak (11am-9pm)",
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.315535
+        }
+      },
+      {
+        "block_name": "Electricity Supply Energy Charge",
+        "basis": "kwh",
+        "condition": "May 1 - September 30, Classification A, Off-Peak",
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.041065
+        }
+      },
+      {
+        "block_name": "Electricity Supply Energy Charge",
+        "basis": "kwh",
+        "condition": "May 1 - September 30, Classification B, On-Peak (11am-9pm)",
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.029252
+        }
+      },
+      {
+        "block_name": "Electricity Supply Energy Charge",
+        "basis": "kwh",
+        "condition": "May 1 - September 30, Classification B, Off-Peak",
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.0121
+        }
+      },
+      {
+        "block_name": "Electricity Supply Energy Charge",
+        "basis": "kwh",
+        "condition": "May 1 - September 30, Classification C, On-Peak (7am-10pm)",
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.015237
+        }
+      },
+      {
+        "block_name": "Electricity Supply Energy Charge",
+        "basis": "kwh",
+        "condition": "May 1 - September 30, Classification C, Off-Peak",
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.003815
+        }
+      },
+      {
+        "block_name": "Electricity Supply Energy Charge",
+        "basis": "kwh",
+        "condition": "October 1 - April 30, Classification A, On-Peak (6am-noon & 5pm-9pm)",
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.315535
+        }
+      },
+      {
+        "block_name": "Electricity Supply Energy Charge",
+        "basis": "kwh",
+        "condition": "October 1 - April 30, Classification A, Off-Peak",
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.060762
+        }
+      },
+      {
+        "block_name": "Electricity Supply Energy Charge",
+        "basis": "kwh",
+        "condition": "October 1 - April 30, Classification B, On-Peak (6am-noon & 5pm-9pm)",
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.029252
+        }
+      },
+      {
+        "block_name": "Electricity Supply Energy Charge",
+        "basis": "kwh",
+        "condition": "October 1 - April 30, Classification B, Off-Peak",
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.014767
+        }
+      },
+      {
+        "block_name": "Electricity Supply Energy Charge",
+        "basis": "kwh",
+        "condition": "October 1 - April 30, Classification C, On-Peak (6am-noon & 5pm-9pm)",
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.014767
+        }
+      },
+      {
+        "block_name": "Electricity Supply Energy Charge",
+        "basis": "kwh",
+        "condition": "October 1 - April 30, Classification C, Off-Peak",
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.007706
+        }
+      }
+    ],
+    "day_classification_note": "Classification A applies no more than 28 days per calendar year; Classification C applies no fewer than 60 days per calendar year. Company determines and posts daily classification by 5pm the preceding day; defaults to Classification C if not posted.",
+    "minimum_charge": {
+      "basis": "sum of Basic Customer Charge and Distribution Demand Charge",
+      "value": null
+    },
+    "riders_note": "subject to all applicable riders (values merged separately)",
+    "demand_determination_note": "Electricity Supply Peak Demand is the higher of the highest average kW demand or 85% of the highest average kVA demand measured during the current billing month.",
+    "source_schedule": "SCHEDULE 132",
+    "source_pages": "70-80",
+    "riders_priced": [
+      {
+        "schedule": "SCHEDULE 132",
+        "rider_name": "CCR-CM",
+        "value": 0.0013950000000000002,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 132",
+        "rider_name": "CE-CM",
+        "value": 0.0045639999999999995,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 132",
+        "rider_name": "CERC-CM",
+        "value": 0.000458,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 132",
+        "rider_name": "DIST-CM",
+        "value": 1.043,
+        "unit": "kw",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 132",
+        "rider_name": "E-CM",
+        "value": 0.000229,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 132",
+        "rider_name": "GEN-CM",
+        "value": 0.0037080000000000004,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 132",
+        "rider_name": "OSW-CM",
+        "value": 0.006026,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 132",
+        "rider_name": "PIPP-CM",
+        "value": 0.0,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 132",
+        "rider_name": "RPS-CM",
+        "value": 0.0053939999999999995,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 132",
+        "rider_name": "SMR-CM",
+        "value": 0.000111,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 132",
+        "rider_name": "SNA-CM",
+        "value": 0.002133,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 132",
+        "rider_name": "T-CM",
+        "value": 4.804,
+        "unit": "kw",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 132",
+        "rider_name": "Fuel Charge Rider A",
+        "value": 0.040868,
+        "unit": "kwh",
+        "withdrawn_date": null
+      }
+    ],
+    "_effective_date": "2025-07-01"
+  },
+  {
+    "sc_code": "SCHEDULE 134",
+    "description": "Municipal and County Large Miscellaneous Light and Power Service, Transmission or Primary Voltage",
+    "billing_model": "usage_based",
+    "logic_steps": [
+      {
+        "step_name": "Basic Customer Charge",
+        "charge_type": "fixed_fee",
+        "value": 116.56,
+        "period": "monthly"
+      }
+    ],
+    "charge_blocks": [
+      {
+        "block_name": "Distribution Contract Demand Charge",
+        "basis": "kw_contract_demand",
+        "condition": null,
+        "unit": "per_kw",
+        "rate_structure": {
+          "type": "tiered",
+          "tiers": [
+            {
+              "threshold": 5000,
+              "threshold_basis": "flat",
+              "rate": 2.541
+            },
+            {
+              "threshold": null,
+              "threshold_basis": "flat",
+              "rate": 1.569
+            }
+          ]
+        }
+      },
+      {
+        "block_name": "On-Peak Electricity Supply Demand Charge",
+        "basis": "kw_es_demand",
+        "condition": "On-Peak",
+        "unit": "per_kw",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 10.162
+        }
+      },
+      {
+        "block_name": "Electricity Supply kWh Charge",
+        "basis": "kwh",
+        "condition": "On-Peak",
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.006508
+        }
+      },
+      {
+        "block_name": "Electricity Supply kWh Charge",
+        "basis": "kwh",
+        "condition": "Off-Peak",
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.004434
+        }
+      }
+    ],
+    "minimum_charge": {
+      "basis": "as may be contracted for",
+      "value": null
+    },
+    "demand_determination_note": "Distribution Peak Demand is the higher of the highest average kW demand or 85% of the highest average kVA demand. Distribution Contract Demand is the maximum demand to be provided, not less than 1,500 kW, and increases if Distribution Peak Demand exceeds it. On-Peak Electricity Supply Demand is the highest of the current month's on-peak kW, 90% of the highest on-peak kW from June to September of the previous year, or 1,000 kW.",
+    "riders_note": "subject to all applicable riders (values merged separately)",
+    "source_schedule": "SCHEDULE 134",
+    "source_pages": "80-84",
+    "riders_priced": [
+      {
+        "schedule": "SCHEDULE 134",
+        "rider_name": "CCR-CM",
+        "value": 0.0013950000000000002,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 134",
+        "rider_name": "CE-CM",
+        "value": 1.315,
+        "unit": "kw",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 134",
+        "rider_name": "CERC-CM",
+        "value": 0.132,
+        "unit": "kw",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 134",
+        "rider_name": "DIST-CM",
+        "value": 1.446,
+        "unit": "kw",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 134",
+        "rider_name": "E-CM",
+        "value": 0.066,
+        "unit": "kw",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 134",
+        "rider_name": "GEN-CM",
+        "value": 1.068,
+        "unit": "kw",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 134",
+        "rider_name": "OSW-CM",
+        "value": 1.736,
+        "unit": "kw",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 134",
+        "rider_name": "PIPP-CM",
+        "value": 0.0,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 134",
+        "rider_name": "RPS-CM",
+        "value": 0.0053939999999999995,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 134",
+        "rider_name": "SMR-CM",
+        "value": 0.032,
+        "unit": "kw",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 134",
+        "rider_name": "SNA-CM",
+        "value": 0.614,
+        "unit": "kw",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 134",
+        "rider_name": "T-CM",
+        "value": 4.804,
+        "unit": "kw",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 134",
+        "rider_name": "Fuel Charge Rider A",
+        "value": 0.040868,
+        "unit": "kwh",
+        "withdrawn_date": null
+      }
+    ],
+    "_effective_date": "2025-07-01"
+  },
+  {
+    "sc_code": "SCHEDULE 150",
+    "description": "Municipal and County Roadway, Directional and Area Lighting Service - High Pressure Sodium",
+    "billing_model": "per_fixture",
+    "fixture_rates": [
+      {
+        "fixture_label": "5,000 Lumens, 82 Wattage",
+        "distribution_charge_per_unit": 10.95,
+        "supply_charge_per_unit": 1.3,
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published for Type 1 fixtures; billed per pole as a single unit."
+      },
+      {
+        "fixture_label": "8,000 Lumens, 120 Wattage",
+        "distribution_charge_per_unit": 11.51,
+        "supply_charge_per_unit": 1.72,
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published for Type 1 fixtures; billed per pole as a single unit."
+      },
+      {
+        "fixture_label": "14,000 Lumens, 202 Wattage",
+        "distribution_charge_per_unit": 12.41,
+        "supply_charge_per_unit": 3.01,
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published for Type 1 fixtures; billed per pole as a single unit."
+      },
+      {
+        "fixture_label": "23,000 Lumens, 315 Wattage",
+        "distribution_charge_per_unit": 16.82,
+        "supply_charge_per_unit": 4.53,
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published for Type 1 fixtures; billed per pole as a single unit."
+      },
+      {
+        "fixture_label": "42,000 Lumens, 490 Wattage",
+        "distribution_charge_per_unit": 25.48,
+        "supply_charge_per_unit": 6.9,
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published for Type 1 fixtures; billed per pole as a single unit."
+      },
+      {
+        "fixture_label": "127,000 Lumens, 1,130 Wattage",
+        "distribution_charge_per_unit": 29.47,
+        "supply_charge_per_unit": 16.4,
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published for Type 1 fixtures; billed per pole as a single unit."
+      },
+      {
+        "fixture_label": "5,000 Lumens, 82 Wattage (Type 2)",
+        "distribution_charge_per_unit": 26.64,
+        "supply_charge_per_unit": 1.3,
+        "period": "monthly",
+        "distribution_charge_additional_unit": 11.53,
+        "supply_charge_additional_unit": 1.3
+      },
+      {
+        "fixture_label": "8,000 Lumens, 120 Wattage (Type 2)",
+        "distribution_charge_per_unit": 26.98,
+        "supply_charge_per_unit": 1.71,
+        "period": "monthly",
+        "distribution_charge_additional_unit": 12.04,
+        "supply_charge_additional_unit": 1.71
+      },
+      {
+        "fixture_label": "14,000 Lumens, 202 Wattage (Type 2)",
+        "distribution_charge_per_unit": 27.51,
+        "supply_charge_per_unit": 3.02,
+        "period": "monthly",
+        "distribution_charge_additional_unit": 12.67,
+        "supply_charge_additional_unit": 3.02
+      },
+      {
+        "fixture_label": "23,000 Lumens, 315 Wattage (Type 2)",
+        "distribution_charge_per_unit": 31.29,
+        "supply_charge_per_unit": 4.55,
+        "period": "monthly",
+        "distribution_charge_additional_unit": 15.43,
+        "supply_charge_additional_unit": 4.55
+      },
+      {
+        "fixture_label": "42,000 Lumens, 490 Wattage (Type 2)",
+        "distribution_charge_per_unit": 37.12,
+        "supply_charge_per_unit": 6.91,
+        "period": "monthly",
+        "distribution_charge_additional_unit": 17.48,
+        "supply_charge_additional_unit": 6.91
+      },
+      {
+        "fixture_label": "23,000 Lumens, 315 Wattage (Directional)",
+        "distribution_charge_per_unit": 31.11,
+        "supply_charge_per_unit": 4.53,
+        "period": "monthly",
+        "distribution_charge_additional_unit": 8.7,
+        "supply_charge_additional_unit": 4.53
+      },
+      {
+        "fixture_label": "42,000 Lumens, 490 Wattage (Directional)",
+        "distribution_charge_per_unit": 27.23,
+        "supply_charge_per_unit": 6.9,
+        "period": "monthly",
+        "distribution_charge_additional_unit": 13.28,
+        "supply_charge_additional_unit": 6.9
+      },
+      {
+        "fixture_label": "127,000 Lumens, 1,130 Wattage (Directional)",
+        "distribution_charge_per_unit": 30.97,
+        "supply_charge_per_unit": 16.39,
+        "period": "monthly",
+        "distribution_charge_additional_unit": 15.68,
+        "supply_charge_additional_unit": 16.39
+      },
+      {
+        "fixture_label": "23,000 Lumens, 315 Wattage (Expressway)",
+        "distribution_charge_per_unit": 54.35,
+        "supply_charge_per_unit": 4.53,
+        "period": "monthly",
+        "distribution_charge_additional_unit": 29.92,
+        "supply_charge_additional_unit": 4.53
+      },
+      {
+        "fixture_label": "42,000 Lumens, 490 Wattage (Expressway)",
+        "distribution_charge_per_unit": 55.5,
+        "supply_charge_per_unit": 6.9,
+        "period": "monthly",
+        "distribution_charge_additional_unit": 31.06,
+        "supply_charge_additional_unit": 6.9
+      }
+    ],
+    "logic_steps": [
+      {
+        "step_name": "Additional Distribution Service Charge for Aluminum Fluted Decorative Pole or Bridge Pole",
+        "charge_type": "fixed_fee",
+        "value": 28.75,
+        "period": "monthly"
+      },
+      {
+        "step_name": "Additional Distribution Service Charge for Fiberglass Fluted Decorative Pole",
+        "charge_type": "fixed_fee",
+        "value": 11.5,
+        "period": "monthly"
+      }
+    ],
+    "minimum_charge": {
+      "basis": "rate specified in Paragraph II. A.",
+      "value": null
+    },
+    "riders_note": "Each kilowatthour used is subject to all applicable riders.",
+    "source_schedule": "SCHEDULE 150",
+    "source_pages": "84-91",
+    "riders_priced": [
+      {
+        "schedule": "SCHEDULE 150",
+        "rider_name": "CCR-CM",
+        "value": 0.0013950000000000002,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 150",
+        "rider_name": "CE-CM",
+        "value": 0.0050880000000000005,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 150",
+        "rider_name": "CERC-CM",
+        "value": 0.000511,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 150",
+        "rider_name": "DIST-CM",
+        "value": 0.005596,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 150",
+        "rider_name": "E-CM",
+        "value": 0.000256,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 150",
+        "rider_name": "GEN-CM",
+        "value": 0.004134,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 150",
+        "rider_name": "OSW-CM",
+        "value": 0.006717999999999999,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 150",
+        "rider_name": "PIPP-CM",
+        "value": 0.0,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 150",
+        "rider_name": "RPS-CM",
+        "value": 0.0053939999999999995,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 150",
+        "rider_name": "SMR-CM",
+        "value": 0.000124,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 150",
+        "rider_name": "SNA-CM",
+        "value": 0.002378,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 150",
+        "rider_name": "T-CM",
+        "value": 0.012991999999999998,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 150",
+        "rider_name": "Fuel Charge Rider A",
+        "value": 0.040868,
+        "unit": "kwh",
+        "withdrawn_date": null
+      }
+    ],
+    "_effective_date": "2025-07-01"
+  },
+  {
+    "sc_code": "SCHEDULE 152",
+    "description": "Municipal and County Street Lighting Fixtures on Bridges and Overpasses",
+    "billing_model": "per_fixture",
+    "fixture_rates": [],
+    "notes": "Monthly charges for lighting service are described in Schedule 150, including additional charges for bridge poles. No specific fixture rates are provided in this schedule.",
+    "riders_note": "subject to all applicable riders (values merged separately)",
+    "source_schedule": "SCHEDULE 152",
+    "source_pages": "91-92",
+    "_effective_date": "2025-07-01"
+  },
+  {
+    "sc_code": "SCHEDULE 151",
+    "description": "Municipal and County Roadway, Directional and Area Lighting Service",
+    "billing_model": "per_fixture",
+    "fixture_rates": [
+      {
+        "fixture_label": "3,300 Lumens Mercury Vapor 125W",
+        "distribution_charge_per_unit": 10.69,
+        "supply_charge_per_unit": 1.72,
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published; billed per pole as a single unit."
+      },
+      {
+        "fixture_label": "7,000 Lumens Mercury Vapor 208W",
+        "distribution_charge_per_unit": 11.25,
+        "supply_charge_per_unit": 3.02,
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published; billed per pole as a single unit."
+      },
+      {
+        "fixture_label": "11,000 Lumens Mercury Vapor 294W",
+        "distribution_charge_per_unit": 14.11,
+        "supply_charge_per_unit": 4.32,
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published; billed per pole as a single unit."
+      },
+      {
+        "fixture_label": "20,000 Lumens Mercury Vapor 452W",
+        "distribution_charge_per_unit": 19.87,
+        "supply_charge_per_unit": 6.47,
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published; billed per pole as a single unit."
+      },
+      {
+        "fixture_label": "33,000 Lumens Mercury Vapor 765W",
+        "distribution_charge_per_unit": 30.24,
+        "supply_charge_per_unit": 10.76,
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published; billed per pole as a single unit."
+      },
+      {
+        "fixture_label": "53,000 Lumens Mercury Vapor 1,080W",
+        "distribution_charge_per_unit": 36.47,
+        "supply_charge_per_unit": 15.52,
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published; billed per pole as a single unit."
+      },
+      {
+        "fixture_label": "20,000 Lumens Urbanlite Mercury Vapor 452W",
+        "distribution_charge_per_unit": 36.28,
+        "supply_charge_per_unit": 6.47,
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published; billed per pole as a single unit."
+      },
+      {
+        "fixture_label": "14,000 Lumens Urbanlite Sodium Vapor 202W",
+        "distribution_charge_per_unit": 30.38,
+        "supply_charge_per_unit": 3.01,
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published; billed per pole as a single unit."
+      },
+      {
+        "fixture_label": "23,000 Lumens Urbanlite Sodium Vapor 315W",
+        "distribution_charge_per_unit": 30.87,
+        "supply_charge_per_unit": 4.53,
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published; billed per pole as a single unit."
+      },
+      {
+        "fixture_label": "20,000 Lumens Directional Mercury Vapor 452W",
+        "distribution_charge_per_unit": 22.42,
+        "supply_charge_per_unit": 6.47,
+        "period": "monthly",
+        "distribution_charge_additional_unit": 14.16,
+        "supply_charge_additional_unit": 6.47
+      },
+      {
+        "fixture_label": "53,000 Lumens Directional Mercury Vapor 1,080W",
+        "distribution_charge_per_unit": 34.17,
+        "supply_charge_per_unit": 15.52,
+        "period": "monthly",
+        "distribution_charge_additional_unit": 17.97,
+        "supply_charge_additional_unit": 15.52
+      },
+      {
+        "fixture_label": "2,500 Lumens Incandescent 202W",
+        "distribution_charge_per_unit": 11.17,
+        "supply_charge_per_unit": 3.01,
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published; billed per pole as a single unit."
+      },
+      {
+        "fixture_label": "4,000 Lumens Incandescent 327W",
+        "distribution_charge_per_unit": 11.64,
+        "supply_charge_per_unit": 4.76,
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published; billed per pole as a single unit."
+      },
+      {
+        "fixture_label": "6,000 Lumens Incandescent 448W",
+        "distribution_charge_per_unit": 8.87,
+        "supply_charge_per_unit": 6.47,
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published; billed per pole as a single unit."
+      },
+      {
+        "fixture_label": "10,000 Lumens Incandescent 690W",
+        "distribution_charge_per_unit": 8.92,
+        "supply_charge_per_unit": 9.92,
+        "period": "monthly",
+        "distribution_charge_additional_unit": null,
+        "supply_charge_additional_unit": null,
+        "additional_unit_note": "No 'each additional unit on same pole' pricing published; billed per pole as a single unit."
+      }
+    ],
+    "minimum_charge": {
+      "basis": "rate specified in Section II.A.",
+      "value": null
+    },
+    "riders_note": "Each kilowatthour used is subject to all applicable riders.",
+    "source_schedule": "SCHEDULE 151",
+    "source_pages": "92-98",
+    "riders_priced": [
+      {
+        "schedule": "SCHEDULE 151",
+        "rider_name": "CCR-CM",
+        "value": 0.0013950000000000002,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 151",
+        "rider_name": "CE-CM",
+        "value": 0.0050880000000000005,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 151",
+        "rider_name": "CERC-CM",
+        "value": 0.000511,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 151",
+        "rider_name": "DIST-CM",
+        "value": 0.005596,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 151",
+        "rider_name": "E-CM",
+        "value": 0.000256,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 151",
+        "rider_name": "GEN-CM",
+        "value": 0.004134,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 151",
+        "rider_name": "OSW-CM",
+        "value": 0.006717999999999999,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 151",
+        "rider_name": "PIPP-CM",
+        "value": 0.0,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 151",
+        "rider_name": "RPS-CM",
+        "value": 0.0053939999999999995,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 151",
+        "rider_name": "SMR-CM",
+        "value": 0.000124,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 151",
+        "rider_name": "SNA-CM",
+        "value": 0.002378,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 151",
+        "rider_name": "T-CM",
+        "value": 0.012991999999999998,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 151",
+        "rider_name": "Fuel Charge Rider A",
+        "value": 0.040868,
+        "unit": "kwh",
+        "withdrawn_date": null
+      }
+    ],
+    "_effective_date": "2025-07-01"
+  },
+  {
+    "sc_code": "SCHEDULE 153",
+    "description": "Municipal and County Street Lighting - Special Fixtures",
+    "billing_model": "not_ratable",
+    "logic_steps": [
+      {
+        "step_name": "Excess of Four Years\u2019 Revenue",
+        "description": "Customer pays the excess of four years' revenue in accordance with Section XII of the Agreement, plus the applicable Tax Effect Recovery Factor (TERF) as per Schedule C."
+      },
+      {
+        "step_name": "Standard Lighting Installation Charges",
+        "description": "All charges pursuant to Schedule 150 or SSL for a standard lighting installation of the same luminaire type and size, plus all applicable riders."
+      },
+      {
+        "step_name": "Facilities Charge",
+        "description": "A facilities charge pursuant to Schedule B for the difference in cost between a standard lighting installation and the special lighting installation."
+      },
+      {
+        "step_name": "Cost of Purchasing Special Fixtures",
+        "description": "Customer pays the greater of the invoice cost plus 10% or the invoice cost plus $50.00 for purchasing any special fixtures, poles, or parts for replacement or repair."
+      }
+    ],
+    "notes": "This schedule is not a standalone billable rate schedule. It involves agreements and charges related to special street lighting fixtures and is subject to other schedules for standard charges.",
+    "source_schedule": "SCHEDULE 153",
+    "source_pages": "98-100",
+    "_effective_date": "2025-07-01"
+  },
+  {
+    "sc_code": "SCHEDULE 154",
+    "description": "Municipal and County Service to Customer-Owned Street, Area and Other Outdoor Lighting Facilities Operated Only During Night-Time Hours",
+    "billing_model": "usage_based",
+    "logic_steps": [
+      {
+        "step_name": "Basic Customer Charge (Metered Service)",
+        "charge_type": "fixed_fee",
+        "value": 11.41,
+        "period": "monthly"
+      },
+      {
+        "step_name": "Basic Customer Charge (Unmetered Service)",
+        "charge_type": "fixed_fee",
+        "value": 5.5,
+        "period": "monthly"
+      }
+    ],
+    "charge_blocks": [
+      {
+        "block_name": "Distribution kWh Charge",
+        "basis": "kwh",
+        "condition": null,
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.053507
+        }
+      },
+      {
+        "block_name": "Electricity Supply kWh Charge",
+        "basis": "kwh",
+        "condition": null,
+        "unit": "per_kwh",
+        "rate_structure": {
+          "type": "flat",
+          "rate": 0.00761
+        }
+      }
+    ],
+    "minimum_charge": {
+      "basis": "Basic Customer Charge",
+      "value": null
+    },
+    "riders_note": "subject to all applicable riders (values merged separately)",
+    "notes": "Unmetered service kWh is estimated based on connected load and usage hours.",
+    "source_schedule": "SCHEDULE 154",
+    "source_pages": "100-103",
+    "riders_priced": [
+      {
+        "schedule": "SCHEDULE 154",
+        "rider_name": "CCR-CM",
+        "value": 0.0013950000000000002,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 154",
+        "rider_name": "CE-CM",
+        "value": 0.0050880000000000005,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 154",
+        "rider_name": "CERC-CM",
+        "value": 0.000511,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 154",
+        "rider_name": "DIST-CM",
+        "value": 0.005596,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 154",
+        "rider_name": "E-CM",
+        "value": 0.000256,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 154",
+        "rider_name": "GEN-CM",
+        "value": 0.004134,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 154",
+        "rider_name": "OSW-CM",
+        "value": 0.006717999999999999,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 154",
+        "rider_name": "PIPP-CM",
+        "value": 0.0,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 154",
+        "rider_name": "RPS-CM",
+        "value": 0.0053939999999999995,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 154",
+        "rider_name": "SMR-CM",
+        "value": 0.000124,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 154",
+        "rider_name": "SNA-CM",
+        "value": 0.002378,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 154",
+        "rider_name": "T-CM",
+        "value": 0.012991999999999998,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE 154",
+        "rider_name": "Fuel Charge Rider A",
+        "value": 0.040868,
+        "unit": "kwh",
+        "withdrawn_date": null
+      }
+    ],
+    "_effective_date": "2025-07-01"
+  },
+  {
+    "sc_code": "SCHEDULE SGCM",
+    "description": "Municipal and County Standby Generator",
+    "billing_model": "not_ratable",
+    "logic_steps": [
+      {
+        "step_name": "Monthly Charge for Metering and Administration",
+        "charge_type": "fixed_fee",
+        "value": 95,
+        "period": "monthly"
+      },
+      {
+        "step_name": "Payment to Customer for Standby Generation (Winter)",
+        "charge_type": "credit",
+        "value": 1.278,
+        "unit": "per_kw",
+        "period": "monthly"
+      },
+      {
+        "step_name": "Payment to Customer for Standby Generation (Summer)",
+        "charge_type": "credit",
+        "value": 2.556,
+        "unit": "per_kw",
+        "period": "monthly"
+      }
+    ],
+    "notes": "This schedule is for standby generation and involves payments to the customer based on capacity levels and operation requests. It is not a standalone billable rate schedule.",
+    "source_schedule": "SCHEDULE SGCM",
+    "source_pages": "103-106",
+    "_effective_date": "2025-07-01"
+  },
+  {
+    "sc_code": "SCHEDULE SGCM-1",
+    "description": "Municipal and County Standby Generator",
+    "billing_model": "not_ratable",
+    "logic_steps": [
+      {
+        "step_name": "Monthly Metering Charge",
+        "charge_type": "fixed_fee",
+        "value": 95,
+        "period": "monthly"
+      },
+      {
+        "step_name": "Payment to Customer for Standby Generation (Winter, Nov-Apr)",
+        "charge_type": "credit",
+        "value": 4.5,
+        "unit": "per_kw",
+        "period": "monthly"
+      },
+      {
+        "step_name": "Payment to Customer for Standby Generation (Summer, May-Oct)",
+        "charge_type": "credit",
+        "value": 8.0,
+        "unit": "per_kw",
+        "period": "monthly"
+      }
+    ],
+    "notes": "This schedule provides a standby generator service where customers are paid for maintaining load during company-requested operations. Payments are based on contracted capacity levels and actual generation during requests, capped at the applicable season's contracted capacity level. It is not a standalone billable rate schedule. Applicable only to accounts receiving service under Schedule SGCM as of July 30, 1997.",
+    "source_schedule": "SCHEDULE SGCM-1",
+    "source_pages": "106-109",
+    "_effective_date": "2025-07-01"
+  },
+  {
+    "sc_code": "SCHEDULE SMH",
+    "description": "Municipal and County Streetscape Metal Halide Supplemental Outdoor Lighting Rate",
+    "billing_model": "per_fixture",
+    "fixture_rates": [
+      {
+        "fixture_label": "7,000 Lumens, 100 Wattage",
+        "distribution_charge_per_unit": 55.86,
+        "supply_charge_per_unit": 1.75,
+        "period": "monthly",
+        "distribution_charge_additional_unit": 24.34,
+        "supply_charge_additional_unit": 1.75
+      },
+      {
+        "fixture_label": "10,000 Lumens, 150 Wattage",
+        "distribution_charge_per_unit": 57.88,
+        "supply_charge_per_unit": 2.45,
+        "period": "monthly",
+        "distribution_charge_additional_unit": 24.78,
+        "supply_charge_additional_unit": 2.45
+      },
+      {
+        "fixture_label": "13,000 Lumens, 200 Wattage",
+        "distribution_charge_per_unit": 69.34,
+        "supply_charge_per_unit": 3.28,
+        "period": "monthly",
+        "distribution_charge_additional_unit": 24.43,
+        "supply_charge_additional_unit": 3.28
+      },
+      {
+        "fixture_label": "24,000 Lumens, 320 Wattage",
+        "distribution_charge_per_unit": 70.03,
+        "supply_charge_per_unit": 5.22,
+        "period": "monthly",
+        "distribution_charge_additional_unit": 25.09,
+        "supply_charge_additional_unit": 5.22
+      }
+    ],
+    "minimum_charge": {
+      "basis": "rate specified in Paragraph II. A., plus all applicable riders",
+      "value": null
+    },
+    "riders_note": "Each kilowatthour used is subject to all applicable riders.",
+    "source_schedule": "SCHEDULE SMH",
+    "source_pages": "109-113",
+    "riders_priced": [
+      {
+        "schedule": "SCHEDULE SMH",
+        "rider_name": "CCR-CM",
+        "value": 0.0013950000000000002,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE SMH",
+        "rider_name": "CE-CM",
+        "value": 0.0050880000000000005,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE SMH",
+        "rider_name": "CERC-CM",
+        "value": 0.000511,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE SMH",
+        "rider_name": "DIST-CM",
+        "value": 0.005596,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE SMH",
+        "rider_name": "E-CM",
+        "value": 0.000256,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE SMH",
+        "rider_name": "GEN-CM",
+        "value": 0.004134,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE SMH",
+        "rider_name": "OSW-CM",
+        "value": 0.006717999999999999,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE SMH",
+        "rider_name": "PIPP-CM",
+        "value": 0.0,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE SMH",
+        "rider_name": "RPS-CM",
+        "value": 0.0053939999999999995,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE SMH",
+        "rider_name": "SMR-CM",
+        "value": 0.000124,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE SMH",
+        "rider_name": "SNA-CM",
+        "value": 0.002378,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE SMH",
+        "rider_name": "T-CM",
+        "value": 0.012991999999999998,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE SMH",
+        "rider_name": "Fuel Charge Rider A",
+        "value": 0.040868,
+        "unit": "kwh",
+        "withdrawn_date": null
+      }
+    ],
+    "_effective_date": "2025-07-01"
+  },
+  {
+    "sc_code": "SCHEDULE SP",
+    "description": "Municipal and County Special Provisions",
+    "billing_model": "not_ratable",
+    "logic_steps": [
+      {
+        "step_name": "Discount for Customer-owned Transformer",
+        "description": "5% discount on per kWh charges for flat miscellaneous light and power rate schedules (Schedules 100, 110, 120)."
+      },
+      {
+        "step_name": "Discount for Demand Schedules",
+        "description": "2% discount on per kWh charges for demand schedules (Schedules 130, 131)."
+      },
+      {
+        "step_name": "Off-peak kWh Reduction",
+        "description": "1/2\u00a2 reduction in the Electricity Supply Energy Off-peak kWh rate for each kWh metered off-peak for Customer-owned street lights."
+      }
+    ],
+    "minimum_charge": {
+      "basis": "Basic Customer Charge as stated in the appropriate rate schedule",
+      "value": null
+    },
+    "notes": "This schedule provides discounts and reductions applicable to other rate schedules and is not a standalone billable rate schedule.",
+    "source_schedule": "SCHEDULE SP",
+    "source_pages": "113-114",
+    "_effective_date": "2025-07-01"
+  },
+  {
+    "sc_code": "SCHEDULE SSL",
+    "description": "Municipal and County Solid State Outdoor Lighting",
+    "billing_model": "per_fixture",
+    "fixture_rates": [
+      {
+        "fixture_label": "Standard Basic LED Tier 1 (0-9 kWh)",
+        "distribution_charge_per_unit": 10.85,
+        "supply_charge_per_unit": 0.21,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Basic LED Tier 2 (10-19 kWh)",
+        "distribution_charge_per_unit": 12.46,
+        "supply_charge_per_unit": 0.63,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Basic LED Tier 3 (20-29 kWh)",
+        "distribution_charge_per_unit": 13.61,
+        "supply_charge_per_unit": 1.04,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Basic LED Tier 4 (30-39 kWh)",
+        "distribution_charge_per_unit": 14.02,
+        "supply_charge_per_unit": 1.45,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Basic LED Tier 5 (40-49 kWh)",
+        "distribution_charge_per_unit": 16.15,
+        "supply_charge_per_unit": 1.88,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Basic LED Tier 6 (50-59 kWh)",
+        "distribution_charge_per_unit": 18.7,
+        "supply_charge_per_unit": 2.29,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Basic LED Tier 7 (60-69 kWh)",
+        "distribution_charge_per_unit": 19.52,
+        "supply_charge_per_unit": 2.71,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Basic LED Tier 8 (70-79 kWh)",
+        "distribution_charge_per_unit": 20.24,
+        "supply_charge_per_unit": 3.11,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Basic LED Tier 9 (80-89 kWh)",
+        "distribution_charge_per_unit": 21.8,
+        "supply_charge_per_unit": 3.55,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Basic LED Tier 10 (90-99 kWh)",
+        "distribution_charge_per_unit": 22.46,
+        "supply_charge_per_unit": 3.95,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Premium LED Tier 1 (0-9 kWh)",
+        "distribution_charge_per_unit": 33.31,
+        "supply_charge_per_unit": 0.21,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Premium LED Tier 2 (10-19 kWh)",
+        "distribution_charge_per_unit": 33.56,
+        "supply_charge_per_unit": 0.63,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Premium LED Tier 3 (20-29 kWh)",
+        "distribution_charge_per_unit": 34.02,
+        "supply_charge_per_unit": 1.04,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Premium LED Tier 4 (30-39 kWh)",
+        "distribution_charge_per_unit": 34.46,
+        "supply_charge_per_unit": 1.45,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Premium LED Tier 5 (40-49 kWh)",
+        "distribution_charge_per_unit": 35.7,
+        "supply_charge_per_unit": 1.88,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Premium LED Tier 6 (50-59 kWh)",
+        "distribution_charge_per_unit": 35.86,
+        "supply_charge_per_unit": 2.29,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Premium LED Tier 7 (60-69 kWh)",
+        "distribution_charge_per_unit": 39.3,
+        "supply_charge_per_unit": 2.71,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Premium LED Tier 8 (70-79 kWh)",
+        "distribution_charge_per_unit": 39.48,
+        "supply_charge_per_unit": 3.11,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Premium LED Tier 9 (80-89 kWh)",
+        "distribution_charge_per_unit": 40.47,
+        "supply_charge_per_unit": 3.55,
+        "period": "monthly"
+      },
+      {
+        "fixture_label": "Standard Premium LED Tier 10 (90-99 kWh)",
+        "distribution_charge_per_unit": 40.63,
+        "supply_charge_per_unit": 3.95,
+        "period": "monthly"
+      }
+    ],
+    "minimum_charge": {
+      "basis": "rate specified in Paragraph II. A.",
+      "value": null
+    },
+    "riders_note": "subject to all applicable riders (values merged separately)",
+    "source_schedule": "SCHEDULE SSL",
+    "source_pages": "114-120",
+    "riders_priced": [
+      {
+        "schedule": "SCHEDULE SSL",
+        "rider_name": "CCR-CM",
+        "value": 0.0013950000000000002,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE SSL",
+        "rider_name": "CE-CM",
+        "value": 0.0050880000000000005,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE SSL",
+        "rider_name": "CERC-CM",
+        "value": 0.000511,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE SSL",
+        "rider_name": "DIST-CM",
+        "value": 0.005596,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE SSL",
+        "rider_name": "E-CM",
+        "value": 0.000256,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE SSL",
+        "rider_name": "GEN-CM",
+        "value": 0.004134,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE SSL",
+        "rider_name": "OSW-CM",
+        "value": 0.006717999999999999,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE SSL",
+        "rider_name": "PIPP-CM",
+        "value": 0.0,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE SSL",
+        "rider_name": "RPS-CM",
+        "value": 0.0053939999999999995,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE SSL",
+        "rider_name": "SMR-CM",
+        "value": 0.000124,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE SSL",
+        "rider_name": "SNA-CM",
+        "value": 0.002378,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE SSL",
+        "rider_name": "T-CM",
+        "value": 0.012991999999999998,
+        "unit": "kwh",
+        "withdrawn_date": null
+      },
+      {
+        "schedule": "SCHEDULE SSL",
+        "rider_name": "Fuel Charge Rider A",
+        "value": 0.040868,
+        "unit": "kwh",
+        "withdrawn_date": null
+      }
+    ],
+    "_effective_date": "2025-07-01"
+  },
+  {
+    "sc_code": "SCHEDULE A",
+    "description": "Municipal and County Temporary Service Charge",
+    "billing_model": "not_ratable",
+    "logic_steps": [
+      {
+        "step_name": "Minimum Temporary Service Charge",
+        "charge_type": "flat_fee",
+        "value": 17.17,
+        "notes": "The charge is the estimated net cost of installing and removing service facilities, but not less than $17.17."
+      }
+    ],
+    "notes": "This schedule describes temporary service charges based on the net cost of installation and removal of service facilities. It is not a standalone billable rate schedule.",
+    "source_schedule": "SCHEDULE A",
+    "source_pages": "120-121",
+    "_effective_date": "2025-07-01"
+  },
+  {
+    "sc_code": "SCHEDULE B",
+    "description": "Municipal and County Excess Facilities Service Rate",
+    "billing_model": "not_ratable",
+    "logic_steps": [
+      {
+        "step_name": "Monthly Facilities Charge",
+        "charge_type": "percentage_fee",
+        "value": "1.164% of the estimated new installed cost of all excess distribution and substation facilities",
+        "condition": "Paragraph A"
+      },
+      {
+        "step_name": "Monthly Facilities Charge",
+        "charge_type": "percentage_fee",
+        "value": "0.941% of the estimated new installed cost of all excess transmission facilities",
+        "condition": "Paragraph A"
+      },
+      {
+        "step_name": "One-time Facilities Charge",
+        "charge_type": "percentage_fee",
+        "value": "estimated new installed cost of all excess distribution and substation facilities",
+        "condition": "Paragraph B"
+      },
+      {
+        "step_name": "Monthly Facilities Charge",
+        "charge_type": "percentage_fee",
+        "value": "0.275% of the estimated new installed cost of all excess distribution and substation facilities",
+        "condition": "Paragraph B"
+      },
+      {
+        "step_name": "One-time Facilities Charge",
+        "charge_type": "percentage_fee",
+        "value": "estimated new installed cost of all excess transmission facilities",
+        "condition": "Paragraph B"
+      },
+      {
+        "step_name": "Monthly Facilities Charge",
+        "charge_type": "percentage_fee",
+        "value": "0.033% of the estimated new installed cost of all excess transmission facilities",
+        "condition": "Paragraph B"
+      }
+    ],
+    "notes": "This schedule provides charges for excess facilities and is not a standalone billable rate schedule. Charges are based on the estimated new installed cost of excess facilities and are subject to updates as per Virginia Jurisdictional Terms and Conditions.",
+    "source_schedule": "SCHEDULE B",
+    "source_pages": "121-122",
+    "_effective_date": "2025-07-01"
+  },
+  {
+    "sc_code": "SCHEDULE C",
+    "description": "Municipal and County Miscellaneous and Standby Charges",
+    "billing_model": "not_ratable",
+    "logic_steps": [
+      {
+        "step_name": "Service Connection Charge",
+        "charge_type": "fixed_fee",
+        "value": 5.7,
+        "unit": "per service"
+      },
+      {
+        "step_name": "Minimum Temporary Service Charge",
+        "charge_type": "fixed_fee",
+        "value": 17.17,
+        "unit": "per instance"
+      },
+      {
+        "step_name": "Tax Effect Recovery Factor (TERF)",
+        "charge_type": "multiplier",
+        "value": 1.15171,
+        "notes": "Applied to contributions in aid of construction"
+      },
+      {
+        "step_name": "Minimum Charge for Net Metering, Parallel, or Standby Service",
+        "charge_type": "complex",
+        "contract_demand_rate": 3.371,
+        "contract_demand_unit": "per_kw",
+        "minimum_es_kwh_rate": 0.031396,
+        "minimum_es_kwh_unit": "per_kwh",
+        "notes": "Where net metering, parallel, or standby service is supplied under Schedule 130 or 131, charges are as provided therein. Where supplied under another rate schedule, a demand meter is installed and the monthly charge equals: (a) the greater of [Contract demand @ $3.371/kW] or [Monthly Minimum Charge @ 3.1396\u00a2/kWh, plus adjustment, not less than zero], plus (b) (Total Distribution and ES kWh Charge for the Billing Period) minus ((ES kWh for the Billing Period x rate per 4a.2 above) + (ES kWh for the Billing Period x Fuel Charge Rider A)). Per Section 4.c, this section does not apply to interconnections that became effective on or before June 30, 2026."
+      },
+      {
+        "step_name": "Alternate Service Meter Minimum Charge",
+        "charge_type": "fixed_fee",
+        "value": 23.62,
+        "unit": "minimum amount billed for electricity"
+      }
+    ],
+    "notes": "This schedule includes miscellaneous and standby charges, not a standalone billable rate schedule.",
+    "source_schedule": "SCHEDULE C",
+    "source_pages": "122-123",
+    "_effective_date": "2025-07-01"
+  },
+  {
+    "sc_code": "SCHEDULE D",
+    "description": "Municipal and County Luminaire Conversion Charges",
+    "billing_model": "flat_service_fee",
+    "logic_steps": [
+      {
+        "step_name": "Conversion Charge for Non-Premium Rate Luminaires",
+        "charge_type": "flat_fee",
+        "value": 130.0,
+        "unit": "per luminaire"
+      },
+      {
+        "step_name": "Conversion Charge for Premium Rate Luminaires",
+        "charge_type": "flat_fee",
+        "value": 386.0,
+        "unit": "per luminaire"
+      }
+    ],
+    "notes": "TERF applies to conversion charges as per federal Tax Cuts and Jobs Act of 2017.",
+    "source_schedule": "SCHEDULE D",
+    "source_pages": "123-127",
+    "_effective_date": "2025-07-01"
+  },
+  {
+    "sc_code": "SCHEDULE E",
+    "description": "Municipal and County Street Lighting Patrol Service",
+    "billing_model": "flat_service_fee",
+    "logic_steps": [
+      {
+        "step_name": "Patrolling Service Charge",
+        "charge_type": "flat_fee",
+        "value": 120.55,
+        "unit": "per hour"
+      }
+    ],
+    "notes": "The patrol rate is subject to adjustment for increased costs by the Company at the beginning of each succeeding year of this Agreement.",
+    "source_schedule": "SCHEDULE E",
+    "source_pages": "127-129",
+    "_effective_date": "2025-07-01"
+  },
+  {
+    "sc_code": "RIDER A",
+    "description": "Fuel Charge Rider A (Municipal and County)",
+    "billing_model": "rider",
+    "rider_type": "fuel_charge",
+    "rate": 0.040868,
+    "unit": "per_kwh",
+    "applicable_schedules": [
+      "100",
+      "102",
+      "110",
+      "120",
+      "130",
+      "131",
+      "132",
+      "134",
+      "150",
+      "151",
+      "154",
+      "SMH",
+      "SSL"
+    ],
+    "notes": "The charge for service under Rate Schedules 100, 102, 110, 120, 130, 131, 132, 134, 150, 151, 154, SMH, and SSL shall be increased by 4.0868 cents per kilowatt-hour. Previously omitted from riders_priced arrays in this JSON; added per audit findings. Should be itemized separately from other CM riders per Colonial Heights precedent, not blended into rider totals.",
+    "source_schedule": "RIDER A",
+    "source_pages": "128",
+    "_effective_date": "2025-07-01"
+  }
+]
