@@ -389,7 +389,7 @@ def render_tariff_viewer():
     )
     tariff_path = TARIFF_FILES[vintage]
 
-    if not Path(TARIFF_JSON_PATH).exists():
+    if not Path(tariff_path).exists():
         st.error(
             f"Tariff logic file not found at `{TARIFF_JSON_PATH}`. "
             f"This file needs to be committed to the repo alongside the app "
@@ -398,7 +398,7 @@ def render_tariff_viewer():
         return
 
     engine = load_audit_engine(TARIFF_JSON_PATH)
-    st.caption(f"Using tariff logic: `{TARIFF_JSON_PATH}`")
+    st.caption(f"Using tariff logic: `{tariff_path}`")
 
     schedule_codes = sorted(engine.tariff_map.keys())
     if not schedule_codes:
